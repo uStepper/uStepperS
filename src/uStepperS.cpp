@@ -8,3 +8,9 @@ uStepperS::uStepperS(void)
 	pointer = this;
 
 }
+
+
+void uStepperS::setup(void){
+
+	
+}

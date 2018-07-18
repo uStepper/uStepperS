@@ -35,13 +35,11 @@
 #define _USTEPPER_S_H_
 
 #ifndef __AVR_ATmega328PB__
-#error !!This library only supports the ATmega328pb MCU!!
+	#error !!This library only supports the ATmega328pb MCU!!
 #endif
 
-#include <inttypes.h>
-#include <avr/io.h>
-#include <avr/delay.h> // ?
 #include <Arduino.h>
+#include <uStepperEncoder.h>
 
 class uStepperS
 {
@@ -52,6 +50,8 @@ public:
 
 
 	uStepperS(void);
+
+	void setup(void);
 	
 };
 
