@@ -1,4 +1,4 @@
-#include <uStepperEncoder.h>
+#include <Arduino.h>
 
 const uint8_t CS  = PB2; // Pin 10
 const uint8_t DIN = PB3; // Pin 11 (MOSI)
@@ -10,14 +10,13 @@ class uStepperEncoder
 
 	public:
 
-		volatile int32_t angleMoved;		
 		volatile uint16_t angle;				 	
 
 		uStepperEncoder(void);
 		
 		float getAngle(void);
 
-		uint8_t SPI(void);
+		uint8_t SPI( uint8_t data );
 	
 };
 

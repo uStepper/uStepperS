@@ -34,8 +34,8 @@
 #ifndef _USTEPPER_S_H_
 #define _USTEPPER_S_H_
 
-#ifndef __AVR_ATmega328PB__
-	#error !!This library only supports the ATmega328pb MCU!!
+#ifndef __AVR_ATmega328P__
+	#error !!This library only supports the ATmega328p MCU!!
 #endif
 
 #include <Arduino.h>

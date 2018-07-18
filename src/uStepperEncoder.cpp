@@ -1,13 +1,10 @@
-
+#include <uStepperEncoder.h>
 /* At initialition setup the SPI hardware protocal to communicate with SSI interface */
 
 uStepperEncoder::uStepperEncoder(void)
 {
-	/* CS as OUTPUT */
-	DDRD |= (1<<CS);
-
-	/* Set MOSI (PB3) and SCK (PB5) as Output */
-	DDRB = (1<<DIN)|(1<<CLK);
+	/* Set CS (PB2), MOSI (PB3) and SCK (PB5) as Output */
+	DDRB = (1<<DIN)|(1<<CLK)|(1<<CS);
 
 	/* 
 	*  SPE   = 1: SPI enabled
@@ -22,22 +19,23 @@ uStepperEncoder::uStepperEncoder(void)
 
 float uStepperEncoder::getAngle(void){
 
-	uint16_t value = 0; uint8_t stats = 0;
+	uint16_t value = 0;
+	uint8_t stats = 0;
 
-	PORTD &= ~(1<<CS);  // Set CS LOW
-	delayMicroseconds(1);
-
+	PORTB |= (1<<CS);  // Set CS HIGH
+	
 	// Write dummy and read the incoming 8 bits
-	value = this.SPI(0x00);
+	value = this->SPI(0x00);
 	value <<= 8;
 
 	// Write dummy and read the incoming 8 bits
-	value |= this.SPI(0x00);
+	value |= this->SPI(0x00);
 
 	// Write dummy and read the incoming 8 bits
-	stats = this.SPI(0x00);
+	stats = this->SPI(0x00);
 
-	PORTD |= (1<<CS);  // Set CS HIGH
+	PORTB &= ~(1<<CS);  // Set CS LOW
+	
 
 	return value;
 
