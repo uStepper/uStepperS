@@ -38,8 +38,13 @@
 	#error !!This library only supports the ATmega328p MCU!!
 #endif
 
+#include <avr/io.h>
+#include <avr/interrupt.h>
 #include <Arduino.h>
 #include <uStepperEncoder.h>
+
+
+extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal,used));
 
 class uStepperS
 {
