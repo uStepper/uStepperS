@@ -23,12 +23,12 @@
 
 /**
  * @file uStepperS.h
- * @brief      Function prototypes and definitions for the uStepperS library
+ * @brief	Function prototypes and definitions for the uStepperS library
  *
- *             This file contains class and function prototypes for the library,
- *             as well as necessary constants and global variables.
+ *			This file contains class and function prototypes for the library,
+ *			as well as necessary constants and global variables.
  *
- * @author     Emil Jacobsen (emil@ustepper.com)
+ * @author	Emil Jacobsen (emil@ustepper.com)
  */
 
 #ifndef _USTEPPER_S_H_
@@ -43,7 +43,11 @@
 #include <Arduino.h>
 #include <uStepperEncoder.h>
 
-
+/**
+ * @brief	Measures angle of motor.
+ *
+ *			This interrupt routine is in charge of sampling the encoder
+ */
 extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal,used));
 
 class uStepperS
@@ -53,9 +57,14 @@ public:
 	/** Instantiate object for the encoder */
 	uStepperEncoder encoder;		
 
-
+	/**
+	 * @brief	Constructor of uStepper class
+	 */
 	uStepperS(void);
 
+	/**
+	 * @brief	Setup function
+	 */
 	void setup(void);
 	
 };

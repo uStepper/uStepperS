@@ -1,13 +1,16 @@
 #include <Arduino.h>
-/* Pin definition for AEAT-8800-Q24 */
 
-#define CS PB2 /* Chip select - Pin 10 on ATmega328p */
+/** Chip select for AEAT-8800-Q24 - Pin 10 on ATmega328p */
+#define CS PB2 
 
-#define DIN PB3 /* Data in - Pin 11 on ATmega328p (MOSI) */
+/** Data in for AEAT-8800-Q24 - Pin 11 on ATmega328p (MOSI) */
+#define DIN PB3 
 
-#define DO PB4 /* Data out - Pin 12 on ATmega328p (MISO) */
+/** Data out for AEAT-8800-Q24 - Pin 12 on ATmega328p (MISO) */
+#define DO PB4 
 
-#define CLK PB5 /* Clock signal - Pin 13 on ATmega328p (SCK) */
+/** Clock signal for AEAT-8800-Q24 - Pin 13 on ATmega328p (SCK) */
+#define CLK PB5 
 
 
 class uStepperEncoder
@@ -19,16 +22,42 @@ class uStepperEncoder
 
 		void setup(void);
 
+		/**
+		 * @brief      Return the current shaft angle
+		 *
+		 *             This function returns the last captured shaft angle.
+		 *             The resolution of the angle returned by this function is
+		 *             0.0054931640625 degrees (16 bits)
+		 *
+		 * @return     Floating point representation of the current motor shaft
+		 *             angle
+		 */
 		float getAngle(void);
 
+		/**
+		 * @brief      Capture the current shaft angle
+		 *
+		 *             This function is used by the ISR to read the current angle of the motor shaft.
+		 *             The Angle is read by means of the SSI interface, using the hardware SPI port.
+		 */
 		void captureAngle(void);
 
+		/**
+		 * @brief	Constructor of uStepperEncoder class
+		 */
 		uStepperEncoder(void);
 
 	private:
 		
+		/** This variable always contain the current rotor angle, relative
+		  * to a single revolution */
 		volatile uint16_t angle;
 
+		/**
+		 * @brief      Send and receive data on the SPI bus
+		 *
+		 *             This function is used to read data from the magnet sensors SSI interface. 
+		 */
 		uint8_t SPI( uint8_t data );
 	
 };
