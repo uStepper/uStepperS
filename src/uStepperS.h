@@ -38,10 +38,55 @@
 	#error !!This library only supports the ATmega328p MCU!!
 #endif
 
+
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <Arduino.h>
 #include <uStepperEncoder.h>
+
+
+
+
+/* Register values for CHOPCONF */
+#define TOFF 0x01
+#define HSTRT 0x10
+#define HEND 0x80
+
+/* Register values for IHOLD_IRUN */ 
+#define IHOLD 0x01
+#define IRUN 0x100
+#define IHOLDDELAY 0x10000
+
+
+#define WRITE_ACCESS 0x80
+
+/* Register addresses */
+#define IHOLD_IRUN 0x10
+#define RAMPMODE 0x20
+#define XACTUAL 0x21
+#define A1 0x24
+#define V1 0x25
+#define AMAX 0x26
+#define VMAX 0x27
+#define DMAX 0x28
+#define D1 0x2A
+#define VSTOP 0x2B
+#define XTARGET 0x2D
+
+/** Chip select Pin 10 on ATmega328p */
+#define CS_1 PB2 
+
+/** Pin 11 on ATmega328p (MOSI) */
+#define MOSI PB3 
+
+/** Pin 12 on ATmega328p (MISO) */
+#define MISO PB4 
+
+/** Pin 13 on ATmega328p (SCK) */
+#define SCK PB5 
+
+
 
 /**
  * @brief	Measures angle of motor.
@@ -55,18 +100,52 @@ class uStepperS
 
 public:			
 	/** Instantiate object for the encoder */
-	uStepperEncoder encoder;		
+	// uStepperEncoder encoder;		
 
 	/**
 	 * @brief	Constructor of uStepper class
 	 */
-	uStepperS(void);
+	uStepperS( int32_t maxAcceleration, int32_t maxVelocity );
 
 	/**
 	 * @brief	Setup function
 	 */
 	void setup(void);
+
+	void runContinous(bool dir);
+
+	void moveSteps(int32_t position);
+
 	
+
+private: 
+
+	/** This variable contains the maximum velocity, the motor is
+	 * allowed to reach at any given point. The user of the library can
+	 * set this by use of the setMaxVelocity() function, and get the
+	 * current value with the getMaxVelocity() function. */
+	float velocity;					
+
+	/** This variable contains the maximum acceleration to be used. The
+	 * can be set and read by the user of the library using the
+	 * functions setMaxAcceleration() and getMaxAcceleration()
+	 * respectively. Since this library uses a second order acceleration
+	 * curve, the acceleration applied will always be either +/- this
+	 * value (acceleration/deceleration)or zero (cruise). */
+	float acceleration;		
+
+	int32_t position;		
+
+
+
+	uint8_t SPI( uint8_t data );
+
+	void setSPIMode( uint8_t mode );
+
+	int32_t setRegisterValue( uint8_t address, uint32_t datagram );
+
+	void setDriverProfile( void );
+
 };
 
 
