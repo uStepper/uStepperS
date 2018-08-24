@@ -63,6 +63,7 @@
 
 /* Register addresses */
 #define IHOLD_IRUN 0x10
+#define THIGH 0x15
 #define RAMPMODE 0x20
 #define XACTUAL 0x21
 #define A1 0x24
@@ -73,6 +74,7 @@
 #define D1 0x2A
 #define VSTOP 0x2B
 #define XTARGET 0x2D
+
 
 /** Chip select Pin 10 on ATmega328p */
 #define CS_1 PB2 
@@ -105,7 +107,7 @@ public:
 	/**
 	 * @brief	Constructor of uStepper class
 	 */
-	uStepperS( int32_t maxAcceleration, int32_t maxVelocity );
+	uStepperS( int32_t maxVelocity, int32_t maxAcceleration );
 
 	/**
 	 * @brief	Setup function
@@ -116,6 +118,9 @@ public:
 
 	void moveSteps(int32_t position);
 
+	void setSpeed(uint32_t velocity); // In usteps / t
+
+	void setRPM(uint16_t RPM);
 	
 
 private: 
@@ -144,7 +149,7 @@ private:
 
 	int32_t setRegisterValue( uint8_t address, uint32_t datagram );
 
-	void setDriverProfile( void );
+	void setDriverProfile( uint8_t mode );
 
 };
 
