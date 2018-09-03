@@ -44,36 +44,7 @@
 #include <avr/interrupt.h>
 #include <Arduino.h>
 #include <uStepperEncoder.h>
-
-
-
-
-/* Register values for CHOPCONF */
-#define TOFF 0x01
-#define HSTRT 0x10
-#define HEND 0x80
-
-/* Register values for IHOLD_IRUN */ 
-#define IHOLD 0x01
-#define IRUN 0x100
-#define IHOLDDELAY 0x10000
-
-
-#define WRITE_ACCESS 0x80
-
-/* Register addresses */
-#define IHOLD_IRUN 0x10
-#define THIGH 0x15
-#define RAMPMODE 0x20
-#define XACTUAL 0x21
-#define A1 0x24
-#define V1 0x25
-#define AMAX 0x26
-#define VMAX 0x27
-#define DMAX 0x28
-#define D1 0x2A
-#define VSTOP 0x2B
-#define XTARGET 0x2D
+#include <TMC5130.h>
 
 
 /** Chip select Pin 10 on ATmega328p */

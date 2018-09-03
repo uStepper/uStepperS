@@ -28,13 +28,15 @@ uStepperS::uStepperS( int32_t maxVelocity, int32_t maxAcceleration )
 	/* Resets GCONF for TMC5130 and enable stealth */
 	setRegisterValue(0x00 + WRITE_ACCESS, 0x04); 
 
+	setRegisterValue(0x70 + WRITE_ACCESS, 1<<18); 
+
 
 	/* Set CHOPCONF for TMC5130 */
 	setRegisterValue(0x6C + WRITE_ACCESS, TOFF * 5 + HSTRT * (5-1) + HEND * (3-1) );
 
 
 	/* IHOLD_IRUN: IHOLD=2, IRUN=10 (max.current), IHOLDDELAY=6 */
-	setRegisterValue(IHOLD_IRUN  + WRITE_ACCESS, IHOLD * 2 + IRUN * 10 + IHOLDDELAY * 10);
+	setRegisterValue(IHOLD_IRUN  + WRITE_ACCESS, IHOLD * 2 + IRUN * 16 + IHOLDDELAY * 10);
 
 
 	/* Resets PWMCONF for TMC5130 */
