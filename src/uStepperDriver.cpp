@@ -1,6 +1,6 @@
-#include <uStepperDriver.h>
+#include <uStepperS.h>
 
-void uStepperDriver::uStepperDriver( uStepperS * _pointer){
+uStepperDriver::uStepperDriver( uStepperS * _pointer){
 
 	this->pointer = _pointer;
 
@@ -40,8 +40,8 @@ void uStepperDriver::setDriverProfile( uint8_t mode ){
 			// Positioning mode
 			writeRegister(A1, 		1000); 			/* A1 = 1000 */
 			writeRegister(V1, 		100000); 		/* V1 = 100000 usteps / t  */
-			writeRegister(AMAX, 	acceleration); 	/* AMAX */
-			writeRegister(VMAX, 	velocity); 		/* VMAX */
+			writeRegister(AMAX, 	pointer->acceleration); 	/* AMAX */
+			writeRegister(VMAX, 	pointer->velocity); 		/* VMAX */
 			writeRegister(D1, 		1400); 			/* D1 = 1400 */
 			writeRegister(VSTOP, 	10); 			/* VSTOP = 10 */
 
@@ -53,8 +53,8 @@ void uStepperDriver::setDriverProfile( uint8_t mode ){
 
 			writeRegister(THIGH, 	200000);
 
-			writeRegister(AMAX, 	acceleration); 	/* AMAX */
-			writeRegister(VMAX, 	velocity); 		/* VMAX */
+			writeRegister(AMAX, 	pointer->acceleration); 	/* AMAX */
+			writeRegister(VMAX, 	pointer->velocity); 		/* VMAX */
 
 			writeRegister(RAMPMODE, 1); 			/* RAMPMODE = 1 = Velocity mode */
 		break;

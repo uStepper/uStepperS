@@ -45,13 +45,14 @@ class uStepperEncoder
 		/**
 		 * @brief	Constructor of uStepperEncoder class
 		 */
-		uStepperEncoder(void);
+		uStepperEncoder(uStepperS * _pointer);
 
 	private:
 		
 		/** This variable always contain the current rotor angle, relative
 		  * to a single revolution */
 		volatile uint16_t angle;
+		uStepperS * pointer;
 	
 };
 

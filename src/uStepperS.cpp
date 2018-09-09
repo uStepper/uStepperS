@@ -26,12 +26,16 @@ uStepperS::uStepperS( int32_t maxVelocity, int32_t maxAcceleration )
 	setSPIMode(3);
 
 
-	driver = new uStepperDriver( * this) ;
-	driver->setup();
+	driver = new uStepperDriver( this) ;
+	driver->setup(16,16);
 
 	pointer = this;
 }
 
+void uStepperS::setup( void )
+{
+
+}
 
 void uStepperS::moveSteps( int32_t steps ){
 

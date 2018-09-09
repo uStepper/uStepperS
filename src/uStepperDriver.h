@@ -82,7 +82,9 @@ class uStepperDriver{
 
 		uStepperDriver( uStepperS * _pointer );
 
-		void setPosition(int32_t position);
+		void setup(uint8_t ihold, uint8_t irun );
+
+		int32_t setPosition(int32_t position);
 
 		void setSpeed(uint32_t velocity); // In usteps / t
 

@@ -43,6 +43,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <Arduino.h>
+class uStepperS;
 #include <uStepperEncoder.h>
 #include <uStepperDriver.h>
 
@@ -73,12 +74,13 @@ class uStepperS
 {
 
 friend class uStepperDriver;
+friend class uStepperEncoder;
 
 public:			
 	/** Instantiate object for the encoder */
-	// uStepperEncoder encoder;
+    //uStepperEncoder encoder;
 
-	uStepperDriver driver;
+	uStepperDriver *driver;
 	
 
 	/**
@@ -94,6 +96,8 @@ public:
 	void runContinous(bool dir);
 
 	void setRPM(uint16_t RPM);
+
+	void moveSteps( int32_t steps );
 	
 
 private: 

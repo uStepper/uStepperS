@@ -1,7 +1,7 @@
-#include <uStepperEncoder.h>
+#include <uStepperS.h>
 /* At initialition setup the SPI hardware protocal to communicate with SSI interface */
 
-uStepperEncoder::uStepperEncoder(void)
+uStepperEncoder::uStepperEncoder(uStepperS * _pointer)
 {
 
 	/* Prepare Hardware SPI communication */
@@ -17,6 +17,8 @@ uStepperEncoder::uStepperEncoder(void)
 	*  CPHA  = 0: Sample at leading edge
 	*/
 	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<CPOL);
+
+	pointer = _pointer;
 }
 
 void uStepperEncoder::setup(void){
@@ -47,14 +49,14 @@ void uStepperEncoder::captureAngle(void){
 	PORTB |= (1<<CS);  // Set CS HIGH
 	
 	/* Write dummy and read the incoming 8 bits */
-	value = this->SPI(0x00);
+	value = this->pointer->SPI(0x00);
 	value <<= 8;
 
 	/* Write dummy and read the incoming 8 bits */
-	value |= this->SPI(0x00);
+	value |= this->pointer->SPI(0x00);
 
 	/* Write dummy and read the incoming 8 bits */
-	stats = this->SPI(0x00);
+	stats = this->pointer->SPI(0x00);
 
 	PORTB &= ~(1<<CS);  // Set CS LOW
 	
@@ -65,7 +67,7 @@ void uStepperEncoder::captureAngle(void){
 float uStepperEncoder::getAngle(void){
 	return this->angle;
 }
-
+/*
 uint8_t uStepperEncoder::SPI(uint8_t data){
 
   SPDR = data;
@@ -75,4 +77,4 @@ uint8_t uStepperEncoder::SPI(uint8_t data){
   
   return SPDR;
 
-}
+}*/
