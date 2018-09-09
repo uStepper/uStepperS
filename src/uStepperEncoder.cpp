@@ -16,7 +16,7 @@ uStepperEncoder::uStepperEncoder(void)
 	*  CPOL  = 1: Idle at HIGH
 	*  CPHA  = 0: Sample at leading edge
 	*/
-	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<CPOL);
+	SPCR1 = (1<<SPE1)|(1<<MSTR1)|(1<<SPR01)|(1<<CPOL1);
 }
 
 void uStepperEncoder::setup(void){
@@ -68,11 +68,11 @@ float uStepperEncoder::getAngle(void){
 
 uint8_t uStepperEncoder::SPI(uint8_t data){
 
-  SPDR = data;
+  SPDR1 = data;
 
   // Wait for transmission complete
-  while(!( SPSR & (1 << SPIF) ));    
+  while(!( SPSR1 & (1 << SPIF1) ));    
   
-  return SPDR;
+  return SPDR1;
 
 }

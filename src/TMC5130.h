@@ -4,18 +4,19 @@
 #define X_COMPARE 			0x05	// Position  comparison  register
 #define IHOLD_IRUN			0x10	// Driver current control
 #define TCOOLTHRS			0x14	// This is the lower threshold velocity for switching on smart energy coolStep and stallGuard feature.
+#define THIGH				0x15
 #define RAMPMODE			0x20	// Driving mode (Velocity, Positioning, Hold)
 #define XACTUAL				0x21	// Actual motor position
 #define VACTUAL 			0x22	// Actual  motor  velocity  from  ramp  generator
 
 /** Ramp curves */
 #define VSTART				0x23	// Motor start velocity
-#define A_1					0x24	// First  acceleration  between  VSTART  and  V1
-#define V_1					0x25	// First  acceleration  /  deceleration  phase  target velocity
+#define A1					0x24	// First  acceleration  between  VSTART  and  V1
+#define V1					0x25	// First  acceleration  /  deceleration  phase  target velocity
 #define AMAX				0x26	// Second  acceleration  between  V1  and  VMAX
 #define VMAX 				0x27	// This is the target velocity in velocity mode. It can be changed any time during a motion.
 #define DMAX				0x28	// Deceleration between VMAX and V1
-#define D_1					0x2A 	// Deceleration  between  V1  and  VSTOP
+#define D1					0x2A 	// Deceleration  between  V1  and  VSTOP
 #define VSTOP				0x2B	// Motor stop velocity (unsigned)
 #define TZEROWAIT			0x2C	// Defines  the  waiting  time  after  ramping  down
 #define XTARGET				0x2D	// Target position for ramp mode

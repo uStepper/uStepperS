@@ -21,7 +21,7 @@ uStepperS::uStepperS( int32_t maxVelocity, int32_t maxAcceleration )
 	*  MSTR  = 1: Master
 	*  SPR0  = 1 & SPR1 = 0: fOSC/16 = 1Mhz
 	*/
-	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+	SPCR1 = (1<<SPE1)|(1<<MSTR1)|(1<<SPR01);
 	setSPIMode(3);
 
 
@@ -32,11 +32,11 @@ uStepperS::uStepperS( int32_t maxVelocity, int32_t maxAcceleration )
 
 
 	/* Set CHOPCONF for TMC5130 */
-	setRegisterValue(0x6C + WRITE_ACCESS, TOFF * 5 + HSTRT * (5-1) + HEND * (3-1) );
+	setRegisterValue(0x6C + WRITE_ACCESS, TOFF(5) + HSTRT_TFD(4) + HEND(2) );
 
 
 	/* IHOLD_IRUN: IHOLD=2, IRUN=10 (max.current), IHOLDDELAY=6 */
-	setRegisterValue(IHOLD_IRUN  + WRITE_ACCESS, IHOLD * 2 + IRUN * 16 + IHOLDDELAY * 10);
+	setRegisterValue(IHOLD_IRUN  + WRITE_ACCESS, IHOLD(2) + IRUN(16) + IHOLDDELAY(10) );
 
 
 	/* Resets PWMCONF for TMC5130 */
@@ -101,13 +101,13 @@ void uStepperS::setSPIMode( uint8_t mode ){
 
 	switch(mode){
 		case 2:
-			SPCR |= (1<<CPOL);  // Set CPOL HIGH
-			SPCR &= ~(1<<CPHA);  // Set CPHA LOW
+			SPCR1 |= (1<<CPOL1);  // Set CPOL HIGH
+			SPCR1 &= ~(1<<CPHA1);  // Set CPHA LOW
 		break;
 
 		case 3:
-			SPCR |= (1<<CPOL);  // Set CPOL HIGH
-			SPCR |= (1<<CPHA);  // Set CPHA HIGH
+			SPCR1 |= (1<<CPOL1);  // Set CPOL HIGH
+			SPCR1 |= (1<<CPHA1);  // Set CPHA HIGH
 		break;
 	}
 
@@ -143,12 +143,12 @@ int32_t uStepperS::setRegisterValue( uint8_t address, uint32_t datagram ){
 
 uint8_t uStepperS::SPI(uint8_t data){
 
-	SPDR = data;
+	SPDR1 = data;
 
 	// Wait for transmission complete
-	while(!( SPSR & (1 << SPIF) ));    
+	while(!( SPSR1 & (1 << SPIF1) ));    
 
-	return SPDR;
+	return SPDR1;
 
 }
 
