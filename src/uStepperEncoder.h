@@ -16,7 +16,7 @@
 class uStepperEncoder
 {
 
-	friend class uStepperS;
+	
 
 	public:
 
@@ -52,13 +52,6 @@ class uStepperEncoder
 		/** This variable always contain the current rotor angle, relative
 		  * to a single revolution */
 		volatile uint16_t angle;
-
-		/**
-		 * @brief      Send and receive data on the SPI bus
-		 *
-		 *             This function is used to read data from the magnet sensors SSI interface. 
-		 */
-		uint8_t SPI( uint8_t data );
 	
 };
 

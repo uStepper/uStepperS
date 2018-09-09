@@ -34,8 +34,8 @@
 #ifndef _USTEPPER_S_H_
 #define _USTEPPER_S_H_
 
-#ifndef __AVR_ATmega328PB__
-	#error !!This library only supports the ATmega328PB MCU!!
+#ifndef __AVR_ATmega328P__
+	#error !!This library only supports the ATmega328P MCU!!
 #endif
 
 
@@ -44,11 +44,12 @@
 #include <avr/interrupt.h>
 #include <Arduino.h>
 #include <uStepperEncoder.h>
-#include <TMC5130.h>
+#include <uStepperDriver.h>
 
 
 /** Chip select Pin 10 on ATmega328p */
-#define CS_1 PB2 
+#define CS_DRIVER PB2 
+// #define CS_ENCODER PB2 
 
 /** Pin 11 on ATmega328p (MOSI) */
 #define MOSI PB3 
@@ -71,9 +72,14 @@ extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal,used));
 class uStepperS
 {
 
+friend class uStepperDriver;
+
 public:			
 	/** Instantiate object for the encoder */
-	uStepperEncoder encoder;		
+	// uStepperEncoder encoder;
+
+	uStepperDriver driver;
+	
 
 	/**
 	 * @brief	Constructor of uStepper class
@@ -87,14 +93,12 @@ public:
 
 	void runContinous(bool dir);
 
-	void moveSteps(int32_t position);
-
-	void setSpeed(uint32_t velocity); // In usteps / t
-
 	void setRPM(uint16_t RPM);
 	
 
 private: 
+
+	
 
 	/** This variable contains the maximum velocity, the motor is
 	 * allowed to reach at any given point. The user of the library can
@@ -113,14 +117,13 @@ private:
 	int32_t position;		
 
 
+	// SPI functions
 
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );
 
-	int32_t setRegisterValue( uint8_t address, uint32_t datagram );
-
-	void setDriverProfile( uint8_t mode );
+	void chipSelect( uint8_t pin , bool state );
 
 };
 
