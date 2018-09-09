@@ -22,6 +22,7 @@
 #define VSTOP				0x2B	// Motor stop velocity (unsigned)
 #define TZEROWAIT			0x2C	// Defines  the  waiting  time  after  ramping  down
 #define XTARGET				0x2D	// Target position for ramp mode
+#define VDCMIN				0x33
 #define SW_MODE 			0x34	// Switch mode configuration
 #define RAMP_STAT			0x35	// Ramp status and switch event status
 #define XLATCH				0x36	// Latches  XACTUAL  upon  a programmable switch event
@@ -80,7 +81,7 @@ class uStepperDriver{
 
 	public:
 
-		uStepperDriver( uStepperS * _pointer );
+		uStepperDriver( uStepperS * p );
 
 		void setup(uint8_t ihold, uint8_t irun );
 

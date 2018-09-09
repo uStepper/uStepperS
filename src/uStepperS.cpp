@@ -11,10 +11,19 @@ uStepperS::uStepperS( int32_t maxVelocity, int32_t maxAcceleration )
 	velocity = maxVelocity;
 
 
+
+
+	pointer = this;
+}
+
+void uStepperS::setup( void )
+{
 	/** Prepare hardware SPI */
 
 	/* Set CS (PB2), MOSI (PB3) and SCK (PB5) as Output */
-	DDRB = (1<<MOSI)|(1<<CLK)|(1<<CS_DRIVER);
+	DDRB = (1<<MOSI)|(1<<CLK)|(1<<CS_DRIVER)|(1<<DRV_ENN);
+
+	PORTB &= ~(1 << DRV_ENN);  // Set DRV_ENN LOW  
 
 	/* 
 	*  SPE   = 1: SPI enabled
@@ -27,14 +36,7 @@ uStepperS::uStepperS( int32_t maxVelocity, int32_t maxAcceleration )
 
 
 	driver = new uStepperDriver( this) ;
-	driver->setup(16,16);
-
-	pointer = this;
-}
-
-void uStepperS::setup( void )
-{
-
+	driver->setup(5,10);
 }
 
 void uStepperS::moveSteps( int32_t steps ){
@@ -85,7 +87,7 @@ uint8_t uStepperS::SPI(uint8_t data){
 
 void uStepperS::chipSelect(uint8_t pin, bool state){
 
-	if(state == 0)
+	if(state == false)
 		PORTB &= ~(1 << pin);  // Set CS LOW 
 	else
 		PORTB |= (1 << pin); // Set CS HIGH

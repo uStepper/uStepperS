@@ -48,6 +48,7 @@ class uStepperS;
 #include <uStepperDriver.h>
 
 
+#define DRV_ENN PB1
 /** Chip select Pin 10 on ATmega328p */
 #define CS_DRIVER PB2 
 // #define CS_ENCODER PB2 
@@ -78,8 +79,10 @@ friend class uStepperEncoder;
 
 public:			
 	/** Instantiate object for the encoder */
-    //uStepperEncoder encoder;
 
+    // uStepperEncoder *encoder;
+
+	/** Instantiate object for the driver */
 	uStepperDriver *driver;
 	
 

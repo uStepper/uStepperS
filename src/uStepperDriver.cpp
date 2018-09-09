@@ -1,37 +1,35 @@
 #include <uStepperS.h>
 
-uStepperDriver::uStepperDriver( uStepperS * _pointer){
+uStepperDriver::uStepperDriver( uStepperS * p){
 
-	this->pointer = _pointer;
+	this->pointer = p;
 
 }
 
 void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 
-	uint32_t iholdrun = IHOLD(ihold) | IRUN(irun) | IHOLDDELAY(7);
+	pointer->chipSelect(CS_DRIVER, true);
 
-	writeRegister(IHOLD_IRUN, iholdrun );
+	writeRegister(IHOLD_IRUN, ( IHOLD(ihold) | IRUN(irun) | IHOLDDELAY(7) ) );
 
 	/* Resets GCONF for TMC5130 and enable stealth */
-	writeRegister(GCONF, 0x04); 
+	// writeRegister(GCONF, 0x04); 
+
+	writeRegister(GCONF, 0x00); 
+
 
 	/* Set CHOPCONF for TMC5130 */
-	writeRegister(CHOPCONF, TOFF(5) + HSTRT_TFD(4) + HEND(2) );
+	writeRegister(CHOPCONF, (TOFF(5) | HSTRT_TFD(4) | HEND(2) | VHIGHCHM(1) | VHIGHFS(1) ) );
 
-
+	writeRegister( VDCMIN, 50000 ); // Enable dcStep up to 20000 steps / t
 	/* Resets PWMCONF for TMC5130 */
-	writeRegister(PWMCONF, 0x000401C8); 
+	// writeRegister(PWMCONF, 0x000401C8); 
+	writeRegister(PWMCONF, 0x00); 
 
-
-	setDriverProfile(1);
-
-}
-
-void uStepperDriver::setSpeed(uint32_t velocity){
-
-	writeRegister(VMAX, velocity);
+	setDriverProfile(0);
 
 }
+
 
 void uStepperDriver::setDriverProfile( uint8_t mode ){
 
@@ -74,19 +72,22 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	address += WRITE_ACCESS;
 
-	pointer->chipSelect(CS, false);
+	pointer->chipSelect(CS_DRIVER, false);
 
 	stats = pointer->SPI(address);
 
 	package |= pointer->SPI((datagram >> 24) & 0xff);
 	package <<= 8;
+
 	package |= pointer->SPI((datagram >> 16) & 0xff);
 	package <<= 8;
+
 	package |= pointer->SPI((datagram >> 8) & 0xff);
 	package <<= 8;
+
 	package |= pointer->SPI((datagram) & 0xff);
 
-	pointer->chipSelect(CS, true); // Set CS HIGH
+	pointer->chipSelect(CS_DRIVER, true); // Set CS HIGH
 
 	/* Serial.println(package, HEX);
 	Serial.println(stats, BIN);*/
@@ -95,6 +96,12 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 }
 
+
+void uStepperDriver::setSpeed(uint32_t velocity){
+
+	writeRegister(VMAX, velocity);
+
+}
 
 int32_t uStepperDriver::setPosition( int32_t position ){
 
