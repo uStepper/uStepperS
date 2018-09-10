@@ -21,10 +21,9 @@ void uStepperS::setup( void )
 	/** Prepare hardware SPI */
 
 	/* Set CS, MOSI, SCK and DRV_ENN as Output */
-	DDRB = (1<<MOSI1)|(1<<CS_DRIVER);
 	DDRC = (1<<SCK1);
 	DDRD = (1<<DRV_ENN);
-
+	DDRE = (1<<MOSI1)|(1<<CS_DRIVER);
 
 	PORTD &= ~(1 << DRV_ENN);  // Set DRV_ENN LOW  
 
