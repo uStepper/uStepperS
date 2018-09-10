@@ -7,7 +7,7 @@ uStepperEncoder::uStepperEncoder(uStepperS * _pointer)
 	/* Prepare Hardware SPI communication */
 
 	/* Set CS (PB2), MOSI (PB3) and SCK (PB5) as Output */
-	DDRB = (1<<DIN)|(1<<CLK)|(1<<CS);
+	// DDRB = (1<<DIN)|(1<<CLK)|(1<<CS);
 
 	/* 
 	*  SPE   = 1: SPI enabled
@@ -16,7 +16,7 @@ uStepperEncoder::uStepperEncoder(uStepperS * _pointer)
 	*  CPOL  = 1: Idle at HIGH
 	*  CPHA  = 0: Sample at leading edge
 	*/
-	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<CPOL);
+	// SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<CPOL);
 
 	pointer = _pointer;
 }

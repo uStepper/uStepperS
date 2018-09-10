@@ -8,25 +8,29 @@ uStepperDriver::uStepperDriver( uStepperS * p){
 
 void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 
-	pointer->chipSelect(CS_DRIVER, true);
-
-	writeRegister(IHOLD_IRUN, ( IHOLD(ihold) | IRUN(irun) | IHOLDDELAY(7) ) );
-
-	/* Resets GCONF for TMC5130 and enable stealth */
-	// writeRegister(GCONF, 0x04); 
-
-	writeRegister(GCONF, 0x00); 
+	// Prepare SPI communication
+	chipSelect(true);
 
 
-	/* Set CHOPCONF for TMC5130 */
-	writeRegister(CHOPCONF, (TOFF(5) | HSTRT_TFD(4) | HEND(2) | VHIGHCHM(1) | VHIGHFS(1) ) );
+	// Configure the motor current
+	writeRegister( IHOLD_IRUN, IHOLD(5) | IRUN(8) | IHOLDDELAY(7));
 
-	writeRegister( VDCMIN, 50000 ); // Enable dcStep up to 20000 steps / t
-	/* Resets PWMCONF for TMC5130 */
-	// writeRegister(PWMCONF, 0x000401C8); 
-	writeRegister(PWMCONF, 0x00); 
+	/* Set GCONF */
+	writeRegister( GCONF, 0x00); 
 
-	setDriverProfile(0);
+	/* Set CHOPCONF: TBL = 24 */
+	writeRegister( CHOPCONF, TOFF(5) | TBL(1) | HSTRT_TFD(4) | HEND(2) | VHIGHCHM(1) | VHIGHFS(1) );
+
+	/* Enable dcStep at above VDCMIN velocity */
+	writeRegister( VDCMIN, 10000 );
+
+	/* Set DCCTRL */
+	writeRegister( DCCTRL, (DC_TIME(25) | DC_SG(2) ) );
+
+	/* Set PWMCONF  */
+	writeRegister( PWMCONF, 0x00); 
+
+	setDriverProfile(1);
 
 }
 
@@ -70,9 +74,14 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 	uint8_t stats;
 	uint32_t package;
 
+	/* 
+	Serial.print(address, HEX); Serial.print(":");
+	Serial.print(datagram, HEX);Serial.print("->");
+	*/
+
 	address += WRITE_ACCESS;
 
-	pointer->chipSelect(CS_DRIVER, false);
+	chipSelect(false);
 
 	stats = pointer->SPI(address);
 
@@ -87,10 +96,12 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	package |= pointer->SPI((datagram) & 0xff);
 
-	pointer->chipSelect(CS_DRIVER, true); // Set CS HIGH
+	chipSelect(true); // Set CS HIGH
 
-	/* Serial.println(package, HEX);
-	Serial.println(stats, BIN);*/
+	/* 
+	Serial.println(package, HEX);
+	Serial.println(stats, BIN);
+	*/
 
 	return package;
 
@@ -107,4 +118,16 @@ int32_t uStepperDriver::setPosition( int32_t position ){
 
 	return writeRegister(XTARGET, position);
 
+}
+
+
+void uStepperDriver::chipSelect(bool state){
+
+	if(state == false)
+		PORTE &= ~(1 << CS_DRIVER);  // Set CS LOW 
+	else
+		PORTE |= (1 << CS_DRIVER); // Set CS HIGH
+
+	if( state )
+		delayMicroseconds(100);   // per spec, settling time is 100us
 }

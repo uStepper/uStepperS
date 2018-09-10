@@ -34,7 +34,7 @@
 #ifndef _USTEPPER_S_H_
 #define _USTEPPER_S_H_
 
-#ifndef __AVR_ATmega328P__
+#ifndef __AVR_ATmega328PB__
 	#error !!This library only supports the ATmega328P MCU!!
 #endif
 
@@ -48,19 +48,19 @@ class uStepperS;
 #include <uStepperDriver.h>
 
 
-#define DRV_ENN PB1
+#define DRV_ENN PD4 
 /** Chip select Pin 10 on ATmega328p */
-#define CS_DRIVER PB2 
+#define CS_DRIVER PE2
 // #define CS_ENCODER PB2 
 
 /** Pin 11 on ATmega328p (MOSI) */
-#define MOSI PB3 
+#define MOSI1 PE3
 
 /** Pin 12 on ATmega328p (MISO) */
-#define MISO PB4 
+#define MISO1 PC0  
 
 /** Pin 13 on ATmega328p (SCK) */
-#define SCK PB5 
+#define SCK1 PC1 
 
 
 

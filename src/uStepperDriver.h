@@ -32,16 +32,16 @@
 
 #define CHOPCONF		0x6C	
 
-#define DISS2G(n)		(((n)&0x1)<<30)
-#define DEDGE(n)		(((n)&0x1)<<29)
-#define INTPOL(n)		(((n)&0x1)<<28)
-#define MRES(n)			(((n)&0xF)<<24)
-#define SYNC(n)			(((n)&0xF)<<20)
-#define VHIGHCHM(n)		(((n)&0x1)<<19)
-#define VHIGHFS(n)		(((n)&0x1)<<18)
-#define VSENSE(n)		(((n)&0x1)<<17)
-#define TBL(n)			(((n)&0x3)<<15)
-#define CHM(n)			(((n)&0x1)<<14)
+#define DISS2G(n)		(((n)&0x1UL)<<30)
+#define DEDGE(n)		(((n)&0x1UL)<<29)
+#define INTPOL(n)		(((n)&0x1UL)<<28)
+#define MRES(n)			(((n)&0xFUL)<<24)
+#define SYNC(n)			(((n)&0xFUL)<<20)
+#define VHIGHCHM(n)		(((n)&0x1UL)<<19)
+#define VHIGHFS(n)		(((n)&0x1UL)<<18)
+#define VSENSE(n)		(((n)&0x1UL)<<17)
+#define TBL(n)			(((n)&0x3UL)<<15)
+#define CHM(n)			(((n)&0x1UL)<<14)
 #define RNDTF(n)		(((n)&0x1)<<13)
 #define DISFDCC(n)		(((n)&0x1)<<12)
 #define TFD3(n)			(((n)&0x1)<<11)
@@ -53,17 +53,23 @@
 /* CoolStep smart current control register and stallGuard2 configuration **/
 
 #define COOLCONF		0x6D	
-#define SFILT(n)		(((n)&0x1)<<24)
-#define SGT(n)			(((n)&0x7F)<<16)
-#define SEIMIN(n)		(((n)&0x1)<<15)
+#define SFILT(n)		(((n)&0x1UL)<<24)
+#define SGT(n)			(((n)&0x7FUL)<<16)
+#define SEIMIN(n)		(((n)&0x1UL)<<15)
 #define SEDN(n)			(((n)&0x3)<<13)
 #define SEMAX(n)		(((n)&0xF)<<8)
 #define SEUP(n)			(((n)&0x3)<<5)
 #define SEMIN(n)		(((n)&0xF)<<0) 
 
+
+#define DCCTRL			0x6E
+#define DC_SG(n)		(((n)&0xFFUL)<<16)
+#define DC_TIME(n)		(((n)&0x3FF)<<0)
+
+
 #define DRV_STATUS 		0x6F	// stallGuard2 value and driver error flags
 
-#define IHOLDDELAY(n)	(((n)&0xF)<<16)
+#define IHOLDDELAY(n)	(((n)&0xFUL)<<16)
 #define IRUN(n)			(((n)&0x1F)<<8)
 #define IHOLD(n)		(((n)&0x1F)<<0)
 
@@ -96,6 +102,8 @@ class uStepperDriver{
 		int32_t writeRegister( uint8_t address, uint32_t datagram );
 
 		int32_t readRegister( uint8_t address );
+
+		void chipSelect(bool state);
 
 		uStepperS * pointer; 
 	
