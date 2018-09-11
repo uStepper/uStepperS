@@ -22,10 +22,11 @@ void uStepperS::setup( void )
 
 	/* Set CS, MOSI, SCK and DRV_ENN as Output */
 	DDRC = (1<<SCK1);
-	DDRD = (1<<DRV_ENN);
+	DDRD = (1<<DRV_ENN)|(1<<SD_MODE);
 	DDRE = (1<<MOSI1)|(1<<CS_DRIVER);
 
 	PORTD &= ~(1 << DRV_ENN);  // Set DRV_ENN LOW  
+	PORTD &= ~(1 << SD_MODE);  // Set SD_MODE LOW  
 
 	/* 
 	*  SPE   = 1: SPI enabled
@@ -53,7 +54,7 @@ void uStepperS::setRPM(uint16_t RPM){
 
 	/* Constant calculated with 13,2Mhz interval oscilator, 200 steps per rev and 256 microsteps */
 
-	uint32_t speed = 1084.587701 * (uint32_t)RPM;
+	uint32_t speed = 894.785 * (uint32_t)RPM;
 	Serial.println("Speed: " + String(speed) + " RPM: " + String(RPM));
 	driver->setSpeed(speed);
 

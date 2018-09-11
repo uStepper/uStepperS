@@ -12,14 +12,7 @@ void setup() {
 
 void loop() {
   
-  /*
-  for(uint8_t x = 0; x < 40; x++){
-    stepper.setRPM(5*x);
-    delay(1000);
-  }
-  */
-
-  stepper.driver->setSpeed( 200000 );
+  stepper.setRPM( 100 );
 
   delay(5000);
   

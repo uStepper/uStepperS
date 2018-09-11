@@ -49,6 +49,7 @@ class uStepperS;
 
 
 #define DRV_ENN PD4 
+#define SD_MODE PD5
 /** Chip select Pin 10 on ATmega328p */
 #define CS_DRIVER PE2
 // #define CS_ENCODER PB2 

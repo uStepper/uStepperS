@@ -13,7 +13,7 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 
 
 	// Configure the motor current
-	writeRegister( IHOLD_IRUN, IHOLD(5) | IRUN(8) | IHOLDDELAY(7));
+	writeRegister( IHOLD_IRUN, IHOLD(3) | IRUN(3) | IHOLDDELAY(7));
 
 	/* Set GCONF */
 	writeRegister( GCONF, 0x00); 
@@ -53,7 +53,7 @@ void uStepperDriver::setDriverProfile( uint8_t mode ){
 		case 1:
 			// Velocity mode (only AMAX and VMAX is used)
 
-			writeRegister(THIGH, 	200000);
+			writeRegister(THIGH, 	20000);
 
 			writeRegister(AMAX, 	pointer->acceleration); 	/* AMAX */
 			writeRegister(VMAX, 	pointer->velocity); 		/* VMAX */
@@ -100,8 +100,9 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	/* 
 	Serial.println(package, HEX);
-	Serial.println(stats, BIN);
 	*/
+	Serial.println(stats, BIN);
+	
 
 	return package;
 
