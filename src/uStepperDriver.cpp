@@ -12,23 +12,29 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 	chipSelect(true);
 
 
-	// Configure the motor current
-	writeRegister( IHOLD_IRUN, IHOLD(3) | IRUN(3) | IHOLDDELAY(2));
+	/* Set motor current */
+	writeRegister( IHOLD_IRUN, IHOLD(16) | IRUN(10) | IHOLDDELAY(5));
 
-	/* Set GCONF */
-	writeRegister( GCONF, 0x00); 
+	/* Set GCONF and enable stealthChop */
+	writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(0) ); 
 
-	/* Set CHOPCONF: TBL = 24 */
-	writeRegister( CHOPCONF, TOFF(5) | TBL(1) | HSTRT_TFD(4) | HEND(2) | VHIGHCHM(1) | VHIGHFS(1) );
+	/* Set PWMCONF for StealthChop */
+	writeRegister( PWMCONF, PWM_GRAD(1) | PWM_AMPL(255) | PWM_FREQ(0) ); 
+
+	/* Set standard CHOPCONF ( set VHIGHCHM(1) | VHIGHFS(1) for dcStep ) */
+	writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
+
+
+	writeRegister( TPWMTHRS, 100000 ); // Set max velocity for stealthChop
 
 	/* Enable dcStep at above VDCMIN velocity */
-	writeRegister( VDCMIN, 4500 );
+	// writeRegister( VDCMIN, 4500 );
 
 	/* Set DCCTRL */
-	writeRegister( DCCTRL, (DC_TIME(25) | DC_SG(4) ) );
+	// writeRegister( DCCTRL, (DC_TIME(25) | DC_SG(4) ) );
 
 	/* Set PWMCONF  */
-	writeRegister( PWMCONF, 0x00); 
+	
 
 	setDriverProfile(1);
 
@@ -53,7 +59,7 @@ void uStepperDriver::setDriverProfile( uint8_t mode ){
 		case 1:
 			// Velocity mode (only AMAX and VMAX is used)
 
-			writeRegister(THIGH, 	20000);
+			// writeRegister(THIGH, 	120000);
 
 			writeRegister(AMAX, 	pointer->acceleration); 	/* AMAX */
 			writeRegister(VMAX, 	pointer->velocity); 		/* VMAX */

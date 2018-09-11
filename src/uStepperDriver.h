@@ -3,8 +3,16 @@
 /**  TMC5130 Register Address Defines */
 
 #define GCONF				0x00 	// Global configuration flags
+
+#define DIRECTION(n)		(((n)&0x1)<<4) // Set motor direction
+#define EN_PWM_MODE(n)		(((n)&0x1)<<2) // Enable stealthMode
+#define I_SCALE_ANALOG(n)	(((n)&0x1)<<0) // Use external current reference
+
+#define GSTAT				0x01 
 #define X_COMPARE 			0x05	// Position  comparison  register
 #define IHOLD_IRUN			0x10	// Driver current control
+#define TPOWERDOWN			0x11
+#define TPWMTHRS			0x13
 #define TCOOLTHRS			0x14	// This is the lower threshold velocity for switching on smart energy coolStep and stallGuard feature.
 #define THIGH				0x15
 #define RAMPMODE			0x20	// Driving mode (Velocity, Positioning, Hold)
@@ -26,7 +34,15 @@
 #define SW_MODE 			0x34	// Switch mode configuration
 #define RAMP_STAT			0x35	// Ramp status and switch event status
 #define XLATCH				0x36	// Latches  XACTUAL  upon  a programmable switch event
+
+
 #define PWMCONF				0x70
+
+#define PWM_AUTOSCALE(n)	(((n)&0x1UL)<<18)
+#define PWM_FREQ(n)			(((n)&0x3UL)<<16)
+#define PWM_GRAD(n)			(((n)&0xFF)<<8)
+#define PWM_AMPL(n)			(((n)&0xFF)<<0)
+
 
 /** Chopper and driver configuration */
 
