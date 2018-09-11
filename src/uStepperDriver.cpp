@@ -13,7 +13,7 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 
 
 	// Configure the motor current
-	writeRegister( IHOLD_IRUN, IHOLD(3) | IRUN(3) | IHOLDDELAY(7));
+	writeRegister( IHOLD_IRUN, IHOLD(3) | IRUN(3) | IHOLDDELAY(2));
 
 	/* Set GCONF */
 	writeRegister( GCONF, 0x00); 
@@ -22,10 +22,10 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 	writeRegister( CHOPCONF, TOFF(5) | TBL(1) | HSTRT_TFD(4) | HEND(2) | VHIGHCHM(1) | VHIGHFS(1) );
 
 	/* Enable dcStep at above VDCMIN velocity */
-	writeRegister( VDCMIN, 10000 );
+	writeRegister( VDCMIN, 4500 );
 
 	/* Set DCCTRL */
-	writeRegister( DCCTRL, (DC_TIME(25) | DC_SG(2) ) );
+	writeRegister( DCCTRL, (DC_TIME(25) | DC_SG(4) ) );
 
 	/* Set PWMCONF  */
 	writeRegister( PWMCONF, 0x00); 
