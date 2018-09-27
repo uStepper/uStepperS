@@ -35,7 +35,7 @@
 #define _USTEPPER_S_H_
 
 #ifndef __AVR_ATmega328PB__
-	#error !!This library only supports the ATmega328P MCU!!
+	#error !!This library only supports the ATmega328PB MCU!!
 #endif
 
 
@@ -90,7 +90,7 @@ public:
 	/**
 	 * @brief	Constructor of uStepper class
 	 */
-	uStepperS( int32_t maxVelocity, int32_t maxAcceleration );
+	uStepperS();
 
 	/**
 	 * @brief	Setup function
@@ -102,7 +102,10 @@ public:
 	void setRPM(uint16_t RPM);
 
 	void moveSteps( int32_t steps );
-	
+
+	void setMaxAcceleration	( int32_t acceleration );
+
+	void setMaxVelocity	( int32_t velocity );
 
 private: 
 
@@ -110,16 +113,14 @@ private:
 
 	/** This variable contains the maximum velocity, the motor is
 	 * allowed to reach at any given point. The user of the library can
-	 * set this by use of the setMaxVelocity() function, and get the
-	 * current value with the getMaxVelocity() function. */
+	 * set this by use of the setMaxVelocity()
+	 */
 	float velocity;					
 
 	/** This variable contains the maximum acceleration to be used. The
 	 * can be set and read by the user of the library using the
-	 * functions setMaxAcceleration() and getMaxAcceleration()
-	 * respectively. Since this library uses a second order acceleration
-	 * curve, the acceleration applied will always be either +/- this
-	 * value (acceleration/deceleration)or zero (cruise). */
+	 * functions setMaxAcceleration()
+	 */
 	float acceleration;		
 
 	int32_t position;		

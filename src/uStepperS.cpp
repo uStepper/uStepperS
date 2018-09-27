@@ -2,16 +2,10 @@
 
 uStepperS * pointer;
 
-uStepperS::uStepperS( int32_t maxVelocity, int32_t maxAcceleration )
+uStepperS::uStepperS()
 {
 
 	// this->encoder.setup();
-
-	acceleration = maxAcceleration;
-	velocity = maxVelocity;
-
-
-
 
 	pointer = this;
 }
@@ -38,7 +32,7 @@ void uStepperS::setup( void )
 	setSPIMode(3);
 
 
-	driver = new uStepperDriver( this) ;
+	driver = new uStepperDriver( this ) ;
 	driver->setup(5,5);
 }
 
@@ -47,8 +41,6 @@ void uStepperS::moveSteps( int32_t steps ){
 	position = driver->setPosition(steps + position);
 
 }
-
-
 
 void uStepperS::setRPM(uint16_t RPM){
 
@@ -84,6 +76,19 @@ uint8_t uStepperS::SPI(uint8_t data){
 	while(!( SPSR1 & (1 << SPIF1) ));    
 
 	return SPDR1;
+
+}
+
+
+void uStepperS::setMaxAcceleration( int32_t _acceleration ){
+
+	this->acceleration = _acceleration;
+
+}
+
+void uStepperS::setMaxVelocity( int32_t _velocity ){
+
+	this->velocity = _velocity;
 
 }
 

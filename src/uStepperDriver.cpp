@@ -13,7 +13,7 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 
 
 	/* Set motor current */
-	writeRegister( IHOLD_IRUN, IHOLD(16) | IRUN(10) | IHOLDDELAY(5));
+	writeRegister( IHOLD_IRUN, IHOLD(16) | IRUN(12) | IHOLDDELAY(5));
 
 	/* Set GCONF and enable stealthChop */
 	writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(0) ); 
@@ -52,8 +52,8 @@ void uStepperDriver::setDriverProfile( uint8_t mode ){
 			writeRegister(VMAX, 	pointer->velocity); 		/* VMAX */
 			writeRegister(D1, 		1400); 			/* D1 = 1400 */
 			writeRegister(VSTOP, 	10); 			/* VSTOP = 10 */
-
 			writeRegister(RAMPMODE, 0); 			/* RAMPMODE = 0 = Positioning mode */
+		
 		break;
 
 		case 1:
