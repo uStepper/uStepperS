@@ -50,17 +50,12 @@ class uStepperS;
 
 #define DRV_ENN PD4 
 #define SD_MODE PD5
-/** Chip select Pin 10 on ATmega328p */
+
 #define CS_DRIVER PE2
-// #define CS_ENCODER PB2 
+#define CS_ENCODER PD7 
 
-/** Pin 11 on ATmega328p (MOSI) */
 #define MOSI1 PE3
-
-/** Pin 12 on ATmega328p (MISO) */
 #define MISO1 PC0  
-
-/** Pin 13 on ATmega328p (SCK) */
 #define SCK1 PC1 
 
 
@@ -86,6 +81,8 @@ public:
 	/** Instantiate object for the driver */
 	uStepperDriver *driver;
 	
+	/** Instantiate object for the driver */
+	uStepperEncoder *encoder;
 
 	/**
 	 * @brief	Constructor of uStepper class

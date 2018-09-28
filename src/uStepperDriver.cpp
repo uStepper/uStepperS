@@ -1,8 +1,8 @@
 #include <uStepperS.h>
 
-uStepperDriver::uStepperDriver( uStepperS * p){
+uStepperDriver::uStepperDriver( uStepperS * _pointer){
 
-	this->pointer = p;
+	this->pointer = _pointer;
 
 }
 
@@ -13,7 +13,7 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 
 
 	/* Set motor current */
-	writeRegister( IHOLD_IRUN, IHOLD(16) | IRUN(12) | IHOLDDELAY(5));
+	writeRegister( IHOLD_IRUN, IHOLD(ihold) | IRUN(irun) | IHOLDDELAY(5));
 
 	/* Set GCONF and enable stealthChop */
 	writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(0) ); 
@@ -77,6 +77,8 @@ void uStepperDriver::setDriverProfile( uint8_t mode ){
 
 int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
+	pointer->setSPIMode(3);
+
 	uint8_t stats;
 	uint32_t package;
 
@@ -106,9 +108,8 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	/* 
 	Serial.println(package, HEX);
-	*/
 	Serial.println(stats, BIN);
-	
+	*/
 
 	return package;
 

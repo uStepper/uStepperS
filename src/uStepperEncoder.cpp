@@ -6,9 +6,6 @@ uStepperEncoder::uStepperEncoder(uStepperS * _pointer)
 
 	/* Prepare Hardware SPI communication */
 
-	/* Set CS (PB2), MOSI (PB3) and SCK (PB5) as Output */
-	// DDRB = (1<<DIN)|(1<<CLK)|(1<<CS);
-
 	/* 
 	*  SPE   = 1: SPI enabled
 	*  MSTR  = 1: Master
@@ -18,7 +15,7 @@ uStepperEncoder::uStepperEncoder(uStepperS * _pointer)
 	*/
 	// SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<CPOL);
 
-	pointer = _pointer;
+	this->pointer = _pointer;
 }
 
 void uStepperEncoder::setup(void){
@@ -43,10 +40,12 @@ void uStepperEncoder::setup(void){
 
 void uStepperEncoder::captureAngle(void){
 
+	this->pointer->setSPIMode(2);
+
 	uint16_t value = 0;
 	uint8_t stats = 0;
 
-	PORTB |= (1<<CS);  // Set CS HIGH
+	this->chipSelect(true);  // Set CS HIGH
 	
 	/* Write dummy and read the incoming 8 bits */
 	value = this->pointer->SPI(0x00);
@@ -58,7 +57,7 @@ void uStepperEncoder::captureAngle(void){
 	/* Write dummy and read the incoming 8 bits */
 	stats = this->pointer->SPI(0x00);
 
-	PORTB &= ~(1<<CS);  // Set CS LOW
+	this->chipSelect(false);  // Set CS LOW
 	
 	this->angle = value;
 
@@ -67,14 +66,11 @@ void uStepperEncoder::captureAngle(void){
 float uStepperEncoder::getAngle(void){
 	return this->angle;
 }
-/*
-uint8_t uStepperEncoder::SPI(uint8_t data){
 
-  SPDR = data;
 
-  // Wait for transmission complete
-  while(!( SPSR & (1 << SPIF) ));    
-  
-  return SPDR;
-
-}*/
+void uStepperEncoder::chipSelect(bool state){
+	if(state == false)
+		PORTD &= ~(1 << CS_ENCODER);  // Set CS LOW 
+	else
+		PORTD |= (1 << CS_ENCODER); // Set CS HIGH
+}

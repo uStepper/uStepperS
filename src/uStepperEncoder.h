@@ -53,6 +53,9 @@ class uStepperEncoder
 		  * to a single revolution */
 		volatile uint16_t angle;
 		uStepperS * pointer;
+
+
+		void chipSelect(bool state);
 	
 };
 

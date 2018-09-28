@@ -103,7 +103,7 @@ class uStepperDriver{
 
 	public:
 
-		uStepperDriver( uStepperS * p );
+		uStepperDriver( uStepperS * _pointer );
 
 		void setup(uint8_t ihold, uint8_t irun );
 
