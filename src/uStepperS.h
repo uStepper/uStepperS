@@ -55,6 +55,7 @@ class uStepperS;
 #define CS_ENCODER PD7 
 
 #define MOSI1 PE3
+#define MOSI_ENC PC2
 #define MISO1 PC0  
 #define SCK1 PC1 
 
@@ -79,10 +80,10 @@ public:
     // uStepperEncoder *encoder;
 
 	/** Instantiate object for the driver */
-	uStepperDriver *driver;
+	uStepperDriver driver;
 	
 	/** Instantiate object for the driver */
-	uStepperEncoder *encoder;
+	uStepperEncoder encoder;
 
 	/**
 	 * @brief	Constructor of uStepper class

@@ -1,16 +1,17 @@
 #include <uStepperS.h>
 
-uStepperDriver::uStepperDriver( uStepperS * _pointer){
+uStepperDriver::uStepperDriver( void ){
+}
+
+void uStepperDriver::initiate( uStepperS * _pointer ){
 
 	this->pointer = _pointer;
 
 }
 
-void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
+void uStepperDriver::begin(uint8_t ihold, uint8_t irun ){
 
-	// Prepare SPI communication
-	chipSelect(true);
-
+	/* Prepare general driver settings */
 
 	/* Set motor current */
 	writeRegister( IHOLD_IRUN, IHOLD(ihold) | IRUN(irun) | IHOLDDELAY(5));
@@ -24,8 +25,9 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 	/* Set standard CHOPCONF ( set VHIGHCHM(1) | VHIGHFS(1) for dcStep ) */
 	writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
 
+	// Set max velocity for stealthChop (DOESNT WORK??)
+	writeRegister( TPWMTHRS, 100000 ); 
 
-	writeRegister( TPWMTHRS, 100000 ); // Set max velocity for stealthChop
 
 	/* Enable dcStep at above VDCMIN velocity */
 	// writeRegister( VDCMIN, 4500 );
@@ -35,7 +37,7 @@ void uStepperDriver::setup(uint8_t ihold, uint8_t irun ){
 
 	/* Set PWMCONF  */
 	
-
+	/* Enable velocity mode */
 	setDriverProfile(1);
 
 }
@@ -77,6 +79,9 @@ void uStepperDriver::setDriverProfile( uint8_t mode ){
 
 int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
+	cli();
+
+
 	pointer->setSPIMode(3);
 
 	uint8_t stats;
@@ -110,8 +115,11 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 	Serial.println(package, HEX);
 	Serial.println(stats, BIN);
 	*/
+	sei(); 
 
 	return package;
+
+
 
 }
 

@@ -103,9 +103,9 @@ class uStepperDriver{
 
 	public:
 
-		uStepperDriver( uStepperS * _pointer );
+		uStepperDriver( void );
 
-		void setup(uint8_t ihold, uint8_t irun );
+		void begin(uint8_t ihold, uint8_t irun );
 
 		int32_t setPosition(int32_t position);
 
@@ -120,6 +120,8 @@ class uStepperDriver{
 		int32_t readRegister( uint8_t address );
 
 		void chipSelect(bool state);
+
+		void initiate( uStepperS * _pointer );
 
 		uStepperS * pointer; 
 	

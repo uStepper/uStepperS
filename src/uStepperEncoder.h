@@ -15,12 +15,16 @@
 
 class uStepperEncoder
 {
-
-	
-
 	public:
 
-		void setup(void);
+		/**
+		 * @brief	Constructor of uStepperEncoder class
+		 */
+		uStepperEncoder(void);
+
+		void initiate( uStepperS * _pointer );
+
+		void begin(void);
 
 		/**
 		 * @brief      Return the current shaft angle
@@ -34,6 +38,8 @@ class uStepperEncoder
 		 */
 		float getAngle(void);
 
+		uint16_t getRaw(void);
+
 		/**
 		 * @brief      Capture the current shaft angle
 		 *
@@ -42,18 +48,16 @@ class uStepperEncoder
 		 */
 		void captureAngle(void);
 
-		/**
-		 * @brief	Constructor of uStepperEncoder class
-		 */
-		uStepperEncoder(uStepperS * _pointer);
+		
 
 	private:
 		
+		/* Reference to the main object */
+		uStepperS * pointer;
+
 		/** This variable always contain the current rotor angle, relative
 		  * to a single revolution */
 		volatile uint16_t angle;
-		uStepperS * pointer;
-
 
 		void chipSelect(bool state);
 	

@@ -1,7 +1,7 @@
 #include <uStepperS.h>
 /* At initialition setup the SPI hardware protocal to communicate with SSI interface */
 
-uStepperEncoder::uStepperEncoder(uStepperS * _pointer)
+uStepperEncoder::uStepperEncoder(void)
 {
 
 	/* Prepare Hardware SPI communication */
@@ -15,10 +15,15 @@ uStepperEncoder::uStepperEncoder(uStepperS * _pointer)
 	*/
 	// SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<CPOL);
 
+}
+
+void uStepperEncoder::initiate(uStepperS * _pointer){
 	this->pointer = _pointer;
 }
 
-void uStepperEncoder::setup(void){
+void uStepperEncoder::begin(void){
+
+	angle = 0;
 
 	/* Set the interrupt mode to 14 with a prescaler of 1 */
 	TCCR1A = (1 << WGM11);
@@ -33,6 +38,9 @@ void uStepperEncoder::setup(void){
 	/* Enable Timer1 compare interrupt */
 	TIMSK1 = (1 << OCIE1A);
 
+	/* As long as we only use SSI, the MOSI_ENC/DIN (NSL) should be pulled LOW  */
+	PORTC &= ~(1 << MOSI_ENC);  
+
 	/* Enable global interrupts */
 	sei();
 }
@@ -40,37 +48,48 @@ void uStepperEncoder::setup(void){
 
 void uStepperEncoder::captureAngle(void){
 
-	this->pointer->setSPIMode(2);
+	pointer->setSPIMode(2);
 
 	uint16_t value = 0;
 	uint8_t stats = 0;
 
-	this->chipSelect(true);  // Set CS HIGH
+	chipSelect(true);  // Set CS HIGH
+	delayMicroseconds(1);
 	
 	/* Write dummy and read the incoming 8 bits */
-	value = this->pointer->SPI(0x00);
+	value = pointer->SPI(0x00);
 	value <<= 8;
 
 	/* Write dummy and read the incoming 8 bits */
-	value |= this->pointer->SPI(0x00);
+	value |= pointer->SPI(0x00);
 
 	/* Write dummy and read the incoming 8 bits */
-	stats = this->pointer->SPI(0x00);
+	stats = pointer->SPI(0x00);
 
-	this->chipSelect(false);  // Set CS LOW
+	chipSelect(false);  // Set CS LOW
 	
-	this->angle = value;
+	angle = value;
 
+	/*Serial.print("Value:");
+	Serial.println(value, BIN);
+	*/
+
+	// Serial.println(stats, BIN);
+	
 }
 
 float uStepperEncoder::getAngle(void){
-	return this->angle;
+	return ((float)angle / 65536.0) * 360.0;
+}
+
+uint16_t uStepperEncoder::getRaw(void){
+	return angle;
 }
 
 
 void uStepperEncoder::chipSelect(bool state){
-	if(state == false)
-		PORTD &= ~(1 << CS_ENCODER);  // Set CS LOW 
-	else
+	if(state)
 		PORTD |= (1 << CS_ENCODER); // Set CS HIGH
+	else
+		PORTD &= ~(1 << CS_ENCODER);  // Set CS LOW 
 }
