@@ -113,6 +113,8 @@ class uStepperDriver{
 
 		void setDriverProfile( uint8_t mode );
 
+		void initiate( uStepperS * _pointer );
+
 	private:
 
 		int32_t writeRegister( uint8_t address, uint32_t datagram );
@@ -121,7 +123,7 @@ class uStepperDriver{
 
 		void chipSelect(bool state);
 
-		void initiate( uStepperS * _pointer );
+		
 
 		uStepperS * pointer; 
 	

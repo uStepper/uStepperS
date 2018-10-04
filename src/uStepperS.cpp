@@ -18,7 +18,6 @@ void uStepperS::setup( void )
 
 	PORTD &= ~(1 << DRV_ENN);  // Set DRV_ENN LOW  
 	PORTD &= ~(1 << SD_MODE);  // Set SD_MODE LOW  
-
 	/* 
 	*  ---- Global SPI1 configuration ----
 	*  SPE   = 1: SPI enabled
@@ -30,7 +29,7 @@ void uStepperS::setup( void )
 	Serial.println(SPCR1, BIN);
 
 
-	// driver = new uStepperDriver( this );
+	this->driver.initiate( this );
 	// driver->setup(16,16);
 
 	encoder.initiate( this );

@@ -6,7 +6,7 @@ uStepperDriver::uStepperDriver( void ){
 void uStepperDriver::initiate( uStepperS * _pointer ){
 
 	this->pointer = _pointer;
-
+	chipSelect(true); // Set CS HIGH
 }
 
 void uStepperDriver::begin(uint8_t ihold, uint8_t irun ){

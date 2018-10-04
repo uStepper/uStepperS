@@ -70,11 +70,11 @@ void uStepperEncoder::captureAngle(void){
 	
 	angle = value;
 
-	/*Serial.print("Value:");
-	Serial.println(value, BIN);
-	*/
-
-	// Serial.println(stats, BIN);
+	Serial.print("Value:");
+	Serial.print(value, BIN);
+	
+	Serial.print("	stats:");
+	Serial.println(stats, BIN);
 	
 }
 
