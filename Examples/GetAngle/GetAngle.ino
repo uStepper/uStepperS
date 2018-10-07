@@ -13,6 +13,6 @@ void loop() {
 
   Serial.println( stepper.encoder.getAngle() );
 
-  delay(1);
+  delay(10);
   
 }

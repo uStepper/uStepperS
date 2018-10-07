@@ -90,10 +90,12 @@ public:
 	 */
 	uStepperS();
 
+	uStepperS(float acceleration, float velocity);
+
 	/**
 	 * @brief	Setup function
 	 */
-	void setup(void);
+	void setup();
 
 	void runContinous(bool dir);
 
@@ -101,9 +103,24 @@ public:
 
 	void moveSteps( int32_t steps );
 
+
+	/**
+	 * @brief      Set the maximum acceleration of the stepper motor.
+	 *
+	 *             This function lets the user set the max acceleration used 
+	 *             by the stepper driver.
+	 *
+	 * @param      acceleration  - Maximum acceleration in microsteps/s^2
+	 */
 	void setMaxAcceleration	( int32_t acceleration );
 
 	void setMaxVelocity	( int32_t velocity );
+
+	void setStartVelocity( int32_t velocity );
+
+	void setStopVelocity( int32_t velocity );
+
+
 
 private: 
 
@@ -121,7 +138,7 @@ private:
 	 */
 	float acceleration;		
 
-	int32_t position;		
+	int32_t position;	
 
 
 	// SPI functions

@@ -69,13 +69,6 @@ void uStepperEncoder::captureAngle(void){
 	chipSelect(false);  // Set CS LOW
 	
 	angle = value;
-
-	Serial.print("Value:");
-	Serial.print(value, BIN);
-	
-	Serial.print("	stats:");
-	Serial.println(stats, BIN);
-	
 }
 
 float uStepperEncoder::getAngle(void){

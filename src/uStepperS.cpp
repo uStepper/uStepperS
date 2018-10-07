@@ -7,6 +7,13 @@ uStepperS::uStepperS()
 	pointer = this;
 }
 
+uStepperS::uStepperS(float _acceleration, float _velocity)
+{
+	acceleration = _acceleration;
+	velocity = _velocity;
+}
+
+
 void uStepperS::setup( void )
 {
 	/** Prepare hardware SPI */
