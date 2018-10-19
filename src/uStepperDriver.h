@@ -105,15 +105,33 @@ class uStepperDriver{
 
 		uStepperDriver( void );
 
+		void initiate( uStepperS * _pointer );
+
 		void begin(uint8_t ihold, uint8_t irun );
 
-		int32_t setPosition(int32_t position);
+		void moveSteps( int32_t steps );
+
+		void moveAngle( float angle );
+
+		void moveToAngle( float angle );
+
+		void setPosition(int32_t position);
+
+		int32_t getPosition( void );
 
 		void setSpeed(uint32_t velocity); // In usteps / t
 
-		void setDriverProfile( uint8_t mode );
+		void runContinous( bool direction );
 
-		void initiate( uStepperS * _pointer );
+		void stop( void );
+
+		void setCurrent( uint8_t percentage );
+
+		void setHoldCurrent( uint8_t percentage );
+
+		void setChopMode( uint8_t mode );
+
+		void setRampMode( uint8_t mode );
 
 	private:
 
@@ -123,7 +141,9 @@ class uStepperDriver{
 
 		void chipSelect(bool state);
 
-		
+		uint8_t status; 
+
+		int32_t position;
 
 		uStepperS * pointer; 
 	

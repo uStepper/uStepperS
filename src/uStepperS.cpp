@@ -9,6 +9,8 @@ uStepperS::uStepperS()
 
 uStepperS::uStepperS(float _acceleration, float _velocity)
 {
+	pointer = this;
+
 	acceleration = _acceleration;
 	velocity = _velocity;
 }
@@ -36,18 +38,12 @@ void uStepperS::setup( void )
 	Serial.println(SPCR1, BIN);
 
 
-	this->driver.initiate( this );
-	// driver->setup(16,16);
+	driver.initiate( this );
+	driver.begin(16,16);
 
 	encoder.initiate( this );
-	encoder.begin();
 }
 
-void uStepperS::moveSteps( int32_t steps ){
-
-	position = driver.setPosition(steps + position);
-
-}
 
 void uStepperS::setRPM(uint16_t RPM){
 
@@ -87,15 +83,17 @@ uint8_t uStepperS::SPI(uint8_t data){
 }
 
 
-void uStepperS::setMaxAcceleration( int32_t _acceleration ){
+void uStepperS::setMaxAcceleration( int32_t accel ){
 
-	this->acceleration = _acceleration;
+	// Steps per second, has to be converted to microsteps
+	this->acceleration = accel * 1000;
 
 }
 
-void uStepperS::setMaxVelocity( int32_t _velocity ){
+void uStepperS::setMaxVelocity( int32_t vel ){
 
-	this->velocity = _velocity;
+	// Steps per second, has to be converted to microsteps
+	this->velocity = vel * 1000;
 
 }
 

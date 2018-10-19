@@ -95,13 +95,9 @@ public:
 	/**
 	 * @brief	Setup function
 	 */
-	void setup();
-
-	void runContinous(bool dir);
-
+	void setup(); 
+	
 	void setRPM(uint16_t RPM);
-
-	void moveSteps( int32_t steps );
 
 
 	/**

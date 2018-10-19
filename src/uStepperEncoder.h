@@ -24,8 +24,6 @@ class uStepperEncoder
 
 		void initiate( uStepperS * _pointer );
 
-		void begin(void);
-
 		/**
 		 * @brief      Return the current shaft angle
 		 *

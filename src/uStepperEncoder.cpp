@@ -18,10 +18,8 @@ uStepperEncoder::uStepperEncoder(void)
 }
 
 void uStepperEncoder::initiate(uStepperS * _pointer){
+	
 	this->pointer = _pointer;
-}
-
-void uStepperEncoder::begin(void){
 
 	angle = 0;
 
