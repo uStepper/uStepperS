@@ -38,18 +38,19 @@ void uStepperS::setup( void )
 	Serial.println(SPCR1, BIN);
 
 
-	driver.initiate( this );
-	driver.begin(16,16);
+	driver.init( this );
 
 	encoder.initiate( this );
 }
 
 
-void uStepperS::setRPM(uint16_t RPM){
+void uStepperS::setRPM( int16_t RPM){
 
 	/* Constant calculated with 16Mhz external oscilator, 200 steps per rev and 256 microsteps */
 
-	uint32_t speed = 894.785 * (uint32_t)RPM;
+	int32_t speed = 894.785 * (uint32_t)RPM;
+
+	Serial.println(speed);
 	// Serial.println("Speed: " + String(speed) + " RPM: " + String(RPM));
 	driver.setSpeed(speed);
 
@@ -83,17 +84,43 @@ uint8_t uStepperS::SPI(uint8_t data){
 }
 
 
-void uStepperS::setMaxAcceleration( int32_t accel ){
+void uStepperS::setMaxAcceleration( float accel ){
 
 	// Steps per second, has to be converted to microsteps
 	this->acceleration = accel * 1000;
 
 }
 
-void uStepperS::setMaxVelocity( int32_t vel ){
+void uStepperS::setMaxVelocity( float vel ){
 
 	// Steps per second, has to be converted to microsteps
 	this->velocity = vel * 1000;
+
+}
+
+void uStepperS::setCurrent( double current ){
+
+	// The current needs to be in the range of 0-31
+	this->driver.current = 0.31 * current; 
+
+}
+
+void uStepperS::setHoldCurrent( double current ){
+
+	// The current needs to be in the range of 0-31
+	this->driver.holdCurrent = 0.31 * current; 
+
+}
+
+
+void uStepperS::runContinous( bool dir ){
+
+	// Need to implement how to change direction. 
+	// - Negativ velocity?
+	// - VELOCITY_MODE_NEG?
+	// - DIRECTION(1) ?
+
+	this->driver.setRampMode(VELOCITY_MODE_POS);
 
 }
 

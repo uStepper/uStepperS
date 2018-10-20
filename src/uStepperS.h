@@ -96,8 +96,12 @@ public:
 	 * @brief	Setup function
 	 */
 	void setup(); 
-	
-	void setRPM(uint16_t RPM);
+
+	void setRPM( int16_t RPM );
+
+	void setSpeed ( int32_t vel );
+
+	void runContinous( bool dir );
 
 
 	/**
@@ -106,15 +110,38 @@ public:
 	 *             This function lets the user set the max acceleration used 
 	 *             by the stepper driver.
 	 *
-	 * @param      acceleration  - Maximum acceleration in microsteps/s^2
+	 * @param      acceleration  - Maximum acceleration in steps/s^2
 	 */
-	void setMaxAcceleration	( int32_t acceleration );
+	void setMaxAcceleration	( float acceleration );
 
-	void setMaxVelocity	( int32_t velocity );
+	/**
+	 * @brief      Set the maximum velocity of the stepper motor.
+	 *
+	 *             This function lets the user set the max velocity used 
+	 *             by the stepper driver.
+	 *
+	 * @param      velocity  - Maximum velocity in steps/s^2
+	 */
+	void setMaxVelocity	( float velocity );
 
-	void setStartVelocity( int32_t velocity );
 
-	void setStopVelocity( int32_t velocity );
+	/**
+	 * @brief      Set motor output current.
+	 *
+	 *             This function allows the user to change the current setting of the motor driver.
+	 *
+	 * @param      current  - Desired current in percent (0% - 100%)
+	 */
+	void setCurrent( double current );
+
+	/**
+	 * @brief      Set motor hold current.
+	 *
+	 *             This function allows the user to change the current setting of the motor driver.
+	 *
+	 * @param      current  - Desired hold current in percent (0% - 100%)
+	 */
+	void setHoldCurrent( double current );
 
 
 
@@ -133,9 +160,6 @@ private:
 	 * functions setMaxAcceleration()
 	 */
 	float acceleration;		
-
-	int32_t position;	
-
 
 	// SPI functions
 

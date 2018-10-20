@@ -101,11 +101,13 @@
 
 class uStepperDriver{
 
+friend class uStepperS;
+
 	public:
 
 		uStepperDriver( void );
 
-		void initiate( uStepperS * _pointer );
+		void init( uStepperS * _pointer );
 
 		void begin(uint8_t ihold, uint8_t irun );
 
@@ -119,7 +121,11 @@ class uStepperDriver{
 
 		int32_t getPosition( void );
 
-		void setSpeed(uint32_t velocity); // In usteps / t
+		bool positionReached( void );
+
+		void setSpeed( int32_t velocity ); // In usteps / t
+
+		int32_t getSpeed( void );
 
 		void runContinous( bool direction );
 
@@ -129,11 +135,22 @@ class uStepperDriver{
 
 		void setHoldCurrent( uint8_t percentage );
 
-		void setChopMode( uint8_t mode );
+		void enableStealth( void );
 
 		void setRampMode( uint8_t mode );
+		
+		/** Status bits from the driver */
+		uint8_t status; 
 
 	private:
+
+		uStepperS * pointer; 
+
+		
+
+		uint8_t current = 16;
+		uint8_t holdCurrent = 16;
+
 
 		int32_t writeRegister( uint8_t address, uint32_t datagram );
 
@@ -141,10 +158,4 @@ class uStepperDriver{
 
 		void chipSelect(bool state);
 
-		uint8_t status; 
-
-		int32_t position;
-
-		uStepperS * pointer; 
-	
 };
