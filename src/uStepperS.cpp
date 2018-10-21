@@ -35,9 +35,6 @@ void uStepperS::setup( void )
 	*/
 	SPCR1 = (1<<SPE1)|(1<<MSTR1)|(1<<SPR10);
 
-	Serial.println(SPCR1, BIN);
-
-
 	driver.init( this );
 
 	encoder.initiate( this );

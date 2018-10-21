@@ -135,7 +135,7 @@ friend class uStepperS;
 
 		void setHoldCurrent( uint8_t percentage );
 
-		void enableStealth( void );
+		void enableStealth( uint32_t threshold );
 
 		void setRampMode( uint8_t mode );
 		

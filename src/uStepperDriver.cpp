@@ -9,37 +9,23 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	this->chipSelect(true); // Set CS HIGH
 
 
-
-
 	/* Prepare general driver settings */
 
 	/* Set motor current */
 	this->writeRegister( IHOLD_IRUN, IHOLD( this->holdCurrent) | IRUN( this->current) | IHOLDDELAY(5));
 
-
+	this->enableStealth( 100000 );
 
 	/* Set all-round chopper configuration */
 	this->writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
 
-
-
 	/* Set startup ramp mode */
 	this->setRampMode( VELOCITY_MODE_POS );
-
-	// this->enableStealth();
-	
-
-
-	/* Enable dcStep at above VDCMIN velocity */
-	// writeRegister( VDCMIN, 4500 );
-
-	/* Set DCCTRL */
-	// writeRegister( DCCTRL, (DC_TIME(25) | DC_SG(4) ) );
 
 }
 
 
-void uStepperDriver::enableStealth( void ){
+void uStepperDriver::enableStealth( uint32_t threshold ){
 
 	/* Set GCONF and enable stealthChop */
 	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(0) ); 
@@ -47,11 +33,9 @@ void uStepperDriver::enableStealth( void ){
 	/* Set PWMCONF for StealthChop */
 	this->writeRegister( PWMCONF, PWM_GRAD(1) | PWM_AMPL(255) | PWM_FREQ(0) ); 
 
+	/* Specifies the upper velocity for operation in stealthChop voltage PWM mode */
+	this->writeRegister( TPWMTHRS, threshold ); 
 
-	/* Set standard CHOPCONF ( set VHIGHCHM(1) | VHIGHFS(1) for dcStep ) */
-	// this->writeRegister( CHOPCONF, TOFF(5) | TBL(2) | HSTRT_TFD(0) | HEND(0) );
-	// Set max velocity for stealthChop
-	// this->writeRegister( TPWMTHRS, threshold ); 
 }
 
 
@@ -60,12 +44,13 @@ void uStepperDriver::setRampMode( uint8_t mode ){
 	switch(mode){
 		case POSITIONING_MODE:
 			// Positioning mode
+			this->writeRegister(VSTART, 0 );
 			this->writeRegister(A1, 	1000); 						/* A1 = 1000 */
 			this->writeRegister(V1, 	100000); 					/* V1 = 100000 usteps / t  */
 			this->writeRegister(AMAX, 	pointer->acceleration); 	/* AMAX */
 			this->writeRegister(VMAX, 	pointer->velocity); 		/* VMAX */
 			this->writeRegister(D1, 	1400); 						/* D1 = 1400 */
-			this->writeRegister(VSTOP, 	10); 						/* VSTOP = 10 */
+			this->writeRegister(VSTOP, 	100 ); 						/* VSTOP = 10 */
 
 			this->writeRegister(RAMPMODE, POSITIONING_MODE); 		/* RAMPMODE = 0 = Positioning mode */
 		
@@ -73,7 +58,9 @@ void uStepperDriver::setRampMode( uint8_t mode ){
 
 		case VELOCITY_MODE_POS:
 			// Velocity mode (only AMAX and VMAX is used)
-		
+			this->writeRegister(A1, 	0); 						
+			this->writeRegister(V1, 	0); 
+			this->writeRegister(D1, 	0); 
 			this->writeRegister(AMAX, 	pointer->acceleration); 	/* AMAX */
 			this->writeRegister(VMAX, 	pointer->velocity); 		/* VMAX */
 
@@ -193,6 +180,8 @@ void uStepperDriver::moveSteps( int32_t steps ){
 
 	// Get current position
 	int32_t current = this->getPosition();
+
+	Serial.println(current);
 
 	// Set new position
 	this->setPosition( current + steps );
