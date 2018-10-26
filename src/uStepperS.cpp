@@ -47,7 +47,6 @@ void uStepperS::setRPM( int16_t RPM){
 
 	int32_t speed = 894.785 * (uint32_t)RPM;
 
-	Serial.println(speed);
 	// Serial.println("Speed: " + String(speed) + " RPM: " + String(RPM));
 	driver.setSpeed(speed);
 

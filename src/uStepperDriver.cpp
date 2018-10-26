@@ -22,6 +22,10 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Set startup ramp mode */
 	this->setRampMode( VELOCITY_MODE_POS );
 
+	/* Reset position */
+	this->writeRegister(XACTUAL, 0);
+	this->writeRegister(XTARGET, 0);
+
 }
 
 
@@ -68,11 +72,6 @@ void uStepperDriver::setRampMode( uint8_t mode ){
 
 		break;
 	}
-
-	/* Reset position */
-	this->writeRegister(XACTUAL, 0);
-	this->writeRegister(XTARGET, 0);
-
 }
 
 
@@ -162,6 +161,7 @@ int32_t uStepperDriver::getSpeed( void ){
 
 void uStepperDriver::setPosition( int32_t position ){
 
+	this->setRampMode(POSITIONING_MODE);
 	this->writeRegister(XTARGET, position);
 
 }
@@ -180,8 +180,6 @@ void uStepperDriver::moveSteps( int32_t steps ){
 
 	// Get current position
 	int32_t current = this->getPosition();
-
-	Serial.println(current);
 
 	// Set new position
 	this->setPosition( current + steps );
