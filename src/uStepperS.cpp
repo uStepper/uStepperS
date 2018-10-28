@@ -35,9 +35,62 @@ void uStepperS::setup( void )
 	*/
 	SPCR1 = (1<<SPE1)|(1<<MSTR1)|(1<<SPR10);
 
+	this->angleToStep = ((float)(200*microSteps))/360.0;
+
 	driver.init( this );
 
-	encoder.initiate( this );
+	encoder.init( this );
+	encoder.setHome();
+
+}
+
+void uStepperS::moveSteps( int32_t steps )
+{
+	// Make sure we use position mode
+	this->driver.setRampMode(POSITIONING_MODE);
+
+	// Get current position
+	int32_t current = this->driver.getPosition();
+
+	// Set new position
+	this->driver.setPosition( current + steps );
+}
+
+
+
+void uStepperS::moveAngle( float angle )
+{
+	int32_t steps;
+
+	if(angle < 0.0)
+	{
+		steps = -(int32_t)((angle * angleToStep) - 0.5);
+		this->moveSteps( steps ); 
+	}
+	else
+	{
+		steps = (int32_t)((angle * angleToStep) + 0.5);
+		this->moveSteps( steps );
+	}
+}
+
+void uStepperS::moveToAngle( float angle )
+{
+	float diff;
+	uint32_t steps;
+
+	diff = angle - this->encoder.getAngleMoved();
+	steps = (uint32_t)( (abs(diff) * angleToStep) + 0.5);
+
+	if(diff < 0.0)
+	{
+		this->moveSteps( steps );
+	}
+	else
+	{
+		this->moveSteps( steps );
+	}
+
 }
 
 
@@ -123,6 +176,13 @@ void uStepperS::runContinous( bool dir ){
 
 void TIMER1_COMPA_vect(void){
 
-	pointer->encoder.captureAngle();
+	uint16_t curAngle = pointer->encoder.captureAngle();
+	pointer->encoder.angle = curAngle;
+
+	curAngle -= pointer->encoder.encoderOffset;
+
+
+
+	pointer->encoder.oldAngle = curAngle;
 
 }

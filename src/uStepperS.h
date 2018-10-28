@@ -99,11 +99,6 @@ public:
 
 	void setRPM( int16_t RPM );
 
-	void setSpeed ( int32_t vel );
-
-	void runContinous( bool dir );
-
-
 	/**
 	 * @brief      Set the maximum acceleration of the stepper motor.
 	 *
@@ -144,6 +139,14 @@ public:
 	void setHoldCurrent( double current );
 
 
+	void moveSteps( int32_t steps );
+
+	void moveAngle( float angle );
+
+	void moveToAngle( float angle );
+
+	void runContinous( bool direction );
+
 
 private: 
 
@@ -160,6 +163,10 @@ private:
 	 * functions setMaxAcceleration()
 	 */
 	float acceleration;		
+
+
+	float angleToStep;
+	uint16_t microSteps = 256;
 
 	// SPI functions
 

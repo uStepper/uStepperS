@@ -172,23 +172,6 @@ int32_t uStepperDriver::getPosition( void ){
 
 }
 
-
-void uStepperDriver::moveSteps( int32_t steps ){
-
-	// Make sure we use position mode
-	this->setRampMode(POSITIONING_MODE);
-
-	// Get current position
-	int32_t current = this->getPosition();
-
-	// Set new position
-	this->setPosition( current + steps );
-
-}
-
-
-
-
 void uStepperDriver::chipSelect(bool state){
 
 	if(state == false)

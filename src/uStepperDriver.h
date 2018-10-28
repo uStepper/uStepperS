@@ -109,14 +109,6 @@ friend class uStepperS;
 
 		void init( uStepperS * _pointer );
 
-		void begin(uint8_t ihold, uint8_t irun );
-
-		void moveSteps( int32_t steps );
-
-		void moveAngle( float angle );
-
-		void moveToAngle( float angle );
-
 		void setPosition(int32_t position);
 
 		int32_t getPosition( void );
@@ -126,8 +118,6 @@ friend class uStepperS;
 		void setSpeed( int32_t velocity ); // In usteps / t
 
 		int32_t getSpeed( void );
-
-		void runContinous( bool direction );
 
 		void stop( void );
 
@@ -144,9 +134,7 @@ friend class uStepperS;
 
 	private:
 
-		uStepperS * pointer; 
-
-		
+		uStepperS * pointer; 	
 
 		uint8_t current = 16;
 		uint8_t holdCurrent = 16;

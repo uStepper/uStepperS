@@ -22,7 +22,9 @@ class uStepperEncoder
 		 */
 		uStepperEncoder(void);
 
-		void initiate( uStepperS * _pointer );
+		void init( uStepperS * _pointer );
+
+		void setHome( void );
 
 		/**
 		 * @brief      Return the current shaft angle
@@ -36,6 +38,8 @@ class uStepperEncoder
 		 */
 		float getAngle(void);
 
+		float getAngleMoved(void);
+
 		uint16_t getRaw(void);
 
 		/**
@@ -44,20 +48,39 @@ class uStepperEncoder
 		 *             This function is used by the ISR to read the current angle of the motor shaft.
 		 *             The Angle is read by means of the SSI interface, using the hardware SPI port.
 		 */
-		void captureAngle(void);
+		uint16_t captureAngle(void);
 
-		
+
+		/** Angle of the shaft at the reference position. */
+		uint16_t encoderOffset;
+
+		/** This variable always contain the current rotor angle, relative
+		  * to a single revolution */
+		volatile uint16_t angle;
+
+		/** Variable used to store that measured angle moved from the
+		  * reference position */
+		volatile int32_t angleMoved;
+
+
+		/** Used to stored the previous measured angle for the speed
+		  * measurement, and the calculation of angle moved from reference
+		  * position */
+		volatile uint16_t oldAngle;
+
+
+		/** This variable contains the number of revolutions in either
+		  * direction, since last home position was set. negative numbers
+		  * corresponds to CCW turns, and positive to CW turns */
+		volatile int16_t revolutions;
+
 
 	private:
 		
 		/* Reference to the main object */
 		uStepperS * pointer;
 
-		/** This variable always contain the current rotor angle, relative
-		  * to a single revolution */
-		volatile uint16_t angle;
-
 		void chipSelect(bool state);
-	
+
 };
 

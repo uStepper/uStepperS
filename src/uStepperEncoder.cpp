@@ -17,7 +17,7 @@ uStepperEncoder::uStepperEncoder(void)
 
 }
 
-void uStepperEncoder::initiate(uStepperS * _pointer){
+void uStepperEncoder::init(uStepperS * _pointer){
 	
 	this->pointer = _pointer;
 
@@ -43,8 +43,20 @@ void uStepperEncoder::initiate(uStepperS * _pointer){
 	sei();
 }
 
+void uStepperEncoder::setHome(void)
+{
+	cli();
 
-void uStepperEncoder::captureAngle(void){
+	this->encoderOffset = this->captureAngle();
+
+	this->angle = 0;
+	this->angleMoved = 0;
+	this->revolutions = 0;
+
+	sei();
+}
+
+uint16_t uStepperEncoder::captureAngle(void){
 
 	pointer->setSPIMode(2);
 
@@ -66,7 +78,7 @@ void uStepperEncoder::captureAngle(void){
 
 	chipSelect(false);  // Set CS LOW
 	
-	angle = value;
+	return value;
 }
 
 float uStepperEncoder::getAngle(void){
