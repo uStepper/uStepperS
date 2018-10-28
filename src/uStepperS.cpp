@@ -176,13 +176,32 @@ void uStepperS::runContinous( bool dir ){
 
 void TIMER1_COMPA_vect(void){
 
-	uint16_t curAngle = pointer->encoder.captureAngle();
+	uint16_t curAngle;
+	int16_t deltaAngle;
+
+	curAngle = pointer->encoder.captureAngle();
 	pointer->encoder.angle = curAngle;
 
 	curAngle -= pointer->encoder.encoderOffset;
 
 
+	deltaAngle = (int16_t)pointer->encoder.oldAngle - (int16_t)curAngle;
 
+	if(deltaAngle < -32768)
+	{
+		pointer->encoder.revolutions--;
+		// deltaAngle += 65535;
+		Serial.println("-1 rotation");
+	}
+	
+	else if(deltaAngle > 32768)
+	{
+		pointer->encoder.revolutions++;
+		// deltaAngle -= 65535;
+		Serial.println("+1 rotation");
+	}
+
+	pointer->encoder.angleMoved = (int32_t)curAngle + (65535 * (int32_t)pointer->encoder.revolutions );
 	pointer->encoder.oldAngle = curAngle;
 
 }
