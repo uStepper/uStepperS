@@ -147,6 +147,8 @@ public:
 
 	void runContinous( bool direction );
 
+	float angleMoved( void );
+
 
 private: 
 

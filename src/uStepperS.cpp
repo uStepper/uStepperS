@@ -74,13 +74,17 @@ void uStepperS::moveAngle( float angle )
 	}
 }
 
+
 void uStepperS::moveToAngle( float angle )
 {
 	float diff;
-	uint32_t steps;
+	int32_t steps;
 
-	diff = angle - this->encoder.getAngleMoved();
-	steps = (uint32_t)( (abs(diff) * angleToStep) + 0.5);
+	diff = angle - this->angleMoved();
+
+	steps = (int32_t)( (abs(diff) * angleToStep) + 0.5);
+
+	Serial.println(steps);
 
 	if(diff < 0.0)
 	{
@@ -173,32 +177,34 @@ void uStepperS::runContinous( bool dir ){
 
 }
 
+float uStepperS::angleMoved ( void ){
+	return this->encoder.angleMoved / this->angleToStep;
+}
 
 void TIMER1_COMPA_vect(void){
 
 	uint16_t curAngle;
-	int16_t deltaAngle;
+	int32_t deltaAngle;
 
 	curAngle = pointer->encoder.captureAngle();
 	pointer->encoder.angle = curAngle;
 
 	curAngle -= pointer->encoder.encoderOffset;
 
+	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
 
-	deltaAngle = (int16_t)pointer->encoder.oldAngle - (int16_t)curAngle;
+	// Serial.println(deltaAngle);
 
 	if(deltaAngle < -32768)
 	{
 		pointer->encoder.revolutions--;
 		// deltaAngle += 65535;
-		Serial.println("-1 rotation");
 	}
 	
 	else if(deltaAngle > 32768)
 	{
 		pointer->encoder.revolutions++;
 		// deltaAngle -= 65535;
-		Serial.println("+1 rotation");
 	}
 
 	pointer->encoder.angleMoved = (int32_t)curAngle + (65535 * (int32_t)pointer->encoder.revolutions );
