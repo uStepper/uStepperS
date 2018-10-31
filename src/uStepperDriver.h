@@ -128,6 +128,8 @@ friend class uStepperS;
 		void enableStealth( uint32_t threshold );
 
 		void setRampMode( uint8_t mode );
+
+		void reset( void );
 		
 		/** Status bits from the driver */
 		uint8_t status; 

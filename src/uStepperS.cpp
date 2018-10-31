@@ -187,9 +187,9 @@ void TIMER1_COMPA_vect(void){
 	int32_t deltaAngle;
 
 	curAngle = pointer->encoder.captureAngle();
-	pointer->encoder.angle = curAngle;
 
 	curAngle -= pointer->encoder.encoderOffset;
+	pointer->encoder.angle = curAngle;
 
 	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
 

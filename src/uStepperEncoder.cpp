@@ -74,7 +74,7 @@ uint16_t uStepperEncoder::captureAngle(void){
 	value |= pointer->SPI(0x00);
 
 	/* Write dummy and read the incoming 8 bits */
-	stats = pointer->SPI(0x00);
+	this->status = pointer->SPI(0x00);
 
 	chipSelect(false);  // Set CS LOW
 	
@@ -83,6 +83,16 @@ uint16_t uStepperEncoder::captureAngle(void){
 
 float uStepperEncoder::getAngle(void){
 	return ((float)angle / 65536.0) * 360.0;
+}
+
+float uStepperEncoder::getAngleMoved(void){
+
+	return ((float)angleMoved / 65536.0) * 360.0;
+
+}
+
+uint8_t uStepperEncoder::getStatus( void ){
+	return this->status;
 }
 
 uint16_t uStepperEncoder::getRaw(void){

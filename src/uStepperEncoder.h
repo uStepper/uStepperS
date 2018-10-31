@@ -50,6 +50,8 @@ class uStepperEncoder
 		 */
 		uint16_t captureAngle(void);
 
+		uint8_t getStatus( void );
+
 
 		/** Angle of the shaft at the reference position. */
 		uint16_t encoderOffset;
@@ -75,12 +77,16 @@ class uStepperEncoder
 		volatile int16_t revolutions;
 
 
+
 	private:
 		
 		/* Reference to the main object */
 		uStepperS * pointer;
 
 		void chipSelect(bool state);
+
+		/** Status bits from the encoder */
+		uint8_t status; 
 
 };
 

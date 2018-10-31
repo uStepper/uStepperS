@@ -3,18 +3,43 @@
 uStepperDriver::uStepperDriver( void ){
 }
 
+
+void uStepperDriver::reset( void ){
+
+	this->writeRegister(XACTUAL, 0);
+	this->writeRegister(XTARGET, 0);
+
+	this->writeRegister( IHOLD_IRUN,0 );
+	this->writeRegister( CHOPCONF, 	0 );
+	this->writeRegister( GCONF, 	0 );
+	this->writeRegister( PWMCONF, 	0 );	
+	this->writeRegister( TPWMTHRS, 	0 );
+
+	this->writeRegister( RAMPMODE, 	0 );
+	this->writeRegister( VSTART, 	0 );
+	this->writeRegister( A1, 		0 ); 
+	this->writeRegister( V1, 		0 ); 
+	this->writeRegister( AMAX, 		0 );
+	this->writeRegister( VMAX, 		0 );
+	this->writeRegister( D1, 		0 );
+	this->writeRegister( VSTOP, 	0 );
+
+}
+
 void uStepperDriver::init( uStepperS * _pointer ){
 
 	this->pointer = _pointer;
 	this->chipSelect(true); // Set CS HIGH
 
+	// First clear previous defined registers
+	this->reset();
 
 	/* Prepare general driver settings */
 
 	/* Set motor current */
 	this->writeRegister( IHOLD_IRUN, IHOLD( this->holdCurrent) | IRUN( this->current) | IHOLDDELAY(5));
 
-	this->enableStealth( 100000 );
+	// this->enableStealth( 100000 );
 
 	/* Set all-round chopper configuration */
 	this->writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
@@ -32,7 +57,7 @@ void uStepperDriver::init( uStepperS * _pointer ){
 void uStepperDriver::enableStealth( uint32_t threshold ){
 
 	/* Set GCONF and enable stealthChop */
-	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(0) ); 
+	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(1) ); 
 
 	/* Set PWMCONF for StealthChop */
 	this->writeRegister( PWMCONF, PWM_GRAD(1) | PWM_AMPL(255) | PWM_FREQ(0) ); 
@@ -169,6 +194,12 @@ void uStepperDriver::setPosition( int32_t position ){
 int32_t uStepperDriver::getPosition( void ){
 
 	return this->readRegister(XACTUAL);
+
+}
+
+void uStepperDriver::stop( void ){
+
+	this->setSpeed(0);
 
 }
 
