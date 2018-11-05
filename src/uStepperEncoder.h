@@ -97,6 +97,8 @@ class uStepperEncoder
 		* the motor shaft */
 		volatile float curSpeed;
 
+		volatile uint32_t deltaTime;
+
 
 	private:
 		
@@ -107,6 +109,8 @@ class uStepperEncoder
 
 		/** Status bits from the encoder */
 		uint8_t status; 
+
+
 
 };
 

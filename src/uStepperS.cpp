@@ -188,6 +188,7 @@ void TIMER1_COMPA_vect(void){
 	float newSpeed;
 	static float deltaSpeedAngle = 0.0;
 	static uint8_t loops = 0;
+	static uint32_t start = micros();
 
 
 	curAngle = pointer->encoder.captureAngle();
@@ -223,12 +224,18 @@ void TIMER1_COMPA_vect(void){
 	{
 		pointer->encoder.curSpeed = deltaSpeedAngle * ENCODERSPEEDCONSTANT;
 
+		pointer->encoder.deltaTime = micros() - start; 
+
 		loops = 0;
 		deltaSpeedAngle = 0.0;
+
+		start = micros();
 	}
 
 
 	pointer->encoder.angleMoved = (int32_t)curAngle + (65535 * (int32_t)pointer->encoder.revolutions );
 	pointer->encoder.oldAngle = curAngle;
+
+
 
 }
