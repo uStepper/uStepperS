@@ -59,6 +59,10 @@ class uStepperS;
 #define MISO1 PC0  
 #define SCK1 PC1 
 
+/** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
+#define ENCODERINTFREQ 1000.0			
+/** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
+#define ENCODERSPEEDCONSTANT ENCODERINTFREQ/10.0/65535.0	
 
 
 /**

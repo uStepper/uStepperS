@@ -1,26 +1,23 @@
 #include <uStepperS.h>
 
-uStepperS stepper(100000, 20000); 
+uStepperS stepper; 
 
 void setup() {
 
   Serial.begin(9600);
   
+  stepper.setMaxAcceleration( 50 ); // Steps/s
   stepper.setup();
-  
+
 }
 
-int rpm = 25;
 
 void loop() {
 
-  for(uint8_t x = 0; x < 10; x++){
-    
-    stepper.setRPM( rpm * x );
+  /** Set the speed */
+  stepper.setRPM( 25 );
 
-    delay(2000);
-  }
-  
-  delay(2000);
-  
+  /** Print current speed in RPM */
+  Serial.println( stepper.encoder.getSpeed() * 60.0 ) ;
+
 }

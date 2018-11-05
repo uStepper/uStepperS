@@ -27,9 +27,9 @@ void uStepperEncoder::init(uStepperS * _pointer){
 	TCCR1A = (1 << WGM11);
 	TCCR1B = (1 << WGM12) | (1 << WGM13) | (1 << CS10);
 
-	/* Reset Timer1 and set compare interrupt each: 62.5 ns * 32000 = 2 milliseconds */
+	/* Reset Timer1 and set compare interrupt each: 62.5 ns * 16000 = 1 milliseconds */
 	TCNT1 = 0;
-	ICR1 = 32000; 
+	ICR1 = 16000; 
 
 	// TIFR1 = 0
 
@@ -85,18 +85,31 @@ float uStepperEncoder::getAngle(void){
 	return ((float)angle / 65536.0) * 360.0;
 }
 
+uint16_t uStepperEncoder::getAngleRaw(void){
+	return angle;
+}
+
+
 float uStepperEncoder::getAngleMoved(void){
 
 	return ((float)angleMoved / 65536.0) * 360.0;
 
 }
 
+int32_t uStepperEncoder::getAngleMovedRaw(void){
+
+	return angleMoved;
+
+}
+
+
 uint8_t uStepperEncoder::getStatus( void ){
 	return this->status;
 }
 
-uint16_t uStepperEncoder::getRaw(void){
-	return angle;
+
+float uStepperEncoder::getSpeed( void ){
+	return curSpeed;
 }
 
 

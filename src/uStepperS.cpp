@@ -104,7 +104,6 @@ void uStepperS::setRPM( int16_t RPM){
 
 	int32_t speed = 894.785 * (uint32_t)RPM;
 
-	// Serial.println("Speed: " + String(speed) + " RPM: " + String(RPM));
 	driver.setSpeed(speed);
 
 }
@@ -186,6 +185,11 @@ void TIMER1_COMPA_vect(void){
 	uint16_t curAngle;
 	int32_t deltaAngle;
 
+	float newSpeed;
+	static float deltaSpeedAngle = 0.0;
+	static uint8_t loops = 0;
+
+
 	curAngle = pointer->encoder.captureAngle();
 
 	curAngle -= pointer->encoder.encoderOffset;
@@ -198,14 +202,31 @@ void TIMER1_COMPA_vect(void){
 	if(deltaAngle < -32768)
 	{
 		pointer->encoder.revolutions--;
-		// deltaAngle += 65535;
+		deltaAngle += 65535;
 	}
 	
 	else if(deltaAngle > 32768)
 	{
 		pointer->encoder.revolutions++;
-		// deltaAngle -= 65535;
+		deltaAngle -= 65535;
 	}
+
+
+	/* Calculation of speed */
+
+	if( loops < 10)
+	{
+		loops++;
+		deltaSpeedAngle += (float)deltaAngle;
+	}
+	else
+	{
+		pointer->encoder.curSpeed = deltaSpeedAngle * ENCODERSPEEDCONSTANT;
+
+		loops = 0;
+		deltaSpeedAngle = 0.0;
+	}
+
 
 	pointer->encoder.angleMoved = (int32_t)curAngle + (65535 * (int32_t)pointer->encoder.revolutions );
 	pointer->encoder.oldAngle = curAngle;

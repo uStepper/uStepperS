@@ -36,11 +36,27 @@ class uStepperEncoder
 		 * @return     Floating point representation of the current motor shaft
 		 *             angle
 		 */
-		float getAngle(void);
+		float getAngle( void );
 
-		float getAngleMoved(void);
+		uint16_t getAngleRaw( void );
 
-		uint16_t getRaw(void);
+		float getAngleMoved( void );
+
+		int32_t getAngleMovedRaw( void );
+
+
+		/**
+		 * @brief      Measure the current speed of the motor
+		 *
+		 *             This function returns the current speed of the motor. The
+		 *             speed is not calculated in this function, it is merely
+		 *             returning a variable. The speed is calculated in the
+		 *             interrupt routine associated with timer1.
+		 *
+		 * @return     Current speed in revolutions per second (RPS)
+		 */
+		float getSpeed(void);
+
 
 		/**
 		 * @brief      Capture the current shaft angle
@@ -48,7 +64,7 @@ class uStepperEncoder
 		 *             This function is used by the ISR to read the current angle of the motor shaft.
 		 *             The Angle is read by means of the SSI interface, using the hardware SPI port.
 		 */
-		uint16_t captureAngle(void);
+		uint16_t captureAngle( void );
 
 		uint8_t getStatus( void );
 
@@ -76,6 +92,10 @@ class uStepperEncoder
 		  * corresponds to CCW turns, and positive to CW turns */
 		volatile int16_t revolutions;
 
+
+		/** Variable used to store the last measured rotational speed of
+		* the motor shaft */
+		volatile float curSpeed;
 
 
 	private:
