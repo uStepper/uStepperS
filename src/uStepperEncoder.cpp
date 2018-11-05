@@ -64,7 +64,7 @@ uint16_t uStepperEncoder::captureAngle(void){
 	uint8_t stats = 0;
 
 	chipSelect(true);  // Set CS HIGH
-	delayMicroseconds(1);
+	// delayMicroseconds(1); Not needed
 	
 	/* Write dummy and read the incoming 8 bits */
 	value = pointer->SPI(0x00);

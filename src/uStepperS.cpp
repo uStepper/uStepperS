@@ -215,7 +215,7 @@ void TIMER1_COMPA_vect(void){
 
 	/* Calculation of speed */
 
-	if( loops < 10)
+	if( loops < 10 )
 	{
 		loops++;
 		deltaSpeedAngle += (float)deltaAngle;
@@ -223,8 +223,8 @@ void TIMER1_COMPA_vect(void){
 	else
 	{
 		pointer->encoder.curSpeed = deltaSpeedAngle * ENCODERSPEEDCONSTANT;
-
 		pointer->encoder.deltaTime = micros() - start; 
+
 
 		loops = 0;
 		deltaSpeedAngle = 0.0;
