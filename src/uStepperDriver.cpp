@@ -39,7 +39,7 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Set motor current */
 	this->writeRegister( IHOLD_IRUN, IHOLD( this->holdCurrent) | IRUN( this->current) | IHOLDDELAY(5));
 
-	// this->enableStealth( 100000 );
+	this->enableStealth( 100000 );
 
 	/* Set all-round chopper configuration */
 	this->writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
@@ -64,6 +64,23 @@ void uStepperDriver::enableStealth( uint32_t threshold ){
 
 	/* Specifies the upper velocity for operation in stealthChop voltage PWM mode */
 	this->writeRegister( TPWMTHRS, threshold ); 
+
+}
+
+void uStepperDriver::setDirection( bool direction ){
+
+	int32_t value = this->readRegister( GCONF );
+
+	// Serial.println(value, BIN);
+
+	if(direction == 1){
+		value |= DIRECTION(1);
+	}else{
+		value &= ~( DIRECTION(1) );
+	}
+
+	
+	this->writeRegister( GCONF, value ); 
 
 }
 

@@ -98,13 +98,19 @@ void uStepperS::moveToAngle( float angle )
 }
 
 
-void uStepperS::setRPM( int16_t RPM){
+void uStepperS::setRPM( float RPM){
 
 	/* Constant calculated with 16Mhz external oscilator, 200 steps per rev and 256 microsteps */
 
-	int32_t speed = 894.785 * (uint32_t)RPM;
+	int32_t speed = (int32_t)(894.785 * RPM);
 
-	driver.setSpeed(speed);
+	if(speed < 0){
+		driver.setDirection(0);
+	}else{
+		driver.setDirection(1);
+	}
+
+	driver.setSpeed( abs(speed) );
 
 }
 

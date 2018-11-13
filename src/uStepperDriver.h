@@ -130,6 +130,8 @@ friend class uStepperS;
 		void setRampMode( uint8_t mode );
 
 		void reset( void );
+
+		void setDirection( bool direction );
 		
 		/** Status bits from the driver */
 		uint8_t status; 

@@ -101,7 +101,7 @@ public:
 	 */
 	void setup(); 
 
-	void setRPM( int16_t RPM );
+	void setRPM( float RPM );
 
 	/**
 	 * @brief      Set the maximum acceleration of the stepper motor.
