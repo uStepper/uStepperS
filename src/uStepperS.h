@@ -113,6 +113,8 @@ public:
 	 */
 	void setMaxAcceleration	( float acceleration );
 
+	void setMaxDeceleration ( float deceleration );
+
 	/**
 	 * @brief      Set the maximum velocity of the stepper motor.
 	 *
@@ -170,9 +172,10 @@ private:
 	 */
 	float acceleration;		
 
-
+	float rpmToVelocity;
 	float angleToStep;
 	uint16_t microSteps = 256;
+	uint16_t fullSteps = 200;
 
 	// SPI functions
 

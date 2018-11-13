@@ -35,7 +35,8 @@ void uStepperS::setup( void )
 	*/
 	SPCR1 = (1<<SPE1)|(1<<MSTR1)|(1<<SPR10);
 
-	this->angleToStep = ((float)(200*microSteps))/360.0;
+	this->angleToStep = ((float)(200 * microSteps))/360.0;
+	this->rpmToVelocity = ((float)(fullSteps * microSteps))/60.0;
 
 	driver.init( this );
 
@@ -98,20 +99,17 @@ void uStepperS::moveToAngle( float angle )
 }
 
 
-void uStepperS::setRPM( float RPM){
+void uStepperS::setRPM( float rpm)
+{
+	int32_t velocity = (int32_t)(rpmToVelocity * rpm);
 
-	/* Constant calculated with 16Mhz external oscilator, 200 steps per rev and 256 microsteps */
-
-	int32_t speed = (int32_t)(894.785 * RPM);
-
-	if(speed < 0){
+	if(velocity < 0){
 		driver.setDirection(0);
 	}else{
 		driver.setDirection(1);
 	}
 
-	driver.setSpeed( abs(speed) );
-
+	driver.setVelocity( abs(velocity) );
 }
 
 
@@ -141,53 +139,68 @@ uint8_t uStepperS::SPI(uint8_t data){
 
 }
 
-
-void uStepperS::setMaxAcceleration( float accel ){
-
+void uStepperS::setMaxVelocity( float velocity )
+{
 	// Steps per second, has to be converted to microsteps
-	this->acceleration = accel * 1000;
-
+	this->driver.setVelocity( velocity * 1000 );
 }
 
-void uStepperS::setMaxVelocity( float vel ){
-
+void uStepperS::setMaxAcceleration( float acceleration )
+{
 	// Steps per second, has to be converted to microsteps
-	this->velocity = vel * 1000;
-
+	this->driver.setAcceleration( acceleration * 1000 );
 }
 
-void uStepperS::setCurrent( double current ){
+void uStepperS::setMaxDeceleration( float deceleration )
+{
+	// Steps per second, has to be converted to microsteps
+	this->driver.setDeceleration( deceleration * 1000 );
+}
 
+void uStepperS::setCurrent( double current )
+{
+	if( current >= 100.0 && current <= 0.0){
+		// The current needs to be in the range of 0-31
+		this->driver.current = ceil(0.31 * current); 
+	}else{
+		// If value is out of range, set default
+		this->driver.current = 16; 
+	}
+
+	driver.updateCurrent();
+}
+
+void uStepperS::setHoldCurrent( double current )
+{
 	// The current needs to be in the range of 0-31
-	this->driver.current = 0.31 * current; 
+	if( current >= 100.0 && current <= 0.0){
+		// The current needs to be in the range of 0-31
+		this->driver.holdCurrent = ceil(0.31 * current); 
+	}else{
+		// If value is out of range, set default
+		this->driver.holdCurrent = 16; 
+	}
 
+	driver.updateCurrent();
 }
 
-void uStepperS::setHoldCurrent( double current ){
 
-	// The current needs to be in the range of 0-31
-	this->driver.holdCurrent = 0.31 * current; 
-
-}
-
-
-void uStepperS::runContinous( bool dir ){
-
-	// Need to implement how to change direction. 
-	// - Negativ velocity?
-	// - VELOCITY_MODE_NEG?
-	// - DIRECTION(1) ?
-
+void uStepperS::runContinous( bool dir )
+{
+	// Make sure we use velocity mode
 	this->driver.setRampMode(VELOCITY_MODE_POS);
 
+	// Set the direction
+	this->driver.setDirection(dir);
 }
 
-float uStepperS::angleMoved ( void ){
+float uStepperS::angleMoved ( void )
+{
 	return this->encoder.angleMoved / this->angleToStep;
 }
 
-void TIMER1_COMPA_vect(void){
-
+void TIMER1_COMPA_vect(void)
+{
 	uint16_t curAngle;
 	int32_t deltaAngle;
 
@@ -196,7 +209,6 @@ void TIMER1_COMPA_vect(void){
 	static uint8_t loops = 0;
 	static uint32_t start = micros();
 
-
 	curAngle = pointer->encoder.captureAngle();
 
 	curAngle -= pointer->encoder.encoderOffset;
@@ -204,23 +216,18 @@ void TIMER1_COMPA_vect(void){
 
 	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
 
-	// Serial.println(deltaAngle);
-
 	if(deltaAngle < -32768)
 	{
 		pointer->encoder.revolutions--;
 		deltaAngle += 65535;
 	}
-	
 	else if(deltaAngle > 32768)
 	{
 		pointer->encoder.revolutions++;
 		deltaAngle -= 65535;
 	}
 
-
 	/* Calculation of speed */
-
 	if( loops < 10 )
 	{
 		loops++;
@@ -231,17 +238,12 @@ void TIMER1_COMPA_vect(void){
 		pointer->encoder.curSpeed = deltaSpeedAngle * ENCODERSPEEDCONSTANT;
 		pointer->encoder.deltaTime = micros() - start; 
 
-
 		loops = 0;
 		deltaSpeedAngle = 0.0;
 
 		start = micros();
 	}
 
-
 	pointer->encoder.angleMoved = (int32_t)curAngle + (65535 * (int32_t)pointer->encoder.revolutions );
 	pointer->encoder.oldAngle = curAngle;
-
-
-
 }

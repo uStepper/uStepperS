@@ -20,14 +20,14 @@
 #define VACTUAL 			0x22	// Actual  motor  velocity  from  ramp  generator
 
 /** Ramp curves */
-#define VSTART				0x23	// Motor start velocity
-#define A1					0x24	// First  acceleration  between  VSTART  and  V1
-#define V1					0x25	// First  acceleration  /  deceleration  phase  target velocity
-#define AMAX				0x26	// Second  acceleration  between  V1  and  VMAX
-#define VMAX 				0x27	// This is the target velocity in velocity mode. It can be changed any time during a motion.
-#define DMAX				0x28	// Deceleration between VMAX and V1
-#define D1					0x2A 	// Deceleration  between  V1  and  VSTOP
-#define VSTOP				0x2B	// Motor stop velocity (unsigned)
+#define VSTART_REG			0x23	// Motor start velocity
+#define A1_REG				0x24	// First  acceleration  between  VSTART  and  V1
+#define V1_REG				0x25	// First  acceleration  /  deceleration  phase  target velocity
+#define AMAX_REG			0x26	// Second  acceleration  between  V1  and  VMAX
+#define VMAX_REG 			0x27	// This is the target velocity in velocity mode. It can be changed any time during a motion.
+#define DMAX_REG			0x28	// Deceleration between VMAX and V1
+#define D1_REG				0x2A 	// Deceleration  between  V1  and  VSTOP
+#define VSTOP_REG			0x2B	// Motor stop velocity (unsigned)
 #define TZEROWAIT			0x2C	// Defines  the  waiting  time  after  ramping  down
 #define XTARGET				0x2D	// Target position for ramp mode
 #define VDCMIN				0x33
@@ -109,30 +109,40 @@ friend class uStepperS;
 
 		void init( uStepperS * _pointer );
 
-		void setPosition(int32_t position);
+		void setPosition( int32_t position );
+
+		void setVelocity( uint32_t velocity );
+
+		void setAcceleration( uint16_t acceleration );
+
+		void setDeceleration( uint16_t deceleration );
+
+		void setRampProfile( uint32_t velocity, uint16_t acceleration, uint16_t deceleration );
+
+		void setRampMode( uint8_t mode );
+
+		void setCurrent( uint8_t current );
+
+		void setHoldCurrent( uint8_t current );
+
+		void updateCurrent( void );
+
+		void setDirection( bool direction );
+
+
+		void stop( void );
+
+		void reset( void );
+
+		void enableStealth( uint32_t threshold );
+
+
+		int32_t getVelocity( void );
 
 		int32_t getPosition( void );
 
 		bool positionReached( void );
 
-		void setSpeed( int32_t velocity ); // In usteps / t
-
-		int32_t getSpeed( void );
-
-		void stop( void );
-
-		void setCurrent( uint8_t percentage );
-
-		void setHoldCurrent( uint8_t percentage );
-
-		void enableStealth( uint32_t threshold );
-
-		void setRampMode( uint8_t mode );
-
-		void reset( void );
-
-		void setDirection( bool direction );
-		
 		/** Status bits from the driver */
 		uint8_t status; 
 
@@ -142,7 +152,17 @@ friend class uStepperS;
 
 		uint8_t current = 16;
 		uint8_t holdCurrent = 16;
+		uint8_t holdDelay = 5;
 
+		/** Default acceleration profile */
+		uint32_t VSTART = 0;
+		uint32_t V1 	= 100000;
+		uint32_t VMAX	= 200000;
+		uint32_t VSTOP 	= 10;
+		uint16_t A1 	= 1000;
+		uint16_t AMAX	= 400;
+		uint16_t DMAX	= 800;
+		uint16_t D1 	= 2000;
 
 		int32_t writeRegister( uint8_t address, uint32_t datagram );
 
