@@ -5,14 +5,20 @@ uStepperS * pointer;
 uStepperS::uStepperS()
 {
 	pointer = this;
+
+	this->setMaxAcceleration(100); 	// steps / ta^2
+	this->setMaxVelocity(1000);		// steps / t
+
+	// t = 2^24 / fCLK
+	// ta² = 2^41 / (fCLK)²
 }
 
-uStepperS::uStepperS(float _acceleration, float _velocity)
+uStepperS::uStepperS(float acceleration, float velocity)
 {
 	pointer = this;
 
-	acceleration = _acceleration;
-	velocity = _velocity;
+	this->setMaxAcceleration(acceleration);
+	this->setMaxVelocity(velocity);
 }
 
 
@@ -36,7 +42,8 @@ void uStepperS::setup( void )
 	SPCR1 = (1<<SPE1)|(1<<MSTR1)|(1<<SPR10);
 
 	this->angleToStep = ((float)(200 * microSteps))/360.0;
-	this->rpmToVelocity = ((float)(fullSteps * microSteps))/60.0;
+	this->rpmToVelocity = ((float)(16777216 * fullSteps * microSteps))/(60.0 * CLOCKFREQ);
+	this->stepMultiplier = 0;
 
 	driver.init( this );
 
@@ -109,7 +116,15 @@ void uStepperS::setRPM( float rpm)
 		driver.setDirection(1);
 	}
 
-	driver.setVelocity( abs(velocity) );
+	// The velocity cannot be signed
+	uint32_t velocity = abs(velocity);
+
+	// Calculated velocity should not exceed maxVelocity 
+	if(velocity > this->maxVelocity ){
+		velocity = this->maxVelocity;
+	}
+
+	driver.setVelocity( velocity );
 }
 
 
@@ -141,20 +156,22 @@ uint8_t uStepperS::SPI(uint8_t data){
 
 void uStepperS::setMaxVelocity( float velocity )
 {
+	this->maxVelocity = abs(velocity);
 	// Steps per second, has to be converted to microsteps
-	this->driver.setVelocity( velocity * 1000 );
+	this->driver.setVelocity( (uint32_t)(this->maxVelocity * this->microSteps) );
 }
 
 void uStepperS::setMaxAcceleration( float acceleration )
 {
+	this->maxAcceleration = abs(acceleration);
 	// Steps per second, has to be converted to microsteps
-	this->driver.setAcceleration( acceleration * 1000 );
+	this->driver.setAcceleration( (uint32_t)(this->maxAcceleration * this->microSteps) );
 }
 
 void uStepperS::setMaxDeceleration( float deceleration )
 {
 	// Steps per second, has to be converted to microsteps
-	this->driver.setDeceleration( deceleration * 1000 );
+	this->driver.setDeceleration( (uint32_t)(abs(deceleration * this->microSteps )) );
 }
 
 void uStepperS::setCurrent( double current )
@@ -185,13 +202,13 @@ void uStepperS::setHoldCurrent( double current )
 }
 
 
-void uStepperS::runContinous( bool dir )
+void uStepperS::runContinous( bool direction )
 {
 	// Make sure we use velocity mode
-	this->driver.setRampMode(VELOCITY_MODE_POS);
+	this->driver.setRampMode( VELOCITY_MODE_POS );
 
 	// Set the direction
-	this->driver.setDirection(dir);
+	this->driver.setDirection( direction );
 }
 
 float uStepperS::angleMoved ( void )

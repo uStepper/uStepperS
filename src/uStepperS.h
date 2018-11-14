@@ -59,6 +59,8 @@ class uStepperS;
 #define MISO1 PC0  
 #define SCK1 PC1 
 
+#define CLOCKFREQ 16000000.0
+
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTFREQ 1000.0			
 /** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
@@ -101,7 +103,16 @@ public:
 	 */
 	void setup(); 
 
-	void setRPM( float RPM );
+
+	/**
+	 * @brief      Set the velocity in rpm
+	 *
+	 *             This function lets the user set the velocity of the motor in rpm. 
+	 *             A negative value switches direction of the motor.
+	 *
+	 * @param      rpm  - The velocity in rotations per minute
+	 */
+	void setRPM( float rpm );
 
 	/**
 	 * @brief      Set the maximum acceleration of the stepper motor.
@@ -158,22 +169,21 @@ public:
 
 private: 
 
-	
-
-	/** This variable contains the maximum velocity, the motor is
+	/** This variable contains the maximum velocity in steps/s, the motor is
 	 * allowed to reach at any given point. The user of the library can
 	 * set this by use of the setMaxVelocity()
 	 */
-	float velocity;					
+	float maxVelocity;					
 
-	/** This variable contains the maximum acceleration to be used. The
+	/** This variable contains the maximum acceleration in steps/s to be used. The
 	 * can be set and read by the user of the library using the
 	 * functions setMaxAcceleration()
 	 */
-	float acceleration;		
+	float maxAcceleration;		
 
 	float rpmToVelocity;
 	float angleToStep;
+	float stepMultiplier;
 	uint16_t microSteps = 256;
 	uint16_t fullSteps = 200;
 
