@@ -5,26 +5,20 @@ uStepperS * pointer;
 uStepperS::uStepperS()
 {
 	pointer = this;
-
-	this->setMaxAcceleration(100); 	// steps / ta^2
-	this->setMaxVelocity(1000);		// steps / t
-
-	// t = 2^24 / fCLK
-	// ta² = 2^41 / (fCLK)²
 }
 
 uStepperS::uStepperS(float acceleration, float velocity)
 {
 	pointer = this;
 
-	this->setMaxAcceleration(acceleration);
-	this->setMaxVelocity(velocity);
+	this->init();
+
+	/*this->setMaxAcceleration(acceleration);
+	this->setMaxVelocity(velocity);*/
 }
 
 
-void uStepperS::setup( void )
-{
-	/** Prepare hardware SPI */
+void uStepperS::init( void ){
 
 	/* Set CS, MOSI, SCK and DRV_ENN as Output */
 	DDRC = (1<<SCK1)|(1<<MOSI_ENC);
@@ -33,6 +27,7 @@ void uStepperS::setup( void )
 
 	PORTD &= ~(1 << DRV_ENN);  // Set DRV_ENN LOW  
 	PORTD &= ~(1 << SD_MODE);  // Set SD_MODE LOW  
+
 	/* 
 	*  ---- Global SPI1 configuration ----
 	*  SPE   = 1: SPI enabled
@@ -41,14 +36,22 @@ void uStepperS::setup( void )
 	*/
 	SPCR1 = (1<<SPE1)|(1<<MSTR1)|(1<<SPR10);
 
-	this->angleToStep = ((float)(200 * microSteps))/360.0;
-	this->rpmToVelocity = ((float)(16777216 * fullSteps * microSteps))/(60.0 * CLOCKFREQ);
-	this->stepMultiplier = 0;
+	this->angleToStep = (float)(200 * microSteps)/360.0;
+	this->rpmToVelocity = (float)(279620.267 * fullSteps * microSteps)/(CLOCKFREQ);
 
 	driver.init( this );
-
 	encoder.init( this );
+}
+
+void uStepperS::setup( void )
+{
+
+	this->init();
+
+
+	// Should setup mode etc. later
 	encoder.setHome();
+
 
 }
 
@@ -61,7 +64,7 @@ void uStepperS::moveSteps( int32_t steps )
 	int32_t current = this->driver.getPosition();
 
 	// Set new position
-	this->driver.setPosition( current + steps );
+	this->driver.setPosition( current + (steps * microSteps) );
 }
 
 
@@ -89,10 +92,7 @@ void uStepperS::moveToAngle( float angle )
 	int32_t steps;
 
 	diff = angle - this->angleMoved();
-
 	steps = (int32_t)( (abs(diff) * angleToStep) + 0.5);
-
-	Serial.println(steps);
 
 	if(diff < 0.0)
 	{
@@ -102,29 +102,31 @@ void uStepperS::moveToAngle( float angle )
 	{
 		this->moveSteps( steps );
 	}
-
 }
 
 
 void uStepperS::setRPM( float rpm)
 {
-	int32_t velocity = (int32_t)(rpmToVelocity * rpm);
+	int32_t velocityDir = rpmToVelocity * rpm;
 
-	if(velocity < 0){
+	if(velocityDir < 0){
 		driver.setDirection(0);
 	}else{
 		driver.setDirection(1);
 	}
 
 	// The velocity cannot be signed
-	uint32_t velocity = abs(velocity);
+	uint32_t velocity = abs(velocityDir);
 
 	// Calculated velocity should not exceed maxVelocity 
 	if(velocity > this->maxVelocity ){
 		velocity = this->maxVelocity;
+		Serial.println("maxVelocity reached");
 	}
 
-	driver.setVelocity( velocity );
+	Serial.println( this->driver.readRegister(IHOLD_IRUN), BIN );
+
+	driver.setVelocity( (uint32_t)(velocity * FREQSCALE) );
 }
 
 
@@ -156,22 +158,23 @@ uint8_t uStepperS::SPI(uint8_t data){
 
 void uStepperS::setMaxVelocity( float velocity )
 {
-	this->maxVelocity = abs(velocity);
+	this->maxVelocity = abs( velocity * this->microSteps );
 	// Steps per second, has to be converted to microsteps
-	this->driver.setVelocity( (uint32_t)(this->maxVelocity * this->microSteps) );
+	this->driver.setVelocity( (uint32_t)( this->maxVelocity * FREQSCALE ) );
 }
 
 void uStepperS::setMaxAcceleration( float acceleration )
 {
-	this->maxAcceleration = abs(acceleration);
+	this->maxAcceleration = abs( acceleration * this->microSteps );
 	// Steps per second, has to be converted to microsteps
-	this->driver.setAcceleration( (uint32_t)(this->maxAcceleration * this->microSteps) );
+	this->driver.setAcceleration( (uint16_t)(this->maxAcceleration * FREQSCALE) );
 }
 
 void uStepperS::setMaxDeceleration( float deceleration )
 {
+	this->maxDeceleration = abs( deceleration * this->microSteps);
 	// Steps per second, has to be converted to microsteps
-	this->driver.setDeceleration( (uint32_t)(abs(deceleration * this->microSteps )) );
+	this->driver.setDeceleration( (uint16_t)( this->maxDeceleration * FREQSCALE) );
 }
 
 void uStepperS::setCurrent( double current )

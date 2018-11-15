@@ -57,6 +57,8 @@ class uStepperEncoder
 		 */
 		float getSpeed(void);
 
+		float getRPM(void);
+
 
 		/**
 		 * @brief      Capture the current shaft angle

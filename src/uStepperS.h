@@ -60,6 +60,7 @@ class uStepperS;
 #define SCK1 PC1 
 
 #define CLOCKFREQ 16000000.0
+#define FREQSCALE 16777216.0 / CLOCKFREQ
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTFREQ 1000.0			
@@ -99,6 +100,11 @@ public:
 	uStepperS(float acceleration, float velocity);
 
 	/**
+	 * @brief	Internal function to prepare the uStepperS in the constructor
+	 */
+	void init( void );
+
+	/**
 	 * @brief	Setup function
 	 */
 	void setup(); 
@@ -135,7 +141,6 @@ public:
 	 * @param      velocity  - Maximum velocity in steps/s^2
 	 */
 	void setMaxVelocity	( float velocity );
-
 
 	/**
 	 * @brief      Set motor output current.
@@ -179,11 +184,12 @@ private:
 	 * can be set and read by the user of the library using the
 	 * functions setMaxAcceleration()
 	 */
-	float maxAcceleration;		
+	float maxAcceleration;
+	float maxDeceleration;
 
 	float rpmToVelocity;
 	float angleToStep;
-	float stepMultiplier;
+
 	uint16_t microSteps = 256;
 	uint16_t fullSteps = 200;
 

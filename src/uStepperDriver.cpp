@@ -37,7 +37,9 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Set motor current */
 	this->writeRegister( IHOLD_IRUN, IHOLD( this->holdCurrent) | IRUN( this->current) | IHOLDDELAY( this->holdDelay) );
 
-	this->enableStealth( 100000 );
+
+
+	// this->enableStealth( 100000 );
 
 	/* Set all-round chopper configuration */
 	this->writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );

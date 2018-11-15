@@ -3,7 +3,6 @@
 
 uStepperEncoder::uStepperEncoder(void)
 {
-
 	/* Prepare Hardware SPI communication */
 
 	/* 
@@ -14,11 +13,10 @@ uStepperEncoder::uStepperEncoder(void)
 	*  CPHA  = 0: Sample at leading edge
 	*/
 	// SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<CPOL);
-
 }
 
-void uStepperEncoder::init(uStepperS * _pointer){
-	
+void uStepperEncoder::init(uStepperS * _pointer)
+{
 	this->pointer = _pointer;
 
 	angle = 0;
@@ -56,8 +54,8 @@ void uStepperEncoder::setHome(void)
 	sei();
 }
 
-uint16_t uStepperEncoder::captureAngle(void){
-
+uint16_t uStepperEncoder::captureAngle(void)
+{
 	pointer->setSPIMode(2);
 
 	uint16_t value = 0;
@@ -81,39 +79,45 @@ uint16_t uStepperEncoder::captureAngle(void){
 	return value;
 }
 
-float uStepperEncoder::getAngle(void){
+float uStepperEncoder::getAngle(void)
+{
 	return ((float)angle / 65536.0) * 360.0;
 }
 
-uint16_t uStepperEncoder::getAngleRaw(void){
+uint16_t uStepperEncoder::getAngleRaw(void)
+{
 	return angle;
 }
 
 
-float uStepperEncoder::getAngleMoved(void){
-
+float uStepperEncoder::getAngleMoved(void)
+{
 	return ((float)angleMoved / 65536.0) * 360.0;
-
 }
 
-int32_t uStepperEncoder::getAngleMovedRaw(void){
-
+int32_t uStepperEncoder::getAngleMovedRaw(void)
+{
 	return angleMoved;
-
 }
 
 
-uint8_t uStepperEncoder::getStatus( void ){
+uint8_t uStepperEncoder::getStatus( void )
+{
 	return this->status;
 }
 
-
-float uStepperEncoder::getSpeed( void ){
+float uStepperEncoder::getSpeed( void )
+{
 	return curSpeed;
 }
 
+float uStepperEncoder::getRPM( void )
+{
+	return curSpeed * 60;
+}
 
-void uStepperEncoder::chipSelect(bool state){
+void uStepperEncoder::chipSelect(bool state)
+{
 	if(state)
 		PORTD |= (1 << CS_ENCODER); // Set CS HIGH
 	else
