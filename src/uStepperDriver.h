@@ -38,6 +38,7 @@
 
 #define PWMCONF				0x70
 
+#define FREEWHEEL(n)		(((n)&0x3UL)<<20)
 #define PWM_AUTOSCALE(n)	(((n)&0x1UL)<<18)
 #define PWM_FREQ(n)			(((n)&0x3UL)<<16)
 #define PWM_GRAD(n)			(((n)&0xFF)<<8)
@@ -151,7 +152,7 @@ friend class uStepperS;
 		uStepperS * pointer; 	
 
 		uint8_t current = 16;
-		uint8_t holdCurrent = 16;
+		uint8_t holdCurrent = 0;
 		uint8_t holdDelay = 5;
 
 		/** Default acceleration profile */

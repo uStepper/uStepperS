@@ -37,9 +37,7 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Set motor current */
 	this->writeRegister( IHOLD_IRUN, IHOLD( this->holdCurrent) | IRUN( this->current) | IHOLDDELAY( this->holdDelay) );
 
-
-
-	// this->enableStealth( 100000 );
+	this->enableStealth( 100000 );
 
 	/* Set all-round chopper configuration */
 	this->writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
@@ -71,18 +69,16 @@ void uStepperDriver::setDeceleration( uint16_t deceleration )
 	this->writeRegister(DMAX_REG, this->DMAX);
 }
 
-void uStepperDriver::setCurrent( uint8_t current ){
-
+void uStepperDriver::setCurrent( uint8_t current )
+{
 	this->current = current;
 	this->updateCurrent();
-
 }
 
-void uStepperDriver::setHoldCurrent( uint8_t current ){
-
+void uStepperDriver::setHoldCurrent( uint8_t current )
+{
 	this->holdCurrent = current;
 	this->updateCurrent();
-
 }
 
 void uStepperDriver::updateCurrent( void )
@@ -156,7 +152,7 @@ void uStepperDriver::enableStealth( uint32_t threshold )
 	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(1) ); 
 
 	/* Set PWMCONF for StealthChop */
-	this->writeRegister( PWMCONF, PWM_GRAD(1) | PWM_AMPL(255) | PWM_FREQ(0) ); 
+	this->writeRegister( PWMCONF, PWM_GRAD(1) | PWM_AMPL(255) | PWM_FREQ(0) | FREEWHEEL(1) ); 
 
 	/* Specifies the upper velocity for operation in stealthChop voltage PWM mode */
 	this->writeRegister( TPWMTHRS, threshold ); 

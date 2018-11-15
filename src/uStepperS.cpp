@@ -5,6 +5,8 @@ uStepperS * pointer;
 uStepperS::uStepperS()
 {
 	pointer = this;
+
+	this->init();
 }
 
 uStepperS::uStepperS(float acceleration, float velocity)
@@ -45,14 +47,8 @@ void uStepperS::init( void ){
 
 void uStepperS::setup( void )
 {
-
-	this->init();
-
-
 	// Should setup mode etc. later
 	encoder.setHome();
-
-
 }
 
 void uStepperS::moveSteps( int32_t steps )
@@ -123,8 +119,6 @@ void uStepperS::setRPM( float rpm)
 		velocity = this->maxVelocity;
 		Serial.println("maxVelocity reached");
 	}
-
-	Serial.println( this->driver.readRegister(IHOLD_IRUN), BIN );
 
 	driver.setVelocity( (uint32_t)(velocity * FREQSCALE) );
 }
