@@ -105,10 +105,10 @@ void uStepperS::setRPM( float rpm)
 {
 	int32_t velocityDir = rpmToVelocity * rpm;
 
-	if(velocityDir < 0){
-		driver.setDirection(0);
-	}else{
+	if(velocityDir > 0){
 		driver.setDirection(1);
+	}else{
+		driver.setDirection(0);
 	}
 
 	// The velocity cannot be signed

@@ -92,7 +92,7 @@ void uStepperDriver::setPosition( int32_t position )
 	this->writeRegister(XTARGET, position);
 }
 
-void uStepperDriver::setDirection( bool direction )
+void uStepperDriver::setShaftDirection( bool direction )
 {
 	// Read the register to save the settings
 	int32_t value = this->readRegister( GCONF );
@@ -105,6 +105,15 @@ void uStepperDriver::setDirection( bool direction )
 	}
 
 	this->writeRegister( GCONF, value ); 
+}
+
+void uStepperDriver::setDirection( bool direction )
+{
+	if(direction){
+		this->writeRegister( RAMPMODE, VELOCITY_MODE_POS ); 
+	}else{
+		this->writeRegister( RAMPMODE, VELOCITY_MODE_NEG ); 
+	}
 }
 
 void uStepperDriver::setRampProfile( uint32_t speed, uint16_t acceleration, uint16_t deceleration ){

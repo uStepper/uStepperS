@@ -130,6 +130,8 @@ friend class uStepperS;
 
 		void setDirection( bool direction );
 
+		void setShaftDirection( bool direction );
+
 
 		void stop( void );
 
@@ -151,11 +153,11 @@ friend class uStepperS;
 
 		uStepperS * pointer; 	
 
-		uint8_t current = 16;
+		uint8_t current = 18;
 		uint8_t holdCurrent = 0;
 		uint8_t holdDelay = 5;
 
-		/** Default acceleration profile */
+		/** Default acceleration profile for positioning mode */
 		uint32_t VSTART = 0;
 		uint32_t V1 	= 100000;
 		uint32_t VMAX	= 200000;
