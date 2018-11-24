@@ -153,8 +153,8 @@ friend class uStepperS;
 
 		uStepperS * pointer; 	
 
-		uint8_t current = 18;
-		uint8_t holdCurrent = 0;
+		uint8_t current = 20;
+		uint8_t holdCurrent = 16;
 		uint8_t holdDelay = 5;
 
 		/** Default acceleration profile for positioning mode */

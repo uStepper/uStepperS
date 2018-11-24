@@ -173,13 +173,16 @@ void uStepperS::setMaxDeceleration( float deceleration )
 
 void uStepperS::setCurrent( double current )
 {
-	if( current >= 100.0 && current <= 0.0){
+	if( current <= 100.0 && current >= 0.0){
 		// The current needs to be in the range of 0-31
 		this->driver.current = ceil(0.31 * current); 
 	}else{
 		// If value is out of range, set default
 		this->driver.current = 16; 
 	}
+
+	/*Serial.print("Motor current: ");
+	Serial.println(this->driver.current);*/
 
 	driver.updateCurrent();
 }
