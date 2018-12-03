@@ -130,6 +130,14 @@ public:
 	 */
 	void setMaxAcceleration	( float acceleration );
 
+	/**
+	 * @brief      Set the maximum deceleration of the stepper motor.
+	 *
+	 *             This function lets the user set the max deceleration used 
+	 *             by the stepper driver.
+	 *
+	 * @param      deceleration  - Maximum deceleration in steps/s^2
+	 */
 	void setMaxDeceleration ( float deceleration );
 
 	/**
@@ -160,17 +168,51 @@ public:
 	 */
 	void setHoldCurrent( double current );
 
-
+	/**
+	 * @brief      Make the motor perform a predefined number of steps
+	 *
+	 *             This function makes the motor perform a predefined number of
+	 *             steps, using the acceleration profile. The motor will accelerate
+	 *             at the rate set by setMaximumAcceleration(), and eventually reach the speed set
+	 *             by setMaximumVelocity() function. The direction of rotation
+	 *             is set by the argument "dir".
+	 *
+	 * @param      steps     -	Number of steps to be performed.
+	 */
 	void moveSteps( int32_t steps );
 
+	/**
+	 * @brief      	Moves the motor to a relative angle
+	 *
+	 * @param  	    angle     -	Relative angle from current position (negative value allowed)
+	 */
 	void moveAngle( float angle );
 
+	/**
+	 * @brief      	Moves the motor to an absolute angle
+	 *
+	 * @param   	angle     -	Absolute angle (negative value allowed)
+	 */
 	void moveToAngle( float angle );
 
-	void runContinous( bool direction );
+	/**
+	 * @brief      Make the motor rotate continuously
+	 *
+	 *             This function makes the motor rotate continuously, using the
+	 *             acceleration profile.
+	 *
+	 * @param      dir   - Can be set to "CCW" or "CW" (without the quotes)
+	 */
+	void runContinous( bool dir );
 
+	/**
+	 * @brief      Get the angle moved from reference position
+	 *
+	 * @return     The angle moved.
+	 */
 	float angleMoved( void );
 
+	void stop( void );
 
 private: 
 

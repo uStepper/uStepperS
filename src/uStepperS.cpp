@@ -19,7 +19,6 @@ uStepperS::uStepperS(float acceleration, float velocity)
 	this->setMaxVelocity(velocity);*/
 }
 
-
 void uStepperS::init( void ){
 
 	/* Set CS, MOSI, SCK and DRV_ENN as Output */
@@ -63,8 +62,6 @@ void uStepperS::moveSteps( int32_t steps )
 	this->driver.setPosition( current + (steps * microSteps) );
 }
 
-
-
 void uStepperS::moveAngle( float angle )
 {
 	int32_t steps;
@@ -81,6 +78,16 @@ void uStepperS::moveAngle( float angle )
 	}
 }
 
+void uStepperS::stop( void ){
+
+	// Check which mode is used
+
+	// if positioning mode  
+		// Update XTARGET to current postion
+	// else
+		// Set VMAX = 0
+
+}
 
 void uStepperS::moveToAngle( float angle )
 {
@@ -100,7 +107,6 @@ void uStepperS::moveToAngle( float angle )
 	}
 }
 
-
 void uStepperS::setRPM( float rpm)
 {
 	int32_t velocityDir = rpmToVelocity * rpm;
@@ -114,18 +120,17 @@ void uStepperS::setRPM( float rpm)
 	// The velocity cannot be signed
 	uint32_t velocity = abs(velocityDir);
 
-	// Calculated velocity should not exceed maxVelocity 
+	// Calculated velocity should not exceed maxVelocity set by the user
 	if(velocity > this->maxVelocity ){
 		velocity = this->maxVelocity;
-		Serial.println("maxVelocity reached");
+		Serial.println("Max velocity reached");
 	}
 
 	driver.setVelocity( (uint32_t)(velocity * FREQSCALE) );
 }
 
-
-void uStepperS::setSPIMode( uint8_t mode ){
-
+void uStepperS::setSPIMode( uint8_t mode )
+{
 	switch(mode){
 		case 2:
 			SPCR1 |= (1<<CPOL1);  // Set CPOL HIGH = 1
@@ -139,15 +144,14 @@ void uStepperS::setSPIMode( uint8_t mode ){
 	}
 }
 
-uint8_t uStepperS::SPI(uint8_t data){
-
+uint8_t uStepperS::SPI(uint8_t data)
+{
 	SPDR1 = data;
 
 	// Wait for transmission complete
 	while(!( SPSR1 & (1 << SPIF1) ));    
 
 	return SPDR1;
-
 }
 
 void uStepperS::setMaxVelocity( float velocity )
@@ -181,16 +185,13 @@ void uStepperS::setCurrent( double current )
 		this->driver.current = 16; 
 	}
 
-	/*Serial.print("Motor current: ");
-	Serial.println(this->driver.current);*/
-
 	driver.updateCurrent();
 }
 
 void uStepperS::setHoldCurrent( double current )
 {
 	// The current needs to be in the range of 0-31
-	if( current >= 100.0 && current <= 0.0){
+	if( current <= 100.0 && current >= 0.0 ){
 		// The current needs to be in the range of 0-31
 		this->driver.holdCurrent = ceil(0.31 * current); 
 	}else{
@@ -201,14 +202,13 @@ void uStepperS::setHoldCurrent( double current )
 	driver.updateCurrent();
 }
 
-
-void uStepperS::runContinous( bool direction )
+void uStepperS::runContinous( bool dir )
 {
 	// Make sure we use velocity mode
 	this->driver.setRampMode( VELOCITY_MODE_POS );
 
 	// Set the direction
-	this->driver.setDirection( direction );
+	this->driver.setDirection( dir );
 }
 
 float uStepperS::angleMoved ( void )
@@ -233,6 +233,7 @@ void TIMER1_COMPA_vect(void)
 
 	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
 
+	/* Calculation of revolutions */
 	if(deltaAngle < -32768)
 	{
 		pointer->encoder.revolutions--;
