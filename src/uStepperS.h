@@ -214,6 +214,7 @@ public:
 
 	void stop( void );
 
+
 private: 
 
 	/** This variable contains the maximum velocity in steps/s, the motor is

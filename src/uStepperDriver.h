@@ -153,7 +153,7 @@ friend class uStepperS;
 
 		uStepperS * pointer; 	
 
-		uint8_t current = 20;
+		uint8_t current = 16;
 		uint8_t holdCurrent = 16;
 		uint8_t holdDelay = 5;
 

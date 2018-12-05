@@ -43,7 +43,7 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	this->writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
 
 	/* Set startup ramp mode */
-	this->setRampMode( VELOCITY_MODE_POS );
+	this->setRampMode( POSITIONING_MODE );
 
 	/* Reset position */
 	this->writeRegister(XACTUAL, 0);
@@ -121,6 +121,10 @@ void uStepperDriver::setRampProfile( uint32_t speed, uint16_t acceleration, uint
 	this->V1 = speed;
 	this->A1 = acceleration;
 	this->D1 = deceleration;
+
+	// Update the rampprofile 
+
+	this->setRampMode(POSITIONING_MODE);
 
 }
 
