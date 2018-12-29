@@ -162,7 +162,7 @@ void uStepperDriver::setRampMode( uint8_t mode ){
 void uStepperDriver::enableStealth()
 {
 	/* Set GCONF and enable stealthChop */
-	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(1) ); 
+	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) ); 
 
 	/* Set PWMCONF for StealthChop */
 	this->writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(1) ); 
