@@ -137,7 +137,7 @@ friend class uStepperS;
 
 		void reset( void );
 
-		void enableStealth( uint32_t threshold );
+		void enableStealth( void);
 
 
 		int32_t getVelocity( void );
@@ -155,7 +155,7 @@ friend class uStepperS;
 
 		uint8_t current = 16;
 		uint8_t holdCurrent = 16;
-		uint8_t holdDelay = 5;
+		uint8_t holdDelay = 0;
 
 		/** Default acceleration profile for positioning mode */
 		uint32_t VSTART = 0;

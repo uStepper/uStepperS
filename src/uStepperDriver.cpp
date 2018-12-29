@@ -37,10 +37,10 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Set motor current */
 	this->writeRegister( IHOLD_IRUN, IHOLD( this->holdCurrent) | IRUN( this->current) | IHOLDDELAY( this->holdDelay) );
 
-	// this->enableStealth( 100000 );
+	this->enableStealth();
 
 	/* Set all-round chopper configuration */
-	this->writeRegister( CHOPCONF, TOFF(4) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
+	this->writeRegister( CHOPCONF, TOFF(2) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
 
 	/* Set startup ramp mode */
 	this->setRampMode( POSITIONING_MODE );
@@ -159,16 +159,16 @@ void uStepperDriver::setRampMode( uint8_t mode ){
 	}
 }
 
-void uStepperDriver::enableStealth( uint32_t threshold )
+void uStepperDriver::enableStealth()
 {
 	/* Set GCONF and enable stealthChop */
 	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) | DIRECTION(1) ); 
 
 	/* Set PWMCONF for StealthChop */
-	this->writeRegister( PWMCONF, PWM_GRAD(1) | PWM_AMPL(255) | PWM_FREQ(0) | FREEWHEEL(1) ); 
+	this->writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(1) ); 
 
-	/* Specifies the upper velocity for operation in stealthChop voltage PWM mode */
-	this->writeRegister( TPWMTHRS, threshold ); 
+	/* Specifies the upper velocity (lower time delay) for operation in stealthChop voltage PWM mode */
+	this->writeRegister( TPWMTHRS, 5000 ); 
 }
 
 int32_t uStepperDriver::getVelocity( void )

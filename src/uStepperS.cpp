@@ -187,9 +187,9 @@ void uStepperS::setCurrent( double current )
 void uStepperS::setHoldCurrent( double current )
 {
 	// The current needs to be in the range of 0-31
-	if( current >= 100.0 && current <= 0.0){
+	if( current <= 100.0 && current >= 0.0){
 		// The current needs to be in the range of 0-31
-		this->driver.holdCurrent = ceil(0.31 * current); 
+		this->driver.holdCurrent = ceil(0.31 * current);
 	}else{
 		// If value is out of range, set default
 		this->driver.holdCurrent = 16; 
