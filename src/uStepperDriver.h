@@ -100,10 +100,13 @@
 #define VELOCITY_MODE_NEG	0x02		// negativ VMAX, using AMAX acceleration
 #define HOLD_MODE			0x03		// velocity remains unchanged, unless stop event occurs
 
+#define DRIVER_STOP 0
+#define DRIVER_VELOCITY 1
+#define DRIVER_POSITION 2
+
 class uStepperDriver{
 
 friend class uStepperS;
-
 	public:
 
 		uStepperDriver( void );
@@ -132,13 +135,13 @@ friend class uStepperS;
 
 		void setShaftDirection( bool direction );
 
-
 		void stop( void );
 
 		void reset( void );
 
 		void enableStealth( void);
 
+		void readMotorStatus(void);
 
 		int32_t getVelocity( void );
 
@@ -146,28 +149,37 @@ friend class uStepperS;
 
 		bool positionReached( void );
 
+		void setHome(void);
+
+		int32_t writeRegister( uint8_t address, uint32_t datagram );
+
 		/** Status bits from the driver */
 		uint8_t status; 
+
+		volatile int32_t xTarget = 0;
+
+		/** STOP, VELOCITY, POSITION*/
+		uint8_t mode = DRIVER_STOP;
 
 	private:
 
 		uStepperS * pointer; 	
 
 		uint8_t current = 16;
-		uint8_t holdCurrent = 16;
+		uint8_t holdCurrent = 10;
 		uint8_t holdDelay = 0;
 
 		/** Default acceleration profile for positioning mode */
 		uint32_t VSTART = 0;
-		uint32_t V1 	= 100000;
+		uint32_t V1 	= 0;
 		uint32_t VMAX	= 200000;
 		uint32_t VSTOP 	= 10;
-		uint16_t A1 	= 1000;
-		uint16_t AMAX	= 400;
-		uint16_t DMAX	= 800;
-		uint16_t D1 	= 2000;
+		uint16_t A1 	= 600;
+		uint16_t AMAX	= 600;
+		uint16_t DMAX	= 600;
+		uint16_t D1 	= 600;
 
-		int32_t writeRegister( uint8_t address, uint32_t datagram );
+		
 
 		int32_t readRegister( uint8_t address );
 
