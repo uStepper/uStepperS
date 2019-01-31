@@ -1,6 +1,6 @@
 #include <uStepperS.h>
 /* At initialition setup the SPI hardware protocal to communicate with SSI interface */
-
+extern uStepperS * pointer;
 uStepperEncoder::uStepperEncoder(void)
 {
 	/* Prepare Hardware SPI communication */
@@ -29,7 +29,7 @@ void uStepperEncoder::init(uStepperS * _pointer)
 	TCNT1 = 0;
 	ICR1 = 16000; 
 
-	// TIFR1 = 0
+	TIFR1 = 0;
 
 	/* Enable Timer1 compare interrupt */
 	TIMSK1 = (1 << OCIE1A);
@@ -46,11 +46,15 @@ void uStepperEncoder::setHome(void)
 	cli();
 
 	this->encoderOffset = this->captureAngle();
-
+	this->oldAngle = 0;
 	this->angle = 0;
 	this->angleMoved = 0;
 	this->revolutions = 0;
-
+	pointer->driver.setHome();
+	this->encoderFilter.posError = 0.0;
+	this->encoderFilter.posEst = 0.0;
+	this->encoderFilter.velIntegrator = 0.0;
+	this->encoderFilter.velEst = 0.0;
 	sei();
 }
 
@@ -62,7 +66,6 @@ uint16_t uStepperEncoder::captureAngle(void)
 	uint8_t stats = 0;
 
 	chipSelect(true);  // Set CS HIGH
-	// delayMicroseconds(1); Not needed
 	
 	/* Write dummy and read the incoming 8 bits */
 	value = pointer->SPI(0x00);
@@ -75,13 +78,14 @@ uint16_t uStepperEncoder::captureAngle(void)
 	this->status = pointer->SPI(0x00);
 
 	chipSelect(false);  // Set CS LOW
-	
+
+
 	return value;
 }
 
 float uStepperEncoder::getAngle(void)
 {
-	return ((float)angle / 65536.0) * 360.0;
+	return (float)angle * 0.005493164;	//360/65536
 }
 
 uint16_t uStepperEncoder::getAngleRaw(void)
@@ -92,7 +96,7 @@ uint16_t uStepperEncoder::getAngleRaw(void)
 
 float uStepperEncoder::getAngleMoved(void)
 {
-	return ((float)angleMoved / 65536.0) * 360.0;
+	return this->encoderFilter.posEst * 0.005493164;	//360/65536
 }
 
 int32_t uStepperEncoder::getAngleMovedRaw(void)
@@ -108,7 +112,7 @@ uint8_t uStepperEncoder::getStatus( void )
 
 float uStepperEncoder::getSpeed( void )
 {
-	return curSpeed;
+	return pointer->encoder.encoderFilter.velIntegrator;
 }
 
 float uStepperEncoder::getRPM( void )

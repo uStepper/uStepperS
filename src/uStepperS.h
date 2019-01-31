@@ -38,7 +38,16 @@
 	#error !!This library only supports the ATmega328PB MCU!!
 #endif
 
+#define CW 1
+#define CCW 0
 
+typedef struct 
+{
+	float posError = 0.0;
+	float posEst = 0.0;				//<--- Filtered Position
+	float velIntegrator = 0.0;		//<--- Filtered velocity
+	float velEst = 0.0;
+}posFilter_t;
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -46,6 +55,8 @@
 class uStepperS;
 #include <uStepperEncoder.h>
 #include <uStepperDriver.h>
+
+
 
 
 #define DRV_ENN PD4 
@@ -59,14 +70,25 @@ class uStepperS;
 #define MISO1 PC0  
 #define SCK1 PC1 
 
+/** Value defining normal mode*/	
+#define NORMAL 	0	
+/** Value defining dropin mode for 3d printer/CNC controller boards*/
+#define DROPIN 	1						
+/** Value defining PID mode for normal library functions*/
+#define PID 	2	
+
 #define CLOCKFREQ 16000000.0
-#define FREQSCALE 16777216.0 / CLOCKFREQ
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
-#define ENCODERINTFREQ 1000.0			
+#define ENCODERINTFREQ 1000.0	
+/** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
+#define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		
 /** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
-#define ENCODERSPEEDCONSTANT ENCODERINTFREQ/10.0/65535.0	
-
+#define ENCODERSPEEDCONSTANT ENCODERINTFREQ/65535.0	
+/**	P term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
+#define PULSEFILTERKP 60.0
+/**	I term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
+#define PULSEFILTERKI 1200.0*ENCODERINTPERIOD
 
 /**
  * @brief	Measures angle of motor.
@@ -75,12 +97,29 @@ class uStepperS;
  */
 extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal,used));
 
+/**
+ * @brief      Used by dropin feature to take in step pulses
+ *
+ *             This interrupt routine is used by the dropin feature to keep
+ *             track of step and direction pulses from main controller
+ */
+void interrupt0(void);
+
+/**
+ * @brief      Used by dropin feature to take in enable signal
+ *
+ *             This interrupt routine is used by the dropin feature to keep
+ *             track of enable signal from main controller
+ */
+void interrupt1(void);
+
 class uStepperS
 {
 
 friend class uStepperDriver;
 friend class uStepperEncoder;
-
+friend void interrupt0(void);
+friend void TIMER1_COMPA_vect(void) __attribute__ ((signal,used));
 public:			
 	/** Instantiate object for the encoder */
 
@@ -105,9 +144,48 @@ public:
 	void init( void );
 
 	/**
-	 * @brief	Setup function
+	 * @brief      Initializes the different parts of the uStepper object
+	 *
+	 *             This function initializes the different parts of the uStepper
+	 *             object, and should be called in the setup() function of the
+	 *             arduino sketch. This function is needed as some things, like
+	 *             the timer can not be setup in the constructor, since arduino
+	 *             for some strange reason, resets a lot of the AVR registers
+	 *             just before entering the setup() function.
+	 *
+	 * @param[in]  mode             Default is normal mode. Pass the constant
+	 *                              "DROPIN" to configure the uStepper to act as
+	 *                              dropin compatible to the stepstick. Pass the
+	 *                              constant "PID", to enable PID feature for
+	 *                              regular movement functions, such as
+	 *                              moveSteps()
+	 * @param[in]  microStepping    When mode is set to anythings else than
+	 *                              "NORMAL", this parameter should be set to
+	 *                              the current microstep setting. available
+	 *                              arguments are: FULL HALF QUARTER EIGHT
+	 *                              SIXTEEN
+	 * @param[in]  faultTolerance   This parameter defines the allowed number of
+	 *                              missed steps before the correction should
+	 *                              kick in.
+	 * @param[in]  faultHysteresis  The number of missed steps allowed for the
+	 *                              PID to turn off
+	 * @param[in]  pTerm            The proportional coefficent of the PID
+	 *                              controller
+	 * @param[in]  iTerm            The integral coefficent of the PID
+	 *                              controller
+	 * @param[in]  dterm            The differential coefficent of the PID
+	 *                              controller
+	 * @param[in]  setHome          When set to true, the encoder position is
+	 *								Reset. When set to false, the encoder
+	 *								position is not reset.
 	 */
-	void setup(); 
+	void setup(	uint8_t mode = NORMAL,
+				uint16_t stepsPerRevolution = 200, 
+				float pTerm = 0.75, 
+				float iTerm = 3.0, 
+				float dTerm = 0.0,
+				uint16_t dropinStepSize = 16,
+				bool setHome = true);	
 
 
 	/**
@@ -212,6 +290,8 @@ public:
 	 */
 	float angleMoved( void );
 
+	bool uStepperS::getMotorState(void);
+
 	void stop( void );
 
 
@@ -233,10 +313,34 @@ private:
 	float rpmToVelocity;
 	float angleToStep;
 
-	uint16_t microSteps = 256;
-	uint16_t fullSteps = 200;
+	uint16_t microSteps;
+	uint16_t fullSteps;
+	uint16_t dropinStepSize;
 
+	int32_t stepCnt;
+
+	float stepsPerSecondToRPM;
+	float RPMToStepsPerSecond;
+
+	volatile posFilter_t externalStepInputFilter;
+
+	float currentPidSpeed;
+	/** This variable is used to indicate which mode the uStepper is
+	* running in (Normal, dropin or pid)*/
+	uint8_t mode;	
+	float pTerm;	
+	/** This variable contains the integral coefficient used by the PID */
+	float iTerm;		
+
+	float dTerm;
+	bool brake;
+	volatile bool pidDisabled;
+	/** This variable holds information on wether the motor is stalled or not.
+	0 = OK, 1 = stalled */
+	volatile bool stall;
 	// SPI functions
+
+	volatile int32_t pidPositionStepsIssued = 0;
 
 	uint8_t SPI( uint8_t data );
 
@@ -244,6 +348,9 @@ private:
 
 	void chipSelect( uint8_t pin , bool state );
 
+	void filterSpeedPos(posFilter_t *filter, int32_t steps);
+
+	float pid(float error);
 };
 
 

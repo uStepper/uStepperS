@@ -1,5 +1,7 @@
 #include <uStepperS.h>
 
+extern uStepperS * pointer;
+
 uStepperDriver::uStepperDriver( void ){
 }
 
@@ -49,6 +51,13 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	this->writeRegister(XACTUAL, 0);
 	this->writeRegister(XTARGET, 0);
 
+
+
+}
+
+void uStepperDriver::readMotorStatus(void)
+{
+	this->readRegister(XACTUAL);
 }
 
 void uStepperDriver::setVelocity( uint32_t velocity )
@@ -88,27 +97,28 @@ void uStepperDriver::updateCurrent( void )
 
 void uStepperDriver::setPosition( int32_t position )
 {
+	this->mode = DRIVER_POSITION;
 	this->setRampMode(POSITIONING_MODE);
 	this->writeRegister(XTARGET, position);
+	this->xTarget = position;
 }
 
 void uStepperDriver::setShaftDirection( bool direction )
 {
 	// Read the register to save the settings
 	int32_t value = this->readRegister( GCONF );
-
 	// Update the direction bit
 	if(direction == 1){
-		value |= DIRECTION(1);
+		value |= (0x01 << 4);
 	}else{
-		value &= ~(DIRECTION(1));
+		value &= ~(0x01 << 4);
 	}
-
 	this->writeRegister( GCONF, value ); 
 }
 
 void uStepperDriver::setDirection( bool direction )
 {
+	this->mode = DRIVER_VELOCITY;
 	if(direction){
 		this->writeRegister( RAMPMODE, VELOCITY_MODE_POS ); 
 	}else{
@@ -183,7 +193,32 @@ int32_t uStepperDriver::getPosition( void )
 
 void uStepperDriver::stop( void )
 {
+	this->mode = DRIVER_STOP;
 	this->setVelocity(0);
+}
+
+void uStepperDriver::setHome(void)
+{
+	int32_t xActual, xTarget;
+
+	if(this->mode == DRIVER_POSITION)
+	{
+		xActual = this->getPosition();
+		xTarget = this->readRegister(XTARGET);
+
+		xTarget -= xActual;
+		this->xTarget = xTarget;
+		this->writeRegister(XACTUAL, 0);
+		this->writeRegister(XTARGET, xTarget);
+	}
+	else
+	{
+		this->xTarget = 0;
+		this->writeRegister(XACTUAL, 0);
+		this->writeRegister(XTARGET, 0);
+	}
+
+	pointer->pidPositionStepsIssued = 0;
 }
 
 int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
@@ -260,7 +295,4 @@ void uStepperDriver::chipSelect(bool state)
 		PORTE &= ~(1 << CS_DRIVER);  // Set CS LOW 
 	else
 		PORTE |= (1 << CS_DRIVER); // Set CS HIGH
-
-	if( state )
-		delayMicroseconds(100);   // per spec, settling time is 100us
 }

@@ -1,5 +1,4 @@
 #include <Arduino.h>
-
 /** Chip select for AEAT-8800-Q24 - Pin 10 on ATmega328p */
 #define CS PB2 
 
@@ -12,6 +11,7 @@
 /** Clock signal for AEAT-8800-Q24 - Pin 13 on ATmega328p (SCK) */
 #define CLK PB5 
 
+#define ENCODERDATATOSTEP 51200.0/65536.0
 
 class uStepperEncoder
 {
@@ -100,7 +100,7 @@ class uStepperEncoder
 		volatile float curSpeed;
 
 		volatile uint32_t deltaTime;
-
+		volatile posFilter_t encoderFilter;
 
 	private:
 		
@@ -112,7 +112,7 @@ class uStepperEncoder
 		/** Status bits from the encoder */
 		uint8_t status; 
 
-
+		
 
 };
 
