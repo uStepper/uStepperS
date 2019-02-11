@@ -10,7 +10,7 @@ uStepperS::uStepperS()
 
 	this->setMaxAcceleration(2000.0);
 	this->setMaxDeceleration(2000.0);
-	this->setMaxVelocity(1000.0);
+	this->setMaxVelocity(100.0);
 }
 
 uStepperS::uStepperS(float acceleration, float velocity)
@@ -80,6 +80,10 @@ void uStepperS::setup(	uint8_t mode,
 
 	this->setCurrent(40.0);
 	this->setHoldCurrent(25.0);
+
+	while(this->driver.readRegister(VACTUAL) != 0);
+
+	delay(500);
 
 	encoder.setHome();
 
@@ -175,7 +179,69 @@ void uStepperS::moveToAngle( float angle )
 		this->moveSteps( steps );
 	}
 }
+bool uStepperS::isStalled( void )
+{
+	int32_t driverSpeed;
+	static uint8_t count = 0;
+	float angle;
+	static float oldAngle;
+	float speed;
+	int32_t driverPos;
+	static int32_t oldDriverPos = 0;
+	int32_t diffAngle;
+	int32_t diffDriverPos;
 
+	driverPos = this->driver.getPosition();
+	speed = this->encoder.getSpeed();
+	angle = this->encoder.getAngleMoved();
+
+	diffAngle = (int32_t)(abs(oldAngle - angle) * this->angleToStep);
+	diffDriverPos = abs(oldDriverPos - driverPos);
+	oldAngle = angle;
+	oldDriverPos = driverPos;
+
+	
+
+	if(this->driver.mode == DRIVER_POSITION)
+	{
+		if(abs(diffDriverPos / 2) > abs(diffAngle))
+		{
+			return 1;
+		}
+	}
+
+	else if(!(this->driver.status & 0x08))		//Motor running
+	{
+		driverSpeed = (this->driver.readRegister(VACTUAL));
+		
+		if(driverSpeed & 0x00800000)
+		{
+			driverSpeed |= 0xFF000000;
+		}
+	    if(driverSpeed > 0)
+	    {
+	    	if(0.5 * (float)driverSpeed > speed)
+	    	{
+	    		return 1;
+	    	}
+	    }
+	    else
+	    {
+	    	if(0.5 * (float)driverSpeed < speed)
+	    	{
+	    		return 1;
+	    	}
+	    }
+		return 0;
+	}
+	
+	return 0;
+}
+
+void uStepperS::brakeMotor( bool brake )
+{
+
+}
 
 void uStepperS::setRPM( float rpm)
 {
@@ -420,7 +486,44 @@ void TIMER1_COMPA_vect(void)
 	}
 }
 
-float uStepperS::pid(float error)
+void uStepperS::enablePid(void)
+{
+	cli();
+	this->pidDisabled = 0;
+	sei();
+}
+
+void uStepperS::disablePid(void)
+{
+	cli();
+	this->pid(0.0,1);	
+	this->pidDisabled = 1;
+	sei();
+}
+
+float uStepperS::moveToEnd(bool dir)
+{
+	float length = this->encoder.getAngleMoved();
+
+	if(dir == CW)
+	{
+		this->setRPM(10);
+	}
+	else
+	{
+		this->setRPM(-10);
+	}
+	delay(1000);
+	while(!this->isStalled())
+	{
+	}
+	this->stop();
+
+	length -= this->encoder.getAngleMoved();
+	return abs(length);
+}
+
+float uStepperS::pid(float error, bool reset)
 {
 	static float output;
 	static float accumError = 0.0;
@@ -428,6 +531,17 @@ float uStepperS::pid(float error)
 	static float oldError = 0.0;
 	float integral;
 	static float d = 0.0;
+
+	if(reset)
+	{
+		output = 0.0;
+		accumError = 0.0;
+		integralReset = 0;
+		oldError = 0.0;
+		d = 0.0;
+		this->setMaxVelocity(this->maxVelocity);
+		return output;
+	}
 
 	if(error > -30.0 && error < 30.0)
 	{

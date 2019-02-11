@@ -153,6 +153,8 @@ friend class uStepperS;
 
 		int32_t writeRegister( uint8_t address, uint32_t datagram );
 
+		int32_t readRegister( uint8_t address );
+		
 		/** Status bits from the driver */
 		uint8_t status; 
 
@@ -181,7 +183,7 @@ friend class uStepperS;
 
 		
 
-		int32_t readRegister( uint8_t address );
+		
 
 		void chipSelect(bool state);
 
