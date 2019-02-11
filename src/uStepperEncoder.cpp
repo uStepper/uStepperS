@@ -58,6 +58,22 @@ void uStepperEncoder::setHome(void)
 	sei();
 }
 
+bool uStepperEncoder::detectMagnet(void)
+{
+	uint8_t status;
+
+	//this->captureAngle();
+
+	status = this->getStatus();
+
+	if((status & 0xE0) != 0x80)
+	{
+		return 0;
+	}
+
+	return 1;
+}
+
 uint16_t uStepperEncoder::captureAngle(void)
 {
 	pointer->setSPIMode(2);
@@ -112,7 +128,7 @@ uint8_t uStepperEncoder::getStatus( void )
 
 float uStepperEncoder::getSpeed( void )
 {
-	return pointer->encoder.encoderFilter.velIntegrator;
+	return pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 }
 
 float uStepperEncoder::getRPM( void )

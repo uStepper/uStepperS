@@ -70,6 +70,8 @@ class uStepperEncoder
 
 		uint8_t getStatus( void );
 
+		bool detectMagnet(void);
+
 
 		/** Angle of the shaft at the reference position. */
 		uint16_t encoderOffset;

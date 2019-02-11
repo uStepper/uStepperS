@@ -153,31 +153,25 @@ public:
 	 *             for some strange reason, resets a lot of the AVR registers
 	 *             just before entering the setup() function.
 	 *
-	 * @param[in]  mode             Default is normal mode. Pass the constant
-	 *                              "DROPIN" to configure the uStepper to act as
-	 *                              dropin compatible to the stepstick. Pass the
-	 *                              constant "PID", to enable PID feature for
-	 *                              regular movement functions, such as
-	 *                              moveSteps()
-	 * @param[in]  microStepping    When mode is set to anythings else than
-	 *                              "NORMAL", this parameter should be set to
-	 *                              the current microstep setting. available
-	 *                              arguments are: FULL HALF QUARTER EIGHT
-	 *                              SIXTEEN
-	 * @param[in]  faultTolerance   This parameter defines the allowed number of
-	 *                              missed steps before the correction should
-	 *                              kick in.
-	 * @param[in]  faultHysteresis  The number of missed steps allowed for the
-	 *                              PID to turn off
-	 * @param[in]  pTerm            The proportional coefficent of the PID
-	 *                              controller
-	 * @param[in]  iTerm            The integral coefficent of the PID
-	 *                              controller
-	 * @param[in]  dterm            The differential coefficent of the PID
-	 *                              controller
-	 * @param[in]  setHome          When set to true, the encoder position is
-	 *								Reset. When set to false, the encoder
-	 *								position is not reset.
+	 * @param[in]  mode             	Default is normal mode. Pass the constant
+	 *                              	"DROPIN" to configure the uStepper to act as
+	 *                              	dropin compatible to the stepstick. Pass the
+	 *                              	constant "PID", to enable PID feature for
+	 *                              	regular movement functions, such as
+	 *                              	moveSteps()
+	 * @param[in]  stepsPerRevolution   Number of fullsteps per revolution
+	 *
+	 * @param[in]  pTerm            	The proportional coefficent of the PID
+	 *                              	controller
+	 * @param[in]  iTerm            	The integral coefficent of the PID
+	 *                              	controller
+	 * @param[in]  dterm            	The differential coefficent of the PID
+	 *                              	controller
+	 * @param[in]  dropinStepSize		number of steps per fullstep, send from
+	 *									external dropin controller   
+	 * @param[in]  setHome          	When set to true, the encoder position is
+	 *									Reset. When set to false, the encoder
+	 *									position is not reset.
 	 */
 	void setup(	uint8_t mode = NORMAL,
 				uint16_t stepsPerRevolution = 200, 
@@ -294,6 +288,15 @@ public:
 
 	void stop( void );
 
+	bool isStalled(void);
+
+	void brakeMotor(bool brake);
+
+	void enablePid(void);
+	void disablePid(void);
+
+	float moveToEnd(bool dir);
+
 
 private: 
 
@@ -350,7 +353,7 @@ private:
 
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
 
-	float pid(float error);
+	float pid(float error, bool reset = 0);
 };
 
 

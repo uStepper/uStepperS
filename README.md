@@ -51,6 +51,10 @@ Currently the documentation of this library is non-existing, but we are working 
 
 http://ustepper.com/docs/html/index.html
 
+### MAC Users:
+In order to make the uStepper S show up in the "ports" list, you need to install the VCP driver from the following link: 
+https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
+
 ## Known Bugs
 - Stall detection is currently not implemented
 - PID mode is currently not working. We are working on it !

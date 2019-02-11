@@ -50,13 +50,11 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Reset position */
 	this->writeRegister(XACTUAL, 0);
 	this->writeRegister(XTARGET, 0);
-
-
-
 }
 
 void uStepperDriver::readMotorStatus(void)
 {
+	while(TCNT1 > 15900);		//If interrupt is just about to happen, wait for it to finish
 	this->readRegister(XACTUAL);
 }
 
