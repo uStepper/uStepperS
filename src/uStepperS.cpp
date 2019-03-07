@@ -1,6 +1,6 @@
 #include <uStepperS.h>
 uStepperS * pointer;
-
+volatile float debug, debug1;
 uStepperS::uStepperS()
 {
 	pointer = this;
@@ -416,6 +416,7 @@ void interrupt0(void)
 	{
 		pointer->stepCnt+=pointer->dropinStepSize;			//DIR is set to CW, therefore we add 1 step to step count (positive values = number of steps in CW direction from initial postion)	
 	}
+	debug1 =  pointer->stepCnt;
 }
 
 void TIMER1_COMPA_vect(void)
@@ -462,6 +463,7 @@ void TIMER1_COMPA_vect(void)
 			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator * pointer->stepsPerSecondToRPM;
 			pointer->setRPM(pointer->pid(error));
 		}
+
 	}
 	else if(pointer->mode == PID)
 	{
@@ -545,13 +547,13 @@ float uStepperS::pid(float error, bool reset)
 
 	if(error > -30.0 && error < 30.0)
 	{
-		accumError = 0.0;
+		//accumError = 0.0;
 	}
 	else
 	{
 		if(!(error > 100.0 || error < -100.0))
 		{
-			accumError *= 0.3;
+			//accumError *= 0.3;
 		}
 	}
 
@@ -585,7 +587,7 @@ float uStepperS::pid(float error, bool reset)
 	oldError = error;
 
 	output *= this->stepsPerSecondToRPM;
-	output += this->currentPidSpeed;
-
+	debug=error;
+	//output += this->currentPidSpeed;
 	return output;
 }

@@ -61,6 +61,7 @@ class uStepperS;
 
 #define DRV_ENN PD4 
 #define SD_MODE PD5
+#define SPI_MODE PD6
 
 #define CS_DRIVER PE2
 #define CS_ENCODER PD7 
@@ -86,9 +87,9 @@ class uStepperS;
 /** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
 #define ENCODERSPEEDCONSTANT ENCODERINTFREQ/65535.0	
 /**	P term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
-#define PULSEFILTERKP 60.0
+#define PULSEFILTERKP 120.0
 /**	I term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
-#define PULSEFILTERKI 1200.0*ENCODERINTPERIOD
+#define PULSEFILTERKI 1900.0*ENCODERINTPERIOD
 
 /**
  * @brief	Measures angle of motor.
