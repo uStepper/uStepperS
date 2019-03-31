@@ -527,6 +527,43 @@ float uStepperS::moveToEnd(bool dir)
 
 float uStepperS::pid(float error, bool reset)
 {
+	static float eOld;
+	static float uWind;
+	float u, uSat;
+	float Ka = 0.02;
+	uint32_t temp;
+	
+	u = error*this->pTerm;
+
+	u += (eOld+error)*this->iTerm + uWind;
+	
+	u += (error-eOld)*this->dTerm;
+
+	//Here we need a saturation for the velocity which also serves as an anti-windup, since we will then go back to the 
+
+	if(u > 100000 || u < -100000)
+	{
+		uSat = 100000;
+		uSat = ((u > 0) - (u < 0)) * uSat;
+	}
+	else
+	{
+		uSat = u;
+	}
+
+	//uSat is the output
+
+	uWind = (uSat-u)*Ka;
+	
+	eOld = error;
+	uSat *= this->stepsPerSecondToRPM;
+
+	return uSat;
+}
+
+/*
+float uStepperS::pid(float error, bool reset)
+{
 	static float output;
 	static float accumError = 0.0;
 	static bool integralReset = 0;
@@ -590,4 +627,4 @@ float uStepperS::pid(float error, bool reset)
 	debug=error;
 	//output += this->currentPidSpeed;
 	return output;
-}
+}*/
