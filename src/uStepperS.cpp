@@ -1,11 +1,10 @@
 #include <uStepperS.h>
 uStepperS * pointer;
-volatile float debug, debug1;
 uStepperS::uStepperS()
 {
 	pointer = this;
 
-	this->microSteps = 256;
+	this->microSteps = 2;
 	this->init();	
 
 	this->setMaxAcceleration(2000.0);
@@ -16,7 +15,7 @@ uStepperS::uStepperS()
 uStepperS::uStepperS(float acceleration, float velocity)
 {
 	pointer = this;
-	this->microSteps = 256;
+	this->microSteps = 2;
 	this->init();
 
 	this->setMaxAcceleration(acceleration);
@@ -43,8 +42,6 @@ void uStepperS::init( void ){
 	*  SPR0  = 0 & SPR1 = 0: fOSC/4 = 4Mhz
 	*/
 	SPCR1 = (1<<SPE1)|(1<<MSTR1);	
-
-	
 
 	driver.init( this );
 	encoder.init( this );
@@ -78,7 +75,7 @@ void uStepperS::setup(	uint8_t mode,
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
 	this->init();
 
-	this->setCurrent(40.0);
+	this->setCurrent(80.0);
 	this->setHoldCurrent(25.0);
 
 	while(this->driver.readRegister(VACTUAL) != 0);
@@ -292,16 +289,24 @@ void uStepperS::setMaxVelocity( float velocity )
 	{
 		velocity = (float)0xFFFFFF;
 	}
-	this->maxVelocity = abs( velocity * this->microSteps );
+	else
+	{
+		velocity *= this->microSteps;
+	}
+	this->maxVelocity = abs( velocity );
 	// Steps per second, has to be converted to microsteps
 	this->driver.setVelocity( (uint32_t)( this->maxVelocity  ) );
 }
 
 void uStepperS::setMaxAcceleration( float acceleration )
 {
-	if( abs(acceleration) > (float)0xFFFF)
+	if( abs(acceleration * this->microSteps) > (float)0xFFFF)
 	{
 		acceleration = (float)0xFFFF;
+	}
+	else
+	{
+		acceleration *= this->microSteps;
 	}
 	this->maxAcceleration = abs( acceleration );
 	// Steps per second, has to be converted to microsteps
@@ -310,9 +315,13 @@ void uStepperS::setMaxAcceleration( float acceleration )
 
 void uStepperS::setMaxDeceleration( float deceleration )
 {
-	if( abs(deceleration) > (float)0xFFFF)
+	if( abs(deceleration * this->microSteps) > (float)0xFFFF)
 	{
 		deceleration = (float)0xFFFF;
+	}
+	else
+	{
+		deceleration *= this->microSteps;
 	}
 	this->maxDeceleration = abs( deceleration );
 	// Steps per second, has to be converted to microsteps
@@ -416,7 +425,6 @@ void interrupt0(void)
 	{
 		pointer->stepCnt+=pointer->dropinStepSize;			//DIR is set to CW, therefore we add 1 step to step count (positive values = number of steps in CW direction from initial postion)	
 	}
-	debug1 =  pointer->stepCnt;
 }
 
 void TIMER1_COMPA_vect(void)
@@ -447,8 +455,8 @@ void TIMER1_COMPA_vect(void)
 		deltaAngle -= 65535;
 	}
 	pointer->encoder.angleMoved += deltaAngle;
-	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 
+	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 	if(pointer->mode == DROPIN)
 	{	
 		cli();
@@ -469,14 +477,13 @@ void TIMER1_COMPA_vect(void)
 	{
 		if(!pointer->pidDisabled)
 		{
-			error = (float)stepsMoved - (pointer->encoder.encoderFilter.posEst * ENCODERDATATOSTEP);
-			
+			error = (float)stepsMoved - (pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 			
 			if(error < -10.0 || error > 10.0)
 			{
 				output = pointer->pid(error);
 				pointer->driver.setVelocity(abs(output) * pointer->rpmToVelocity);
-				pointer->driver.writeRegister(XACTUAL,pointer->encoder.encoderFilter.posEst * ENCODERDATATOSTEP);
+				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
 			}
 			else
@@ -525,6 +532,11 @@ float uStepperS::moveToEnd(bool dir)
 	return abs(length);
 }
 
+float uStepperS::getPidError(void)
+{
+	return this->currentPidError;
+}
+
 float uStepperS::pid(float error, bool reset)
 {
 	static float eOld;
@@ -533,6 +545,8 @@ float uStepperS::pid(float error, bool reset)
 	float Ka = 0.02;
 	uint32_t temp;
 	
+	this->currentPidError = error;
+
 	u = error*this->pTerm;
 
 	u += (eOld+error)*this->iTerm + uWind;
@@ -557,7 +571,6 @@ float uStepperS::pid(float error, bool reset)
 	
 	eOld = error;
 	uSat *= this->stepsPerSecondToRPM;
-
 	return uSat;
 }
 

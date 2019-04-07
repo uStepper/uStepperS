@@ -42,7 +42,7 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	this->enableStealth();
 
 	/* Set all-round chopper configuration */
-	this->writeRegister( CHOPCONF, TOFF(2) | TBL(2) | HSTRT_TFD(4) | HEND(0) );
+	this->writeRegister( CHOPCONF, TOFF(2) | TBL(2) | HSTRT_TFD(4) | HEND(0) | MRES(7));
 
 	/* Set startup ramp mode */
 	this->setRampMode( POSITIONING_MODE );
@@ -60,19 +60,19 @@ void uStepperDriver::readMotorStatus(void)
 
 void uStepperDriver::setVelocity( uint32_t velocity )
 {
-	this->VMAX = velocity;
+	this->VMAX = ceil(velocity * VELOCITYCONVERSION);
 	this->writeRegister(VMAX_REG, this->VMAX);
 }
 
 void uStepperDriver::setAcceleration( uint16_t acceleration )
 {
-	this->AMAX = acceleration;
+	this->AMAX = ceil(acceleration * ACCELERATIONCONVERSION);
 	this->writeRegister(AMAX_REG, this->AMAX);
 }
 
 void uStepperDriver::setDeceleration( uint16_t deceleration )
 {
-	this->DMAX = deceleration;
+	this->DMAX = ceil(deceleration * ACCELERATIONCONVERSION);
 	this->writeRegister(DMAX_REG, this->DMAX);
 }
 

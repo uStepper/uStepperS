@@ -297,7 +297,7 @@ public:
 	void disablePid(void);
 
 	float moveToEnd(bool dir);
-
+	float getPidError(void);
 
 private: 
 
@@ -345,6 +345,7 @@ private:
 	// SPI functions
 
 	volatile int32_t pidPositionStepsIssued = 0;
+	volatile float currentPidError;
 
 	uint8_t SPI( uint8_t data );
 

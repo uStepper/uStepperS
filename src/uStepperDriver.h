@@ -104,6 +104,9 @@
 #define DRIVER_VELOCITY 1
 #define DRIVER_POSITION 2
 
+#define ACCELERATIONCONVERSION 1.0/116.415321827	//page 74 datasheet
+#define VELOCITYCONVERSION 1.0/0.953674316	//page 74 datasheet
+
 class uStepperDriver{
 
 friend class uStepperS;

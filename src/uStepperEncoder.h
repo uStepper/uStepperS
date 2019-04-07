@@ -12,6 +12,7 @@
 #define CLK PB5 
 
 #define ENCODERDATATOSTEP 51200.0/65536.0
+#define ENCODERDATATOREVOLUTIONS 60.0/65536.0
 
 class uStepperEncoder
 {
