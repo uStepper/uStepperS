@@ -120,9 +120,9 @@ friend class uStepperS;
 
 		void setVelocity( uint32_t velocity );
 
-		void setAcceleration( uint16_t acceleration );
+		void setAcceleration( uint32_t acceleration );
 
-		void setDeceleration( uint16_t deceleration );
+		void setDeceleration( uint32_t deceleration );
 
 		void setRampProfile( uint32_t velocity, uint16_t acceleration, uint16_t deceleration );
 

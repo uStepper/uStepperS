@@ -57,7 +57,8 @@ class uStepperS;
 #include <uStepperDriver.h>
 
 
-
+#define HARD 0
+#define SOFT 1
 
 #define DRV_ENN PD4 
 #define SD_MODE PD5
@@ -287,9 +288,9 @@ public:
 
 	bool uStepperS::getMotorState(void);
 
-	void stop( void );
+	void stop( bool mode = HARD );
 
-	bool isStalled(void);
+	bool isStalled(float stallSensitivity = 0.992);
 
 	void brakeMotor(bool brake);
 
@@ -298,7 +299,16 @@ public:
 
 	float moveToEnd(bool dir);
 	float getPidError(void);
+	void setProportional(float P);
 
+	void setIntegral(float I);
+
+	void setDifferential(float D);
+	void invertDropinDir(bool invert);
+	void dropinCli();
+	void parseCommand(String *cmd);
+	void dropinPrintHelp();
+	
 private: 
 
 	/** This variable contains the maximum velocity in steps/s, the motor is
@@ -313,7 +323,7 @@ private:
 	 */
 	float maxAcceleration;
 	float maxDeceleration;
-
+	bool invertPidDropinDirection;
 	float rpmToVelocity;
 	float angleToStep;
 
@@ -346,7 +356,7 @@ private:
 
 	volatile int32_t pidPositionStepsIssued = 0;
 	volatile float currentPidError;
-
+	float stallSensitivity = 0.992;
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );
@@ -356,6 +366,7 @@ private:
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
 
 	float pid(float error, bool reset = 0);
+	bool detectStall(int32_t stepsMoved);
 };
 
 
