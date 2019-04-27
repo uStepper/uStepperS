@@ -1,5 +1,6 @@
 #include <uStepperS.h>
 uStepperS * pointer;
+
 uStepperS::uStepperS()
 {
 	pointer = this;
@@ -47,10 +48,10 @@ void uStepperS::init( void ){
 	encoder.init( this );
 }
 
-bool uStepperS::getMotorState(void)
+bool uStepperS::getMotorState(uint8_t statusType)
 {
 	this->driver.readMotorStatus();
-	if(this->driver.status & 0x20)
+	if(this->driver.status & statusType)
 	{
 		return 0;
 	}
@@ -63,8 +64,12 @@ void uStepperS::setup(	uint8_t mode,
 							float iTerm,
 							float dTerm,
 							uint16_t dropinStepSize,
-							bool setHome)
+							bool setHome,
+							uint8_t invert,
+							uint8_t runCurrent,
+							uint8_t holdCurrent)
 {
+	dropinCliSettings_t tempSettings;
 	this->pidDisabled = 1;
 	// Should setup mode etc. later
 	this->mode = mode;
@@ -76,28 +81,13 @@ void uStepperS::setup(	uint8_t mode,
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
 	this->init();
 
-	this->setCurrent(60.0);
+	this->setCurrent(40.0);
 	this->setHoldCurrent(25.0);
 	this->setRPM(0);
 	while(this->driver.readRegister(VACTUAL) != 0);
 
 	delay(500);
 
-	encoder.setHome();
-
-	this->moveAngle(0.8);
-
-	while(this->getMotorState());
-
-	if(this->encoder.getAngleMoved() < 0.0)
-	{
-		this->driver.setShaftDirection(1);
-	}
-	else
-	{
-		this->driver.setShaftDirection(0);
-	}
-	
 	encoder.setHome();
 
 	if(this->mode)
@@ -117,15 +107,60 @@ void uStepperS::setup(	uint8_t mode,
 			this->driver.writeRegister(AMAX_REG, 	65535); 
 			this->driver.writeRegister(DMAX_REG, 	65535); 
 			Serial.begin(9600);
+
+			tempSettings.P.f = pTerm;
+			tempSettings.I.f = iTerm;
+			tempSettings.D.f = dTerm;
+			tempSettings.invert = invert;
+			tempSettings.runCurrent = runCurrent;
+			tempSettings.holdCurrent = holdCurrent;
+			tempSettings.checksum = this->dropinSettingsCalcChecksum(&tempSettings);
+
+			if(tempSettings.checksum != EEPROM.read(sizeof(dropinCliSettings_t)))
+			{
+				this->dropinSettings = tempSettings;
+				this->saveDropinSettings();
+				EEPROM.put(sizeof(dropinCliSettings_t),this->dropinSettings.checksum);
+				this->loadDropinSettings();
+			}
+			else
+			{
+				if(!this->loadDropinSettings())
+				{
+					this->dropinSettings = tempSettings;
+					this->saveDropinSettings();
+					EEPROM.put(sizeof(dropinCliSettings_t),this->dropinSettings.checksum);
+					this->loadDropinSettings();
+				}
+			}
+
+			delay(10000);
   			this->dropinPrintHelp();
 		}		
-
-		//Scale supplied controller coefficents. This is done to enable the user to use easier to manage numbers for these coefficients.
-	    this->pTerm = pTerm; 
-	    this->iTerm = iTerm * ENCODERINTPERIOD;    
-	    this->dTerm = dTerm * ENCODERINTFREQ;    
-
+		else
+		{
+			//Scale supplied controller coefficents. This is done to enable the user to use easier to manage numbers for these coefficients.
+			this->pTerm = pTerm; 
+			this->iTerm = iTerm * ENCODERINTPERIOD;    
+			this->dTerm = dTerm * ENCODERINTFREQ;    
+		}
 	}
+
+	this->moveAngle(1.8);
+
+	while(this->getMotorState());
+
+	if(this->encoder.getAngleMoved() < -0.8)
+	{
+		this->driver.setShaftDirection(1);
+	}
+	else
+	{
+		this->driver.setShaftDirection(0);
+	}
+	
+	encoder.setHome();
+
 	this->pidDisabled = 0;
 
 	DDRB |= (1 << 4);
@@ -513,9 +548,13 @@ void TIMER1_COMPA_vect(void)
 	{
 		if(!pointer->pidDisabled)
 		{
-			pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
-			pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
-			error = (float)stepsMoved - (pointer->encoder.angleMoved * ENCODERDATATOSTEP);
+			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
+			if(abs(pointer->currentPidError) >= 10.0 )
+			{
+				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
+				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
+			}
+			
 			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
@@ -532,7 +571,6 @@ void uStepperS::enablePid(void)
 void uStepperS::disablePid(void)
 {
 	cli();
-	this->pid(0.0,1);	
 	this->pidDisabled = 1;
 	sei();
 }
@@ -564,7 +602,7 @@ float uStepperS::getPidError(void)
 	return this->currentPidError;
 }
 
-float uStepperS::pid(float error, bool reset)
+float uStepperS::pid(float error)
 {
 	float u;
 	float limit = abs(this->currentPidSpeed) + 150000.0;
@@ -691,6 +729,8 @@ void uStepperS::parseCommand(String *cmd)
       {
         Serial.print("COMMAND ACCEPTED. P = ");
         Serial.println(value.toFloat(),4);
+        this->dropinSettings.P.f = value.toFloat();
+    	this->saveDropinSettings();
         this->setProportional(value.toFloat());
         return;
       }
@@ -741,6 +781,8 @@ void uStepperS::parseCommand(String *cmd)
       {
         Serial.print("COMMAND ACCEPTED. I = ");
         Serial.println(value.toFloat(),4);
+        this->dropinSettings.I.f = value.toFloat();
+    	this->saveDropinSettings();
         this->setIntegral(value.toFloat());
         return;
       }
@@ -791,6 +833,8 @@ void uStepperS::parseCommand(String *cmd)
       {
         Serial.print("COMMAND ACCEPTED. D = ");
         Serial.println(value.toFloat(),4);
+        this->dropinSettings.D.f = value.toFloat();
+    	this->saveDropinSettings();
         this->setDifferential(value.toFloat());
         return;
       }
@@ -816,12 +860,16 @@ void uStepperS::parseCommand(String *cmd)
       if(this->invertPidDropinDirection)
       {
       	Serial.println(F("Direction normal!"));
+      	this->dropinSettings.invert = 0;
+    	this->saveDropinSettings();
         this->invertDropinDir(0);
         return;
       }
       else
       {
       	Serial.println(F("Direction inverted!"));
+      	this->dropinSettings.invert = 1;
+    	this->saveDropinSettings();
         this->invertDropinDir(1);
         return;
       }
@@ -862,6 +910,41 @@ void uStepperS::parseCommand(String *cmd)
       Serial.println(F(" %"));
   }
   
+  /****************** Get PID Parameters ***********************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,10) == String("parameters"))
+  {
+      if(cmd->charAt(10) != ';')
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+      Serial.print(F("P: "));
+      Serial.print(this->dropinSettings.P.f,4);
+      Serial.print(F(", "));
+      Serial.print(F("I: "));
+      Serial.print(this->dropinSettings.I.f,4);
+      Serial.print(F(", "));
+      Serial.print(F("D: "));
+      Serial.println(this->dropinSettings.D.f,4);
+  }
+
+  /****************** Help menu ********************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,4) == String("help"))
+  {
+      if(cmd->charAt(4) != ';')
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+      this->dropinPrintHelp();
+  }
+
 /****************** SET run current ***************************
   *                                                            *
   *                                                            *
@@ -920,6 +1003,8 @@ void uStepperS::parseCommand(String *cmd)
     Serial.print("COMMAND ACCEPTED. runCurrent = ");
     Serial.print(i);
     Serial.println(F(" %"));
+    this->dropinSettings.runCurrent = i;
+    this->saveDropinSettings();
     this->setCurrent(i);
   }
 
@@ -981,6 +1066,8 @@ void uStepperS::parseCommand(String *cmd)
     Serial.print("COMMAND ACCEPTED. holdCurrent = ");
     Serial.print(i);
     Serial.println(F(" %"));
+    this->dropinSettings.holdCurrent = i;
+    this->saveDropinSettings();
     this->setHoldCurrent(i);
   }
 
@@ -1024,9 +1111,11 @@ void uStepperS::dropinCli()
 
 void uStepperS::dropinPrintHelp()
 {
-	Serial.println(F("uStepper S Dropin !"));
+	Serial.println(F("uStepper S-lite Dropin !"));
 	Serial.println(F(""));
 	Serial.println(F("Usage:"));
+	Serial.println(F("Show this command list: 'help;'"));
+	Serial.println(F("Get PID Parameters: 'parameters;'"));
 	Serial.println(F("Set Proportional constant: 'P=10.002;'"));
 	Serial.println(F("Set Integral constant: 'I=10.002;'"));
 	Serial.println(F("Set Differential constant: 'D=10.002;'"));
@@ -1037,4 +1126,46 @@ void uStepperS::dropinPrintHelp()
 	Serial.println(F("Set Hold Current (percent): 'holdCurrent=50.0;'"));
 	Serial.println(F(""));
 	Serial.println(F(""));
+}
+
+bool uStepperS::loadDropinSettings(void)
+{
+	dropinCliSettings_t tempSettings;
+
+	EEPROM.get(0,tempSettings);
+
+	if(this->dropinSettingsCalcChecksum(&tempSettings) != tempSettings.checksum)
+	{
+		return 0;
+	}
+
+	this->dropinSettings = tempSettings;
+	this->setProportional(this->dropinSettings.P.f);
+	this->setIntegral(this->dropinSettings.I.f);
+	this->setDifferential(this->dropinSettings.D.f);
+	this->invertDropinDir((bool)this->dropinSettings.invert);
+	this->setCurrent(this->dropinSettings.runCurrent);	
+	this->setHoldCurrent(this->dropinSettings.holdCurrent);	
+	return 1;
+}
+
+void uStepperS::saveDropinSettings(void)
+{
+	this->dropinSettings.checksum = this->dropinSettingsCalcChecksum(&this->dropinSettings);
+
+	EEPROM.put(0,this->dropinSettings);
+}
+
+uint8_t uStepperS::dropinSettingsCalcChecksum(dropinCliSettings_t *settings)
+{
+	uint8_t i;
+	uint8_t checksum = 0xAA;
+	uint8_t *p = (uint8_t*)settings;
+
+	for(i=0; i < 15; i++)
+	{		
+		checksum ^= *p++;
+	}
+
+	return checksum;
 }

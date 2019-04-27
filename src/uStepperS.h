@@ -37,9 +37,35 @@
 #ifndef __AVR_ATmega328PB__
 	#error !!This library only supports the ATmega328PB MCU!!
 #endif
-
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <Arduino.h>
+#include <EEPROM.h>
+#include <inttypes.h>
 #define CW 1
 #define CCW 0
+
+#define POSITION_REACHED 0x20
+#define VELOCITY_REACHED 0x10
+#define STANDSTILL 0x08
+#define STALLGUARD2 0x04
+
+typedef union
+{
+	float f;
+	uint8_t bytes[4];
+}floatBytes_t;
+
+typedef struct 
+{
+	floatBytes_t P;
+	floatBytes_t I;
+	floatBytes_t D;
+	uint8_t invert;
+	uint8_t holdCurrent;
+	uint8_t runCurrent;
+	uint8_t checksum;
+}dropinCliSettings_t;
 
 typedef struct 
 {
@@ -49,13 +75,10 @@ typedef struct
 	float velEst = 0.0;
 }posFilter_t;
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <Arduino.h>
+
 class uStepperS;
 #include <uStepperEncoder.h>
 #include <uStepperDriver.h>
-
 
 #define HARD 0
 #define SOFT 1
@@ -181,7 +204,10 @@ public:
 				float iTerm = 3.0, 
 				float dTerm = 0.0,
 				uint16_t dropinStepSize = 16,
-				bool setHome = true);	
+				bool setHome = true,
+				uint8_t invert = 0,
+				uint8_t runCurrent = 50,
+				uint8_t holdCurrent = 30);	
 
 
 	/**
@@ -286,7 +312,7 @@ public:
 	 */
 	float angleMoved( void );
 
-	bool uStepperS::getMotorState(void);
+	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
 
 	void stop( bool mode = HARD );
 
@@ -299,14 +325,79 @@ public:
 
 	float moveToEnd(bool dir);
 	float getPidError(void);
+		/**
+	 * @brief      	This method is used to change the PID proportional parameter P.
+	 *
+	 * @param[in]  	PID proportional part P
+	 *
+	 */
 	void setProportional(float P);
 
+	/**
+	 * @brief      	This method is used to change the PID integral parameter I.
+	 *
+	 * @param[in]  	PID integral part I
+	 *
+	 */
 	void setIntegral(float I);
 
+	/**
+	 * @brief      	This method is used to change the PID differential parameter D.
+	 *
+	 * @param[in]  	PID differential part D
+	 *
+	 */
 	void setDifferential(float D);
+
+	/**
+	 * @brief      	This method is used to invert the drop-in direction pin interpretation.
+	 *
+	 * @param[in]  	0 = not inverted, 1 = inverted
+	 *
+	 */
 	void invertDropinDir(bool invert);
+
+	/**
+	 * @brief      	This method is used to tune Drop-in parameters.
+	 *				After tuning uStepper S-lite the parameters are saved in EEPROM
+	 *				
+	 * 				Usage:
+	 *				Set Proportional constant: 'P=10.002;'
+	 *				Set Integral constant: 'I=10.002;'
+	 *				Set Differential constant: 'D=10.002;'
+	 *				Invert Direction: 'invert;'
+	 *				Get Current PID Error: 'error;'
+	 *				Get Run/Hold Current Settings: 'current;'
+	 *				Set Run Current (percent): 'runCurrent=50.0;'
+	 *				Set Hold Current (percent): 'holdCurrent=50.0;'	
+	 *
+	 */	
 	void dropinCli();
+
+	/**
+	 * @brief      	This method is used for the dropinCli to take in user commands.
+	 *
+	 * @param[in]  	cmd - input from terminal for dropinCli
+	 *			
+	 */
 	void parseCommand(String *cmd);
+	
+	/**
+	 * @brief      	This method is used to print the dropinCli menu explainer:
+	 *				
+	 * 				Usage:
+	 *				Show this command list: 'help;'
+	 *				Get PID Parameters: 'parameters;'
+	 *				Set Proportional constant: 'P=10.002;'
+	 *				Set Integral constant: 'I=10.002;'
+	 *				Set Differential constant: 'D=10.002;'
+	 *				Invert Direction: 'invert;'
+	 *				Get Current PID Error: 'error;'
+	 *				Get Run/Hold Current Settings: 'current;'
+	 *				Set Run Current (percent): 'runCurrent=50.0;'
+	 *				Set Hold Current (percent): 'holdCurrent=50.0;'	
+	 *
+	 */	
 	void dropinPrintHelp();
 	
 private: 
@@ -365,8 +456,12 @@ private:
 
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
 
-	float pid(float error, bool reset = 0);
+	float pid(float error);
 	bool detectStall(int32_t stepsMoved);
+	dropinCliSettings_t dropinSettings;
+	bool loadDropinSettings(void);
+	void saveDropinSettings(void);
+	uint8_t dropinSettingsCalcChecksum(dropinCliSettings_t *settings);
 };
 
 
