@@ -44,16 +44,14 @@ void uStepperS::init( void ){
 	*/
 	SPCR1 = (1<<SPE1)|(1<<MSTR1);	
 
-	
-
 	driver.init( this );
 	encoder.init( this );
 }
 
-bool uStepperS::getMotorState(void)
+bool uStepperS::getMotorState(uint8_t statusType)
 {
 	this->driver.readMotorStatus();
-	if(this->driver.status & 0x20)
+	if(this->driver.status & statusType)
 	{
 		return 0;
 	}
@@ -66,13 +64,18 @@ void uStepperS::setup(	uint8_t mode,
 							float iTerm,
 							float dTerm,
 							uint16_t dropinStepSize,
-							bool setHome)
+							bool setHome,
+							uint8_t invert,
+							uint8_t runCurrent,
+							uint8_t holdCurrent)
 {
+	dropinCliSettings_t tempSettings;
+	this->pidDisabled = 1;
 	// Should setup mode etc. later
 	this->mode = mode;
 	this->fullSteps = stepsPerRevolution;
 	this->dropinStepSize = 256/dropinStepSize;
-	this->angleToStep = (float)(this->fullSteps*this->microSteps)/360.0;
+	this->angleToStep = (float)this->fullSteps * (float)this->microSteps / 360.0;
 	this->rpmToVelocity = (float)(279620.267 * fullSteps * microSteps)/(CLOCKFREQ);
 	this->stepsPerSecondToRPM = 60.0/(this->microSteps*this->fullSteps);
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
@@ -80,26 +83,11 @@ void uStepperS::setup(	uint8_t mode,
 
 	this->setCurrent(40.0);
 	this->setHoldCurrent(25.0);
-
+	this->setRPM(0);
 	while(this->driver.readRegister(VACTUAL) != 0);
 
 	delay(500);
 
-	encoder.setHome();
-
-	this->moveAngle(0.8);
-
-	while(this->getMotorState());
-
-	if(this->encoder.getAngleMoved() < 0.0)
-	{
-		this->driver.setShaftDirection(1);
-	}
-	else
-	{
-		this->driver.setShaftDirection(0);
-	}
-	
 	encoder.setHome();
 
 	if(this->mode)
@@ -114,17 +102,66 @@ void uStepperS::setup(	uint8_t mode,
 			digitalWrite(2,HIGH);
 			digitalWrite(3,HIGH);
 			digitalWrite(4,HIGH);
+			delay(10000);
 			attachInterrupt(0, interrupt0, FALLING);
 			attachInterrupt(1, interrupt1, CHANGE);
-			this->driver.writeRegister(AMAX_REG, 	65535); 
-			this->driver.writeRegister(DMAX_REG, 	65535); 
-		}		
+			this->driver.setDeceleration( 0xFFFFF );
+			this->driver.setAcceleration( 0xFFFFF );
+			Serial.begin(9600);
 
-		//Scale supplied controller coefficents. This is done to enable the user to use easier to manage numbers for these coefficients.
-	    this->pTerm = pTerm; 
-	    this->iTerm = iTerm * ENCODERINTPERIOD;    
-	    this->dTerm = dTerm * ENCODERINTFREQ;    
+			tempSettings.P.f = pTerm;
+			tempSettings.I.f = iTerm;
+			tempSettings.D.f = dTerm;
+			tempSettings.invert = invert;
+			tempSettings.runCurrent = runCurrent;
+			tempSettings.holdCurrent = holdCurrent;
+			tempSettings.checksum = this->dropinSettingsCalcChecksum(&tempSettings);
+
+			if(tempSettings.checksum != EEPROM.read(sizeof(dropinCliSettings_t)))
+			{
+				this->dropinSettings = tempSettings;
+				this->saveDropinSettings();
+				EEPROM.put(sizeof(dropinCliSettings_t),this->dropinSettings.checksum);
+				this->loadDropinSettings();
+			}
+			else
+			{
+				if(!this->loadDropinSettings())
+				{
+					this->dropinSettings = tempSettings;
+					this->saveDropinSettings();
+					EEPROM.put(sizeof(dropinCliSettings_t),this->dropinSettings.checksum);
+					this->loadDropinSettings();
+				}
+			}
+
+			
+  			this->dropinPrintHelp();
+		}		
+		else
+		{
+			//Scale supplied controller coefficents. This is done to enable the user to use easier to manage numbers for these coefficients.
+			this->pTerm = pTerm; 
+			this->iTerm = iTerm * ENCODERINTPERIOD;    
+			this->dTerm = dTerm * ENCODERINTFREQ;    
+		}
 	}
+
+	this->moveAngle(1.8);
+
+	while(this->getMotorState());
+
+	if(this->encoder.getAngleMoved() < -0.8)
+	{
+		this->driver.setShaftDirection(1);
+	}
+	else
+	{
+		this->driver.setShaftDirection(0);
+	}
+	
+	encoder.setHome();
+
 	this->pidDisabled = 0;
 
 	DDRB |= (1 << 4);
@@ -179,63 +216,59 @@ void uStepperS::moveToAngle( float angle )
 		this->moveSteps( steps );
 	}
 }
-bool uStepperS::isStalled( void )
+
+bool uStepperS::detectStall(int32_t stepsMoved)
 {
-	int32_t driverSpeed;
-	static uint8_t count = 0;
-	float angle;
-	static float oldAngle;
-	float speed;
-	int32_t driverPos;
-	static int32_t oldDriverPos = 0;
-	int32_t diffAngle;
-	int32_t diffDriverPos;
+	static float oldTargetPosition;
+	static float oldEncoderPosition;
+	static float encoderPositionChange;
+	static float targetPositionChange;
+	float encoderPosition = ((float)this->encoder.angleMoved*ENCODERDATATOSTEP);
+	static float internalStall = 0.0;
 
-	driverPos = this->driver.getPosition();
-	speed = this->encoder.getSpeed();
-	angle = this->encoder.getAngleMoved();
+	encoderPositionChange *= 0.99;
+	encoderPositionChange += 0.01*(oldEncoderPosition - encoderPosition);
+	oldEncoderPosition = encoderPosition;
 
-	diffAngle = (int32_t)(abs(oldAngle - angle) * this->angleToStep);
-	diffDriverPos = abs(oldDriverPos - driverPos);
-	oldAngle = angle;
-	oldDriverPos = driverPos;
+	targetPositionChange *= 0.99;
+	targetPositionChange += 0.01*(oldTargetPosition - stepsMoved);
+	oldTargetPosition = stepsMoved;
 
-	
-
-	if(this->driver.mode == DRIVER_POSITION)
+	if(abs(encoderPositionChange) < abs(targetPositionChange)*0.5)
 	{
-		if(abs(diffDriverPos / 2) > abs(diffAngle))
-		{
-			return 1;
-		}
+		internalStall *= this->stallSensitivity;
+		internalStall += 1.0-this->stallSensitivity;
+	}
+	else
+	{
+		internalStall *= this->stallSensitivity;
 	}
 
-	else if(!(this->driver.status & 0x08))		//Motor running
+	if(internalStall >= 0.95)		//3 timeconstants
 	{
-		driverSpeed = (this->driver.readRegister(VACTUAL));
-		
-		if(driverSpeed & 0x00800000)
-		{
-			driverSpeed |= 0xFF000000;
-		}
-	    if(driverSpeed > 0)
-	    {
-	    	if(0.5 * (float)driverSpeed > speed)
-	    	{
-	    		return 1;
-	    	}
-	    }
-	    else
-	    {
-	    	if(0.5 * (float)driverSpeed < speed)
-	    	{
-	    		return 1;
-	    	}
-	    }
-		return 0;
+		this->stall = 1;
 	}
-	
-	return 0;
+	else
+	{
+		this->stall = 0;
+	}
+}
+
+bool uStepperS::isStalled( float stallSensitivity )
+{
+	if(this->stallSensitivity > 1.0)
+  	{
+  		this->stallSensitivity = 1.0;
+  	}
+  	else if(this->stallSensitivity < 0.0)
+  	{
+  		this->stallSensitivity = 0.0;
+  	}
+  	else{
+  		this->stallSensitivity = stallSensitivity;
+  	}
+  	
+	return this->stall;
 }
 
 void uStepperS::brakeMotor( bool brake )
@@ -288,35 +321,56 @@ uint8_t uStepperS::SPI(uint8_t data){
 
 void uStepperS::setMaxVelocity( float velocity )
 {
-	if( abs(velocity * this->microSteps) > (float)(0xFFFFFF))
+	velocity *= (float)this->microSteps;
+	velocity = abs(velocity);
+
+	if( velocity > (float)0x7FFE00/VELOCITYCONVERSION)
 	{
-		velocity = (float)0xFFFFFF;
+		this->maxVelocity = (float)0x7FFE00/VELOCITYCONVERSION;
 	}
-	this->maxVelocity = abs( velocity * this->microSteps );
+	else
+	{
+		this->maxVelocity = velocity;
+	}
+	
 	// Steps per second, has to be converted to microsteps
 	this->driver.setVelocity( (uint32_t)( this->maxVelocity  ) );
 }
 
 void uStepperS::setMaxAcceleration( float acceleration )
 {
-	if( abs(acceleration) > (float)0xFFFF)
+	acceleration *= (float)this->microSteps;
+	acceleration = abs(acceleration);
+
+	if( acceleration > (float)0xFFFFF/ACCELERATIONCONVERSION)
 	{
-		acceleration = (float)0xFFFF;
+		this->maxAcceleration = (float)0xFFFFF/ACCELERATIONCONVERSION;
 	}
-	this->maxAcceleration = abs( acceleration );
+	else
+	{
+		this->maxAcceleration = acceleration;
+	}
+	
 	// Steps per second, has to be converted to microsteps
-	this->driver.setAcceleration( (uint16_t)(this->maxAcceleration ) );
+	this->driver.setAcceleration( (uint32_t)(this->maxAcceleration ) );
 }
 
 void uStepperS::setMaxDeceleration( float deceleration )
 {
-	if( abs(deceleration) > (float)0xFFFF)
+	deceleration *= (float)this->microSteps;
+	deceleration = abs(deceleration);
+	
+	if( deceleration > (float)0xFFFFF/ACCELERATIONCONVERSION)
 	{
-		deceleration = (float)0xFFFF;
+		this->maxDeceleration = (float)0xFFFFF/ACCELERATIONCONVERSION;
 	}
-	this->maxDeceleration = abs( deceleration );
+	else
+	{
+		this->maxDeceleration = deceleration;
+	}
+	
 	// Steps per second, has to be converted to microsteps
-	this->driver.setDeceleration( (uint16_t)( this->maxDeceleration ) );
+	this->driver.setDeceleration( (uint32_t)(this->maxDeceleration ) );
 }
 
 void uStepperS::setCurrent( double current )
@@ -348,8 +402,8 @@ void uStepperS::setHoldCurrent( double current )
 
 void uStepperS::runContinous( bool direction )
 {
-	this->driver.setDeceleration( (uint16_t)( this->maxDeceleration ) );
-	this->driver.setAcceleration( (uint16_t)(this->maxAcceleration ) );
+	this->driver.setDeceleration( (uint32_t)( this->maxDeceleration ) );
+	this->driver.setAcceleration( (uint32_t)(this->maxAcceleration ) );
 	this->driver.setVelocity( (uint32_t)( this->maxVelocity  ) );
 
 	// Make sure we use velocity mode
@@ -364,7 +418,7 @@ float uStepperS::angleMoved ( void )
 	return this->encoder.getAngleMoved();
 }
 
-void uStepperS::stop( void ){
+void uStepperS::stop( bool mode){
 
 	// Check which mode is used
 
@@ -375,7 +429,19 @@ void uStepperS::stop( void ){
 
 	// Side 76 TMC5130
 
-	this->setRPM(0);
+	if(mode == HARD)
+	{
+		this->driver.setDeceleration( 0xFFFFF );
+		this->driver.setAcceleration( 0xFFFFF );
+		this->setRPM(0);
+		while(this->driver.readRegister(VACTUAL) != 0);
+		this->driver.setDeceleration( (uint32_t)( this->maxDeceleration ) );
+		this->driver.setAcceleration( (uint32_t)(this->maxAcceleration ) );
+	}
+	else
+	{
+		this->setRPM(0);
+	}
 }
 
 void uStepperS::filterSpeedPos(posFilter_t *filter, int32_t steps)
@@ -409,12 +475,27 @@ void interrupt0(void)
 		PORTD &= ~(1 << 4);
 	}
 	if((PINB & (0x08)))			//CCW
-	{	
-		pointer->stepCnt-=pointer->dropinStepSize;				//DIR is set to CCW, therefore we subtract 1 step from step count (negative values = number of steps in CCW direction from initial postion)
+	{
+		if(!pointer->invertPidDropinDirection)
+		{
+			pointer->stepCnt-=pointer->dropinStepSize;				//DIR is set to CCW, therefore we subtract 1 step from step count (negative values = number of steps in CCW direction from initial postion)
+		}
+		else
+		{
+			pointer->stepCnt+=pointer->dropinStepSize;			//DIR is set to CW, therefore we add 1 step to step count (positive values = number of steps in CW direction from initial postion)	
+		}
+		
 	}
 	else						//CW
 	{
-		pointer->stepCnt+=pointer->dropinStepSize;			//DIR is set to CW, therefore we add 1 step to step count (positive values = number of steps in CW direction from initial postion)	
+		if(!pointer->invertPidDropinDirection)
+		{
+			pointer->stepCnt+=pointer->dropinStepSize;			//DIR is set to CW, therefore we add 1 step to step count (positive values = number of steps in CW direction from initial postion)	
+		}
+		else
+		{
+			pointer->stepCnt-=pointer->dropinStepSize;				//DIR is set to CCW, therefore we subtract 1 step from step count (negative values = number of steps in CCW direction from initial postion)
+		}
 	}
 }
 
@@ -446,8 +527,8 @@ void TIMER1_COMPA_vect(void)
 		deltaAngle -= 65535;
 	}
 	pointer->encoder.angleMoved += deltaAngle;
-	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 
+	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 	if(pointer->mode == DROPIN)
 	{	
 		cli();
@@ -458,32 +539,27 @@ void TIMER1_COMPA_vect(void)
 
 		if(!pointer->pidDisabled)
 		{
-			error = pointer->externalStepInputFilter.posEst - (pointer->encoder.encoderFilter.posEst * ENCODERDATATOSTEP);
-			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator * pointer->stepsPerSecondToRPM;
-			pointer->setRPM(pointer->pid(error));
+			error = stepCntTemp - (pointer->encoder.angleMoved * ENCODERDATATOSTEP);
+			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator;
+			pointer->pid(error);
 		}
+		return;
 	}
 	else if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{
-			error = (float)stepsMoved - (pointer->encoder.encoderFilter.posEst * ENCODERDATATOSTEP);
-			
-			
-			if(error < -10.0 || error > 10.0)
+			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
+			if(abs(pointer->currentPidError) >= 10.0 )
 			{
-				output = pointer->pid(error);
-				pointer->driver.setVelocity(abs(output) * pointer->rpmToVelocity);
-				pointer->driver.writeRegister(XACTUAL,pointer->encoder.encoderFilter.posEst * ENCODERDATATOSTEP);
+				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
 			}
-			else
-			{
-				pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
-				output = pointer->pid(error);
-			}
+			
+			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
+	pointer->detectStall(stepsMoved);
 }
 
 void uStepperS::enablePid(void)
@@ -496,12 +572,11 @@ void uStepperS::enablePid(void)
 void uStepperS::disablePid(void)
 {
 	cli();
-	this->pid(0.0,1);	
 	this->pidDisabled = 1;
 	sei();
 }
 
-float uStepperS::moveToEnd(bool dir)
+float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.992)
 {
 	float length = this->encoder.getAngleMoved();
 
@@ -514,7 +589,7 @@ float uStepperS::moveToEnd(bool dir)
 		this->setRPM(-10);
 	}
 	delay(1000);
-	while(!this->isStalled())
+	while(!this->isStalled(stallSensitivity))
 	{
 	}
 	this->stop();
@@ -523,69 +598,585 @@ float uStepperS::moveToEnd(bool dir)
 	return abs(length);
 }
 
-float uStepperS::pid(float error, bool reset)
+float uStepperS::getPidError(void)
 {
-	static float output;
-	static float accumError = 0.0;
+	return this->currentPidError;
+}
+
+float uStepperS::pid(float error)
+{
+	float u;
+	float limit = abs(this->currentPidSpeed) + 150000.0;
+	static float integral;
 	static bool integralReset = 0;
-	static float oldError = 0.0;
-	float integral;
-	static float d = 0.0;
+	static float errorOld, differential = 0.0;
 
-	if(reset)
-	{
-		output = 0.0;
-		accumError = 0.0;
-		integralReset = 0;
-		oldError = 0.0;
-		d = 0.0;
-		this->setMaxVelocity(this->maxVelocity);
-		return output;
-	}
+	this->currentPidError = error;
 
-	if(error > -30.0 && error < 30.0)
+	u = error*this->pTerm;
+
+	if(u > 0.0)
 	{
-		accumError = 0.0;
-	}
-	else
-	{
-		if(!(error > 100.0 || error < -100.0))
+		if(u > limit)
 		{
-			accumError *= 0.3;
+			u = limit;
+		}
+	}
+	else if(u < 0.0)
+	{
+		if(u < -limit)
+		{
+			u = -limit;
 		}
 	}
 
-	integral = this->iTerm * error;
-	accumError += integral;
+	integral += error*this->iTerm;
 
-	if(accumError > 100000.0)
+	if(integral > 3000000.0)
 	{
-		accumError = 100000.0;
+		integral = 3000000.0;
 	}
-	else if(accumError < -100000.0)
+	else if(integral < -3000000.0)
 	{
-		accumError = -100000.0;
+		integral = -3000000.0;
 	}
 
-	output = this->pTerm*error;
-	if(output > 100000.0)
+	if(error > -100 && error < 100)
 	{
-		output = 100000.0;
+		if(!integralReset)
+		{
+			integralReset = 1;
+			integral = 0;
+		}
 	}
-	else if(output < -100000.0)
+	else
 	{
-		output = -100000.0;
+		integralReset = 0;
 	}
+
+	u += integral;
 	
-	d *= 0.9;
-	d += (this->dTerm*(error - oldError))*0.1;
+	differential *= 0.0;
+	differential += 1.0*((error - errorOld)*this->dTerm);
 
-	output += d;
-	output += accumError;
-	oldError = error;
+	errorOld = error;
 
-	output *= this->stepsPerSecondToRPM;
-	output += this->currentPidSpeed;
+	u += differential;
 
-	return output;
+	u *= this->stepsPerSecondToRPM;
+	this->setRPM(u);
+	this->driver.setDeceleration( 0xFFFFF );
+	this->driver.setAcceleration( 0xFFFFF );
+}
+
+void uStepperS::setProportional(float P)
+{
+	this->pTerm = P;
+}
+
+void uStepperS::setIntegral(float I)
+{
+	this->iTerm = I * ENCODERINTPERIOD; 
+}
+
+void uStepperS::setDifferential(float D)
+{
+	this->dTerm = D * ENCODERINTFREQ;
+}
+
+void uStepperS::invertDropinDir(bool invert)
+{
+	this->invertPidDropinDirection = invert;
+}
+
+void uStepperS::parseCommand(String *cmd)
+{
+  uint8_t i = 0;
+  String value;
+
+  if(cmd->charAt(2) == ';')
+  {
+    Serial.println("COMMAND NOT ACCEPTED");
+    return;
+  }
+
+  value.remove(0);
+  /****************** SET P Parameter ***************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  if(cmd->substring(0,2) == String("P="))
+  {
+    for(i = 2;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == '.')
+      {
+        value.concat(cmd->charAt(i));
+        i++;
+        break;
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        break;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+    
+    for(;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        Serial.print("COMMAND ACCEPTED. P = ");
+        Serial.println(value.toFloat(),4);
+        this->dropinSettings.P.f = value.toFloat();
+    	this->saveDropinSettings();
+        this->setProportional(value.toFloat());
+        return;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+  }
+
+/****************** SET I Parameter ***************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,2) == String("I="))
+  {
+    for(i = 2;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == '.')
+      {
+        value.concat(cmd->charAt(i));
+        i++;
+        break;
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        break;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+    
+    for(;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        Serial.print("COMMAND ACCEPTED. I = ");
+        Serial.println(value.toFloat(),4);
+        this->dropinSettings.I.f = value.toFloat();
+    	this->saveDropinSettings();
+        this->setIntegral(value.toFloat());
+        return;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+  }
+
+/****************** SET D Parameter ***************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,2) == String("D="))
+  {
+    for(i = 2;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == '.')
+      {
+        value.concat(cmd->charAt(i));
+        i++;
+        break;
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        break;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+    
+    for(;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        Serial.print("COMMAND ACCEPTED. D = ");
+        Serial.println(value.toFloat(),4);
+        this->dropinSettings.D.f = value.toFloat();
+    	this->saveDropinSettings();
+        this->setDifferential(value.toFloat());
+        return;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+  }
+
+/****************** invert Direction ***************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,6) == String("invert"))
+  {
+      if(cmd->charAt(6) != ';')
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+      if(this->invertPidDropinDirection)
+      {
+      	Serial.println(F("Direction normal!"));
+      	this->dropinSettings.invert = 0;
+    	this->saveDropinSettings();
+        this->invertDropinDir(0);
+        return;
+      }
+      else
+      {
+      	Serial.println(F("Direction inverted!"));
+      	this->dropinSettings.invert = 1;
+    	this->saveDropinSettings();
+        this->invertDropinDir(1);
+        return;
+      }
+  }
+
+  /****************** get Current Pid Error ********************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,5) == String("error"))
+  {
+      if(cmd->charAt(5) != ';')
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+      Serial.print(F("Current Error: "));
+      Serial.print(this->getPidError());
+      Serial.println(F(" Steps"));
+  }
+
+  /****************** Get run/hold current settings ************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,7) == String("current"))
+  {
+      if(cmd->charAt(7) != ';')
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+      Serial.print(F("Run Current: "));
+      Serial.print(ceil(((float)this->driver.current)/0.31));
+      Serial.println(F(" %"));
+      Serial.print(F("Hold Current: "));
+      Serial.print(ceil(((float)this->driver.holdCurrent)/0.31));
+      Serial.println(F(" %"));
+  }
+  
+  /****************** Get PID Parameters ***********************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,10) == String("parameters"))
+  {
+      if(cmd->charAt(10) != ';')
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+      Serial.print(F("P: "));
+      Serial.print(this->dropinSettings.P.f,4);
+      Serial.print(F(", "));
+      Serial.print(F("I: "));
+      Serial.print(this->dropinSettings.I.f,4);
+      Serial.print(F(", "));
+      Serial.print(F("D: "));
+      Serial.println(this->dropinSettings.D.f,4);
+  }
+
+  /****************** Help menu ********************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,4) == String("help"))
+  {
+      if(cmd->charAt(4) != ';')
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+      this->dropinPrintHelp();
+  }
+
+/****************** SET run current ***************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,11) == String("runCurrent="))
+  {
+    for(i = 11;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == '.')
+      {
+        value.concat(cmd->charAt(i));
+        i++;
+        break;
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        break;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+    
+    for(;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+      	if(value.toFloat() >= 0.0 && value.toFloat() <= 100.0)
+      	{
+      		i = (uint8_t)value.toFloat();
+    		break;	
+      	}
+      	else
+      	{
+      		Serial.println("COMMAND NOT ACCEPTED");
+        	return;
+      	}
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+
+    Serial.print("COMMAND ACCEPTED. runCurrent = ");
+    Serial.print(i);
+    Serial.println(F(" %"));
+    this->dropinSettings.runCurrent = i;
+    this->saveDropinSettings();
+    this->setCurrent(i);
+  }
+
+  /****************** SET run current ***************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else if(cmd->substring(0,12) == String("holdCurrent="))
+  {
+    for(i = 12;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == '.')
+      {
+        value.concat(cmd->charAt(i));
+        i++;
+        break;
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+        break;
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+    
+    for(;;i++)
+    {
+      if(cmd->charAt(i) >= '0' && cmd->charAt(i) <= '9')
+      {
+        value.concat(cmd->charAt(i));
+      }
+      else if(cmd->charAt(i) == ';')
+      {
+      	if(value.toFloat() >= 0.0 && value.toFloat() <= 100.0)
+      	{
+      		i = (uint8_t)value.toFloat();
+    		break;	
+      	}
+      	else
+      	{
+      		Serial.println("COMMAND NOT ACCEPTED");
+        	return;
+      	}
+      }
+      else
+      {
+        Serial.println("COMMAND NOT ACCEPTED");
+        return;
+      }
+    }
+
+    Serial.print("COMMAND ACCEPTED. holdCurrent = ");
+    Serial.print(i);
+    Serial.println(F(" %"));
+    this->dropinSettings.holdCurrent = i;
+    this->saveDropinSettings();
+    this->setHoldCurrent(i);
+  }
+
+  /****************** DEFAULT (Reject!) ************************
+  *                                                            *
+  *                                                            *
+  **************************************************************/
+  else
+  {
+    Serial.println("COMMAND NOT ACCEPTED");
+    return;
+  }
+  
+}
+
+void uStepperS::dropinCli()
+{
+	static String stringInput;
+	static uint32_t t = millis();
+
+	while(1)
+	{
+		while(!Serial.available())
+		{
+			delay(1);
+			if((millis() - t) >= 500)
+			{
+				stringInput.remove(0);
+				t = millis();
+			}
+		}
+		t = millis();
+		stringInput += (char)Serial.read();
+		if(stringInput.lastIndexOf(';') > -1)
+		{
+		  this->parseCommand(&stringInput);
+		  stringInput.remove(0);
+		}
+	}
+}
+
+void uStepperS::dropinPrintHelp()
+{
+	Serial.println(F("uStepper S-lite Dropin !"));
+	Serial.println(F(""));
+	Serial.println(F("Usage:"));
+	Serial.println(F("Show this command list: 'help;'"));
+	Serial.println(F("Get PID Parameters: 'parameters;'"));
+	Serial.println(F("Set Proportional constant: 'P=10.002;'"));
+	Serial.println(F("Set Integral constant: 'I=10.002;'"));
+	Serial.println(F("Set Differential constant: 'D=10.002;'"));
+	Serial.println(F("Invert Direction: 'invert;'"));
+	Serial.println(F("Get Current PID Error: 'error;'"));
+	Serial.println(F("Get Run/Hold Current Settings: 'current;'"));
+	Serial.println(F("Set Run Current (percent): 'runCurrent=50.0;'"));
+	Serial.println(F("Set Hold Current (percent): 'holdCurrent=50.0;'"));
+	Serial.println(F(""));
+	Serial.println(F(""));
+}
+
+bool uStepperS::loadDropinSettings(void)
+{
+	dropinCliSettings_t tempSettings;
+
+	EEPROM.get(0,tempSettings);
+
+	if(this->dropinSettingsCalcChecksum(&tempSettings) != tempSettings.checksum)
+	{
+		return 0;
+	}
+
+	this->dropinSettings = tempSettings;
+	this->setProportional(this->dropinSettings.P.f);
+	this->setIntegral(this->dropinSettings.I.f);
+	this->setDifferential(this->dropinSettings.D.f);
+	this->invertDropinDir((bool)this->dropinSettings.invert);
+	this->setCurrent(this->dropinSettings.runCurrent);	
+	this->setHoldCurrent(this->dropinSettings.holdCurrent);	
+	return 1;
+}
+
+void uStepperS::saveDropinSettings(void)
+{
+	this->dropinSettings.checksum = this->dropinSettingsCalcChecksum(&this->dropinSettings);
+
+	EEPROM.put(0,this->dropinSettings);
+}
+
+uint8_t uStepperS::dropinSettingsCalcChecksum(dropinCliSettings_t *settings)
+{
+	uint8_t i;
+	uint8_t checksum = 0xAA;
+	uint8_t *p = (uint8_t*)settings;
+
+	for(i=0; i < 15; i++)
+	{		
+		checksum ^= *p++;
+	}
+
+	return checksum;
 }

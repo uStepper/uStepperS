@@ -37,9 +37,36 @@
 #ifndef __AVR_ATmega328PB__
 	#error !!This library only supports the ATmega328PB MCU!!
 #endif
-
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <Arduino.h>
+#include <EEPROM.h>
+#include <inttypes.h>
+#include <uStepperServo.h>
 #define CW 1
 #define CCW 0
+
+#define POSITION_REACHED 0x20
+#define VELOCITY_REACHED 0x10
+#define STANDSTILL 0x08
+#define STALLGUARD2 0x04
+
+typedef union
+{
+	float f;
+	uint8_t bytes[4];
+}floatBytes_t;
+
+typedef struct 
+{
+	floatBytes_t P;
+	floatBytes_t I;
+	floatBytes_t D;
+	uint8_t invert;
+	uint8_t holdCurrent;
+	uint8_t runCurrent;
+	uint8_t checksum;
+}dropinCliSettings_t;
 
 typedef struct 
 {
@@ -49,18 +76,17 @@ typedef struct
 	float velEst = 0.0;
 }posFilter_t;
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <Arduino.h>
+
 class uStepperS;
 #include <uStepperEncoder.h>
 #include <uStepperDriver.h>
 
-
-
+#define HARD 0
+#define SOFT 1
 
 #define DRV_ENN PD4 
 #define SD_MODE PD5
+#define SPI_MODE PD6
 
 #define CS_DRIVER PE2
 #define CS_ENCODER PD7 
@@ -86,9 +112,9 @@ class uStepperS;
 /** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
 #define ENCODERSPEEDCONSTANT ENCODERINTFREQ/65535.0	
 /**	P term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
-#define PULSEFILTERKP 60.0
+#define PULSEFILTERKP 120.0
 /**	I term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
-#define PULSEFILTERKI 1200.0*ENCODERINTPERIOD
+#define PULSEFILTERKI 1900.0*ENCODERINTPERIOD
 
 /**
  * @brief	Measures angle of motor.
@@ -175,11 +201,14 @@ public:
 	 */
 	void setup(	uint8_t mode = NORMAL,
 				uint16_t stepsPerRevolution = 200, 
-				float pTerm = 0.75, 
-				float iTerm = 3.0, 
+				float pTerm = 10.0, 
+				float iTerm = 0.0, 
 				float dTerm = 0.0,
 				uint16_t dropinStepSize = 16,
-				bool setHome = true);	
+				bool setHome = true,
+				uint8_t invert = 0,
+				uint8_t runCurrent = 50,
+				uint8_t holdCurrent = 30);	
 
 
 	/**
@@ -284,20 +313,94 @@ public:
 	 */
 	float angleMoved( void );
 
-	bool uStepperS::getMotorState(void);
+	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
 
-	void stop( void );
+	void stop( bool mode = HARD );
 
-	bool isStalled(void);
+	bool isStalled(float stallSensitivity = 0.992);
 
 	void brakeMotor(bool brake);
 
 	void enablePid(void);
 	void disablePid(void);
 
-	float moveToEnd(bool dir);
+	float moveToEnd(bool dir, float stallSensitivity = 0.992);
+	float getPidError(void);
+		/**
+	 * @brief      	This method is used to change the PID proportional parameter P.
+	 *
+	 * @param[in]  	PID proportional part P
+	 *
+	 */
+	void setProportional(float P);
 
+	/**
+	 * @brief      	This method is used to change the PID integral parameter I.
+	 *
+	 * @param[in]  	PID integral part I
+	 *
+	 */
+	void setIntegral(float I);
 
+	/**
+	 * @brief      	This method is used to change the PID differential parameter D.
+	 *
+	 * @param[in]  	PID differential part D
+	 *
+	 */
+	void setDifferential(float D);
+
+	/**
+	 * @brief      	This method is used to invert the drop-in direction pin interpretation.
+	 *
+	 * @param[in]  	0 = not inverted, 1 = inverted
+	 *
+	 */
+	void invertDropinDir(bool invert);
+
+	/**
+	 * @brief      	This method is used to tune Drop-in parameters.
+	 *				After tuning uStepper S-lite the parameters are saved in EEPROM
+	 *				
+	 * 				Usage:
+	 *				Set Proportional constant: 'P=10.002;'
+	 *				Set Integral constant: 'I=10.002;'
+	 *				Set Differential constant: 'D=10.002;'
+	 *				Invert Direction: 'invert;'
+	 *				Get Current PID Error: 'error;'
+	 *				Get Run/Hold Current Settings: 'current;'
+	 *				Set Run Current (percent): 'runCurrent=50.0;'
+	 *				Set Hold Current (percent): 'holdCurrent=50.0;'	
+	 *
+	 */	
+	void dropinCli();
+
+	/**
+	 * @brief      	This method is used for the dropinCli to take in user commands.
+	 *
+	 * @param[in]  	cmd - input from terminal for dropinCli
+	 *			
+	 */
+	void parseCommand(String *cmd);
+	
+	/**
+	 * @brief      	This method is used to print the dropinCli menu explainer:
+	 *				
+	 * 				Usage:
+	 *				Show this command list: 'help;'
+	 *				Get PID Parameters: 'parameters;'
+	 *				Set Proportional constant: 'P=10.002;'
+	 *				Set Integral constant: 'I=10.002;'
+	 *				Set Differential constant: 'D=10.002;'
+	 *				Invert Direction: 'invert;'
+	 *				Get Current PID Error: 'error;'
+	 *				Get Run/Hold Current Settings: 'current;'
+	 *				Set Run Current (percent): 'runCurrent=50.0;'
+	 *				Set Hold Current (percent): 'holdCurrent=50.0;'	
+	 *
+	 */	
+	void dropinPrintHelp();
+	
 private: 
 
 	/** This variable contains the maximum velocity in steps/s, the motor is
@@ -312,7 +415,7 @@ private:
 	 */
 	float maxAcceleration;
 	float maxDeceleration;
-
+	bool invertPidDropinDirection;
 	float rpmToVelocity;
 	float angleToStep;
 
@@ -344,7 +447,8 @@ private:
 	// SPI functions
 
 	volatile int32_t pidPositionStepsIssued = 0;
-
+	volatile float currentPidError;
+	float stallSensitivity = 0.992;
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );
@@ -353,7 +457,12 @@ private:
 
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
 
-	float pid(float error, bool reset = 0);
+	float pid(float error);
+	bool detectStall(int32_t stepsMoved);
+	dropinCliSettings_t dropinSettings;
+	bool loadDropinSettings(void);
+	void saveDropinSettings(void);
+	uint8_t dropinSettingsCalcChecksum(dropinCliSettings_t *settings);
 };
 
 

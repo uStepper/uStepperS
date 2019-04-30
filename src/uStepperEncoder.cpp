@@ -112,7 +112,7 @@ uint16_t uStepperEncoder::getAngleRaw(void)
 
 float uStepperEncoder::getAngleMoved(void)
 {
-	return this->encoderFilter.posEst * 0.005493164;	//360/65536
+	return this->angleMoved * 0.005493164;	//360/65536
 }
 
 int32_t uStepperEncoder::getAngleMovedRaw(void)
@@ -133,7 +133,7 @@ float uStepperEncoder::getSpeed( void )
 
 float uStepperEncoder::getRPM( void )
 {
-	return curSpeed * 60;
+	return pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOREVOLUTIONS;
 }
 
 void uStepperEncoder::chipSelect(bool state)

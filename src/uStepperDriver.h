@@ -104,6 +104,9 @@
 #define DRIVER_VELOCITY 1
 #define DRIVER_POSITION 2
 
+#define ACCELERATIONCONVERSION 1.0/116.415321827	//page 74 datasheet
+#define VELOCITYCONVERSION 1.0/0.953674316	//page 74 datasheet
+
 class uStepperDriver{
 
 friend class uStepperS;
@@ -117,9 +120,9 @@ friend class uStepperS;
 
 		void setVelocity( uint32_t velocity );
 
-		void setAcceleration( uint16_t acceleration );
+		void setAcceleration( uint32_t acceleration );
 
-		void setDeceleration( uint16_t deceleration );
+		void setDeceleration( uint32_t deceleration );
 
 		void setRampProfile( uint32_t velocity, uint16_t acceleration, uint16_t deceleration );
 

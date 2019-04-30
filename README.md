@@ -47,20 +47,21 @@ To add the uStepper S library do the following:
 - Close Library Manager
 
 ## Documentation
-Currently the documentation of this library is non-existing, but we are working on getting this part up to speed ASAP. For now, the documentation for the original uStepper can be used as a guideline, as these two libraries are much alike in usage:
+Currently the documentation of this library is non-existing, but we are working on getting this part up to speed ASAP (a few weeks)
 
-http://ustepper.com/docs/html/index.html
-
-### MAC Users:
+### MAC (and a few Windows) Users:
 In order to make the uStepper S show up in the "ports" list, you need to install the VCP driver from the following link: 
 https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 
-## Known Bugs
-- Stall detection is currently not implemented
-- PID mode is currently not working. We are working on it !
-- DROPIN mode is working, but should be improved
-
 ## Change Log
+1.0.0:
+- Bug fixes
+- New Dropin PID code
+- Added dropin CLI interface
+- Fixed stall detection, and added user sensitivity parameter
+
+0.1.1:
+- Bug fixes
 
 0.1.0:	
 

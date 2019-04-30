@@ -18,9 +18,9 @@ uStepperS stepper;
 void setup() {
 
   Serial.begin(9600);
-  stepper.setup(DROPIN, 200, 4.1, 2.0, 1.0);
+  stepper.setup(DROPIN, 200, 35, 0.0, 2.0);
 }
 
 void loop() {
-  Serial.println(stepper.encoder.getAngleMoved());
+  stepper.dropinCli();
 }
