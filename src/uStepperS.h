@@ -42,6 +42,7 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <inttypes.h>
+#include <uStepperServo.h>
 #define CW 1
 #define CCW 0
 
@@ -200,8 +201,8 @@ public:
 	 */
 	void setup(	uint8_t mode = NORMAL,
 				uint16_t stepsPerRevolution = 200, 
-				float pTerm = 0.75, 
-				float iTerm = 3.0, 
+				float pTerm = 10.0, 
+				float iTerm = 0.0, 
 				float dTerm = 0.0,
 				uint16_t dropinStepSize = 16,
 				bool setHome = true,
@@ -323,7 +324,7 @@ public:
 	void enablePid(void);
 	void disablePid(void);
 
-	float moveToEnd(bool dir);
+	float moveToEnd(bool dir, float stallSensitivity = 0.992);
 	float getPidError(void);
 		/**
 	 * @brief      	This method is used to change the PID proportional parameter P.

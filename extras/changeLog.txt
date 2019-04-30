@@ -1,5 +1,13 @@
 Changelog - uStepper S library
 ----------------------------
+Version 1.0.0:
+	- Bug fixes
+	- New Dropin PID code
+	- Added dropin CLI interface
+	- Fixed stall detection, and added user sensitivity parameter
+
+Version 0.1.1:
+	- Bug fixes
 
 Version 0.1.0:	
 	- Initial release

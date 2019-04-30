@@ -102,10 +102,11 @@ void uStepperS::setup(	uint8_t mode,
 			digitalWrite(2,HIGH);
 			digitalWrite(3,HIGH);
 			digitalWrite(4,HIGH);
+			delay(10000);
 			attachInterrupt(0, interrupt0, FALLING);
 			attachInterrupt(1, interrupt1, CHANGE);
-			this->driver.writeRegister(AMAX_REG, 	65535); 
-			this->driver.writeRegister(DMAX_REG, 	65535); 
+			this->driver.setDeceleration( 0xFFFFF );
+			this->driver.setAcceleration( 0xFFFFF );
 			Serial.begin(9600);
 
 			tempSettings.P.f = pTerm;
@@ -134,7 +135,7 @@ void uStepperS::setup(	uint8_t mode,
 				}
 			}
 
-			delay(10000);
+			
   			this->dropinPrintHelp();
 		}		
 		else
@@ -575,7 +576,7 @@ void uStepperS::disablePid(void)
 	sei();
 }
 
-float uStepperS::moveToEnd(bool dir)
+float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.992)
 {
 	float length = this->encoder.getAngleMoved();
 
@@ -588,7 +589,7 @@ float uStepperS::moveToEnd(bool dir)
 		this->setRPM(-10);
 	}
 	delay(1000);
-	while(!this->isStalled())
+	while(!this->isStalled(stallSensitivity))
 	{
 	}
 	this->stop();
@@ -608,6 +609,7 @@ float uStepperS::pid(float error)
 	float limit = abs(this->currentPidSpeed) + 150000.0;
 	static float integral;
 	static bool integralReset = 0;
+	static float errorOld, differential = 0.0;
 
 	this->currentPidError = error;
 
@@ -654,8 +656,17 @@ float uStepperS::pid(float error)
 
 	u += integral;
 	
+	differential *= 0.0;
+	differential += 1.0*((error - errorOld)*this->dTerm);
+
+	errorOld = error;
+
+	u += differential;
+
 	u *= this->stepsPerSecondToRPM;
 	this->setRPM(u);
+	this->driver.setDeceleration( 0xFFFFF );
+	this->driver.setAcceleration( 0xFFFFF );
 }
 
 void uStepperS::setProportional(float P)
