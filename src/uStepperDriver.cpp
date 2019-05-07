@@ -61,19 +61,31 @@ void uStepperDriver::readMotorStatus(void)
 
 void uStepperDriver::setVelocity( uint32_t velocity )
 {
-	this->VMAX = ceil((float)velocity * VELOCITYCONVERSION);
+	this->VMAX = velocity;
 	this->writeRegister(VMAX_REG, this->VMAX);
 }
 
 void uStepperDriver::setAcceleration( uint32_t acceleration )
 {
-	this->AMAX = ceil((float)acceleration * ACCELERATIONCONVERSION);
+	this->AMAX = acceleration;
+
+	if(this->AMAX > 0xFFFE)
+	{
+		this->AMAX = 0xFFFE;
+	}
+
 	this->writeRegister(AMAX_REG, this->AMAX);
 }
 
 void uStepperDriver::setDeceleration( uint32_t deceleration )
 {
-	this->DMAX = ceil((float)deceleration * ACCELERATIONCONVERSION);
+	this->DMAX = deceleration;
+
+	if(this->DMAX > 0xFFFE)
+	{
+		this->DMAX = 0xFFFE;
+	}
+
 	this->writeRegister(DMAX_REG, this->DMAX);
 }
 

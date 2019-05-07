@@ -81,12 +81,17 @@ void uStepperS::setup(	uint8_t mode,
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
 	this->init();
 
-	this->setCurrent(40.0);
-	this->setHoldCurrent(25.0);
-	this->setRPM(0);
+	this->setCurrent(0.0);
+	this->setHoldCurrent(0.0);
+
+	this->stop(HARD);
+
 	while(this->driver.readRegister(VACTUAL) != 0);
 
 	delay(500);
+
+	this->setCurrent(40.0);
+	this->setHoldCurrent(25.0);	
 
 	encoder.setHome();
 
@@ -105,8 +110,8 @@ void uStepperS::setup(	uint8_t mode,
 			delay(10000);
 			attachInterrupt(0, interrupt0, FALLING);
 			attachInterrupt(1, interrupt1, CHANGE);
-			this->driver.setDeceleration( 0xFFFFF );
-			this->driver.setAcceleration( 0xFFFFF );
+			this->driver.setDeceleration( 0xFFFE);
+			this->driver.setAcceleration( 0xFFFE );
 			Serial.begin(9600);
 
 			tempSettings.P.f = pTerm;
@@ -322,17 +327,10 @@ uint8_t uStepperS::SPI(uint8_t data){
 void uStepperS::setMaxVelocity( float velocity )
 {
 	velocity *= (float)this->microSteps;
-	velocity = abs(velocity);
+	velocity = abs(velocity)*VELOCITYCONVERSION;
 
-	if( velocity > (float)0x7FFE00/VELOCITYCONVERSION)
-	{
-		this->maxVelocity = (float)0x7FFE00/VELOCITYCONVERSION;
-	}
-	else
-	{
-		this->maxVelocity = velocity;
-	}
-	
+	this->maxVelocity = velocity;
+
 	// Steps per second, has to be converted to microsteps
 	this->driver.setVelocity( (uint32_t)( this->maxVelocity  ) );
 }
@@ -340,16 +338,10 @@ void uStepperS::setMaxVelocity( float velocity )
 void uStepperS::setMaxAcceleration( float acceleration )
 {
 	acceleration *= (float)this->microSteps;
-	acceleration = abs(acceleration);
+	acceleration = abs(acceleration) * ACCELERATIONCONVERSION;
 
-	if( acceleration > (float)0xFFFFF/ACCELERATIONCONVERSION)
-	{
-		this->maxAcceleration = (float)0xFFFFF/ACCELERATIONCONVERSION;
-	}
-	else
-	{
-		this->maxAcceleration = acceleration;
-	}
+	this->maxAcceleration = acceleration;
+
 	
 	// Steps per second, has to be converted to microsteps
 	this->driver.setAcceleration( (uint32_t)(this->maxAcceleration ) );
@@ -358,16 +350,9 @@ void uStepperS::setMaxAcceleration( float acceleration )
 void uStepperS::setMaxDeceleration( float deceleration )
 {
 	deceleration *= (float)this->microSteps;
-	deceleration = abs(deceleration);
+	deceleration = abs(deceleration) * ACCELERATIONCONVERSION;
 	
-	if( deceleration > (float)0xFFFFF/ACCELERATIONCONVERSION)
-	{
-		this->maxDeceleration = (float)0xFFFFF/ACCELERATIONCONVERSION;
-	}
-	else
-	{
-		this->maxDeceleration = deceleration;
-	}
+	this->maxDeceleration = deceleration;
 	
 	// Steps per second, has to be converted to microsteps
 	this->driver.setDeceleration( (uint32_t)(this->maxDeceleration ) );
@@ -431,8 +416,8 @@ void uStepperS::stop( bool mode){
 
 	if(mode == HARD)
 	{
-		this->driver.setDeceleration( 0xFFFFF );
-		this->driver.setAcceleration( 0xFFFFF );
+		this->driver.setDeceleration( 0xFFFE );
+		this->driver.setAcceleration( 0xFFFE );
 		this->setRPM(0);
 		while(this->driver.readRegister(VACTUAL) != 0);
 		this->driver.setDeceleration( (uint32_t)( this->maxDeceleration ) );
@@ -665,8 +650,8 @@ float uStepperS::pid(float error)
 
 	u *= this->stepsPerSecondToRPM;
 	this->setRPM(u);
-	this->driver.setDeceleration( 0xFFFFF );
-	this->driver.setAcceleration( 0xFFFFF );
+	this->driver.setDeceleration( 0xFFFE );
+	this->driver.setAcceleration( 0xFFFE );
 }
 
 void uStepperS::setProportional(float P)

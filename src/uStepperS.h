@@ -51,29 +51,46 @@
 #define STANDSTILL 0x08
 #define STALLGUARD2 0x04
 
+/**
+ * @brief      Union to easily split a float into its binary representation
+ * 
+ */
 typedef union
 {
-	float f;
-	uint8_t bytes[4];
+	float f;			/**< normal float value*/
+	uint8_t bytes[4];	/**< binary representation, split into an array of 4 bytes*/
 }floatBytes_t;
 
+/**
+ * @brief      	Struct to store dropin settings
+ *
+ *				This struct contains the current dropin settings, aswell as a checksum,
+ *				which is used upon loading of settings from EEPROM, to determine if the 
+ *				settings in the EEPROM are valid.								
+ * 
+ */
 typedef struct 
 {
-	floatBytes_t P;
-	floatBytes_t I;
-	floatBytes_t D;
-	uint8_t invert;
-	uint8_t holdCurrent;
-	uint8_t runCurrent;
-	uint8_t checksum;
+	floatBytes_t P;				/**< Proportional gain of the dropin PID controller	*/
+	floatBytes_t I;				/**< Integral gain of the dropin PID controller	*/			
+	floatBytes_t D;				/**< Differential gain of the dropin PID controller	*/
+	uint8_t invert;				/**< Inversion of the "direction" input in dropin mode. 0 = NOT invert, 1 = invert	*/
+	uint8_t holdCurrent;		/**< Current to use when the motor is NOT rotating. 0-100 %	*/
+	uint8_t runCurrent;			/**< Current to use when the motor is rotating. 0-100 %	*/
+	uint8_t checksum;			/**< Checksum	*/
 }dropinCliSettings_t;
 
+/**
+ * @brief      	Struct for encoder velocity estimator
+ *
+ *				This struct contains the variables for the velocity estimator.
+ */
 typedef struct 
 {
-	float posError = 0.0;
-	float posEst = 0.0;				//<--- Filtered Position
-	float velIntegrator = 0.0;		//<--- Filtered velocity
-	float velEst = 0.0;
+	float posError = 0.0;			/**< Position estimation error*/
+	float posEst = 0.0;				/**< Position Estimation (Filtered Position)*/
+	float velIntegrator = 0.0;		/**< Velocity integrator output (Filtered velocity)*/
+	float velEst = 0.0;				/**< Estimated Velocity*/
 }posFilter_t;
 
 
@@ -117,9 +134,9 @@ class uStepperS;
 #define PULSEFILTERKI 1900.0*ENCODERINTPERIOD
 
 /**
- * @brief	Measures angle of motor.
+ * @brief	Interrupt routine for critical tasks.
  *
- *			This interrupt routine is in charge of sampling the encoder
+ *			This interrupt routine is in charge of sampling the encoder, process the data and handle PID
  */
 extern "C" void TIMER1_COMPA_vect(void) __attribute__ ((signal,used));
 
@@ -139,6 +156,14 @@ void interrupt0(void);
  */
 void interrupt1(void);
 
+
+/**
+ * @brief      Prototype of class for accessing all features of the uStepper S in
+ *             a single object.
+ *
+ *             This class enables the user of the library to access all features
+ *             of the uStepper S board, by use of a single object.
+ */
 class uStepperS
 {
 
@@ -147,14 +172,11 @@ friend class uStepperEncoder;
 friend void interrupt0(void);
 friend void TIMER1_COMPA_vect(void) __attribute__ ((signal,used));
 public:			
-	/** Instantiate object for the encoder */
-
-    // uStepperEncoder *encoder;
 
 	/** Instantiate object for the driver */
 	uStepperDriver driver;
 	
-	/** Instantiate object for the driver */
+	/** Instantiate object for the Encoder */
 	uStepperEncoder encoder;
 
 	/**
@@ -162,6 +184,9 @@ public:
 	 */
 	uStepperS();
 
+	/**
+	 * @brief	Overloaded Constructor of uStepper class
+	 */
 	uStepperS(float acceleration, float velocity);
 
 	/**
@@ -170,9 +195,9 @@ public:
 	void init( void );
 
 	/**
-	 * @brief      Initializes the different parts of the uStepper object
+	 * @brief      Initializes the different parts of the uStepper S object
 	 *
-	 *             This function initializes the different parts of the uStepper
+	 *             This function initializes the different parts of the uStepper S
 	 *             object, and should be called in the setup() function of the
 	 *             arduino sketch. This function is needed as some things, like
 	 *             the timer can not be setup in the constructor, since arduino
@@ -182,22 +207,27 @@ public:
 	 * @param[in]  mode             	Default is normal mode. Pass the constant
 	 *                              	"DROPIN" to configure the uStepper to act as
 	 *                              	dropin compatible to the stepstick. Pass the
-	 *                              	constant "PID", to enable PID feature for
+	 *                              	constant "PID", to enable closed loop feature for
 	 *                              	regular movement functions, such as
 	 *                              	moveSteps()
 	 * @param[in]  stepsPerRevolution   Number of fullsteps per revolution
 	 *
-	 * @param[in]  pTerm            	The proportional coefficent of the PID
+	 * @param[in]  pTerm            	The proportional coefficent of the DROPIN PID
 	 *                              	controller
-	 * @param[in]  iTerm            	The integral coefficent of the PID
+	 * @param[in]  iTerm            	The integral coefficent of the DROPIN PID
 	 *                              	controller
-	 * @param[in]  dterm            	The differential coefficent of the PID
+	 * @param[in]  dterm            	The differential coefficent of the DROPIN PID
 	 *                              	controller
 	 * @param[in]  dropinStepSize		number of steps per fullstep, send from
 	 *									external dropin controller   
 	 * @param[in]  setHome          	When set to true, the encoder position is
 	 *									Reset. When set to false, the encoder
 	 *									position is not reset.
+	 * @param[in]  invert           	Inverts the motor direction for dropin
+	 *									feature. 0 = NOT invert, 1 = invert.
+	 *									this has no effect for other modes than dropin
+	 * @param[in]  runCurrent       	Sets the current (in percent) to use while motor is running.
+	 * @param[in]  holdCurrent      	Sets the current (in percent) to use while motor is NOT running
 	 */
 	void setup(	uint8_t mode = NORMAL,
 				uint16_t stepsPerRevolution = 200, 
@@ -217,7 +247,7 @@ public:
 	 *             This function lets the user set the velocity of the motor in rpm. 
 	 *             A negative value switches direction of the motor.
 	 *
-	 * @param      rpm  - The velocity in rotations per minute
+	 * @param[in]  rpm  - The velocity in rotations per minute
 	 */
 	void setRPM( float rpm );
 
@@ -227,7 +257,7 @@ public:
 	 *             This function lets the user set the max acceleration used 
 	 *             by the stepper driver.
 	 *
-	 * @param      acceleration  - Maximum acceleration in steps/s^2
+	 * @param[in]      acceleration  - Maximum acceleration in steps/s^2
 	 */
 	void setMaxAcceleration	( float acceleration );
 
@@ -237,7 +267,7 @@ public:
 	 *             This function lets the user set the max deceleration used 
 	 *             by the stepper driver.
 	 *
-	 * @param      deceleration  - Maximum deceleration in steps/s^2
+	 * @param[in]      deceleration  - Maximum deceleration in steps/s^2
 	 */
 	void setMaxDeceleration ( float deceleration );
 
@@ -247,7 +277,7 @@ public:
 	 *             This function lets the user set the max velocity used 
 	 *             by the stepper driver.
 	 *
-	 * @param      velocity  - Maximum velocity in steps/s^2
+	 * @param[in]      velocity  - Maximum velocity in steps/s
 	 */
 	void setMaxVelocity	( float velocity );
 
@@ -256,18 +286,18 @@ public:
 	 *
 	 *             This function allows the user to change the current setting of the motor driver.
 	 *
-	 * @param      current  - Desired current in percent (0% - 100%)
+	 * @param[in]      current  - Desired current in percent (0% - 100%)
 	 */
-	void setCurrent( double current );
+	void setCurrent( float current );
 
 	/**
 	 * @brief      Set motor hold current.
 	 *
 	 *             This function allows the user to change the current setting of the motor driver.
 	 *
-	 * @param      current  - Desired hold current in percent (0% - 100%)
+	 * @param[in]      current  - Desired hold current in percent (0% - 100%)
 	 */
-	void setHoldCurrent( double current );
+	void setHoldCurrent( float current );
 
 	/**
 	 * @brief      Make the motor perform a predefined number of steps
@@ -278,14 +308,14 @@ public:
 	 *             by setMaximumVelocity() function. The direction of rotation
 	 *             is set by the argument "dir".
 	 *
-	 * @param      steps     -	Number of steps to be performed.
+	 * @param[in]      steps     -	Number of steps to be performed.
 	 */
 	void moveSteps( int32_t steps );
 
 	/**
 	 * @brief      	Moves the motor to a relative angle
 	 *
-	 * @param  	    angle     -	Relative angle from current position (negative value allowed)
+	 * @param[in]  	    angle     -	Relative angle from current position (negative values allowed)
 	 */
 	void moveAngle( float angle );
 
