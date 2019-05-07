@@ -288,7 +288,7 @@ public:
 	 *
 	 * @param[in]      current  - Desired current in percent (0% - 100%)
 	 */
-	void setCurrent( float current );
+	void setCurrent( double current );
 
 	/**
 	 * @brief      Set motor hold current.
@@ -297,7 +297,7 @@ public:
 	 *
 	 * @param[in]      current  - Desired hold current in percent (0% - 100%)
 	 */
-	void setHoldCurrent( float current );
+	void setHoldCurrent( double current );
 
 	/**
 	 * @brief      Make the motor perform a predefined number of steps
