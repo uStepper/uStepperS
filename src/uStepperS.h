@@ -322,7 +322,7 @@ public:
 	/**
 	 * @brief      	Moves the motor to an absolute angle
 	 *
-	 * @param   	angle     -	Absolute angle (negative value allowed)
+	 * @param[in]   	angle     -	Absolute angle (negative values allowed)
 	 */
 	void moveToAngle( float angle );
 
@@ -332,7 +332,7 @@ public:
 	 *             This function makes the motor rotate continuously, using the
 	 *             acceleration profile.
 	 *
-	 * @param      dir   - Can be set to "CCW" or "CW" (without the quotes)
+	 * @param[in]      dir   - Can be set to "CCW" or "CW" (without the quotes)
 	 */
 	void runContinous( bool dir );
 
@@ -343,6 +343,16 @@ public:
 	 */
 	float angleMoved( void );
 
+	/**
+	 * @brief      Get the current motor driver state
+	 *
+	 *				This function is used to check some internal status flags of the driver.
+	 *				The argument is used to specify the flag to check
+	 *
+	 *	param[in]
+	 *
+	 * @return     The angle moved.
+	 */
 	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
 
 	void stop( bool mode = HARD );
