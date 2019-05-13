@@ -1,11 +1,11 @@
 /********************************************************************************************
-* 	 	File: 		uStepperS.h 																*
-*		Version:    1.0.0                                         						*
-*      	date: 		July 12th, 2018 	                                    				*
-*      	Author: 	Emil Jacobsen 		                                  					*
+* 	 	File: 		uStepperS.h 															*
+*		Version:    1.0.1                                           						*
+*      	Date: 		May 14th, 2019  	                                    				*
+*      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
-*	(C) 2018																				*
+*	(C) 2019																				*
 *																							*
 *	uStepper ApS																			*
 *	www.ustepper.com 																		*
@@ -20,16 +20,93 @@
 * 	caused by the use of the code contained in this file ! 									*
 *                                                                                           *
 ********************************************************************************************/
-
 /**
- * @file uStepperS.h
- * @brief	Function prototypes and definitions for the uStepperS library
- *
- *			This file contains class and function prototypes for the library,
- *			as well as necessary constants and global variables.
- *
- * @author	Emil Jacobsen (emil@ustepper.com)
- */
+* @file uStepperS.h
+*
+* @brief      Function prototypes and definitions for the uStepper S library
+*
+*             This file contains class and function prototypes for the library,
+*             as well as necessary constants and global variables.
+*
+* @author     Thomas Hørring Olsen (thomas@ustepper.com)
+*
+*	\mainpage Arduino library for the uStepper S Board
+*	
+*	This is the uStepper S Arduino library, providing software functions for the different features of the uStepper S board.
+*
+*	\par Features
+*	The uStepper S library contains the following features:
+*
+*	- Dropin feature for applications like 3D printers
+*	- Closed loop PID position controller
+*	- Control of RC servo motors
+*	- Measure the current position of the shaft (absolute, multiple revolutions)
+*	- Measure the current speed of the motor 
+*	- Stall detection for use in e.g. limit detection functionality 
+*	
+*	The library uses timer one in order to function properly, meaning that unless the user of this library
+*	can accept the loss of some functionality, this timer is unavailable and the registers associated with these timers
+*	should not be reconfigured.
+*
+*	Timer one is used for sampling the encoder in order to provide the ability to keep track of both the current speed and the
+*	angle moved since the board was reset (or a new home position was configured). Also the drop-in features missed step detection and 
+*	correction is done in this timer. 
+*	
+*	\par Installation
+*	To install the uStepper S library into the Arduino IDE, perform the following steps:
+*
+*	- Go to Sketch->Include Libraries->Manage Libraries... in the arduino IDE
+*	- Search for "uStepper S", in the top right corner of the "Library Manager" window
+*	- Install uStepper S library 
+*	
+*	The library is tested with Arduino IDE 1.8.8
+*	
+*	\warning MAC users should be aware, that OSX does NOT include SILABS VCP drivers, needed to upload sketches to the uStepper S, by default. This driver should be 
+*	downloaded and installed from SILABS's website:
+*	\warning https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
+*	\warning             The uStepper S should NOT be connected to the USB port while installing this driver !
+*	\warning This is not (commonly) a problem for windows/linux users, as these drivers are most often already included in the OS
+*
+*	\par Copyright
+*
+*	(C)2019 uStepper ApS	
+*																	
+*	www.ustepper.com 																	
+*
+*	administration@ustepper.com 														
+*																							
+*	<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />																
+*
+*	The code contained in this file is released under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>	
+*																							
+*	The code in this library is provided without warranty of any kind - use at own risk!		
+* 	neither uStepper ApS nor the author, can be held responsible for any damage		
+* 	caused by the use of the code contained in this library ! 	
+*
+*	\par To do list
+*	- Clean out in unused variables
+*	- Update comments
+*
+*	\par Known Bugs
+*	- No known bugs
+*
+*	\author Thomas Hørring Olsen (thomas@ustepper.com)
+*	\par Change Log
+*	\version 1.0.1:
+*	- Fixed bug in functions to set acceleration and deceleration
+*	- moved a couple of functions in uStepperDriver.h from public to protected section of class
+*	- added documentation
+*	\version 1.0.0:
+*	- Bug fixes
+*	- New Dropin PID code
+*	- Added dropin CLI interface
+*	- Fixed stall detection, and added user sensitivity parameter
+*	\version 0.1.1:
+*	- Bug fixes
+*	\version 0.1.0:	
+*	- Initial release
+*	
+*/
 
 #ifndef _USTEPPER_S_H_
 #define _USTEPPER_S_H_
@@ -43,13 +120,13 @@
 #include <EEPROM.h>
 #include <inttypes.h>
 #include <uStepperServo.h>
-#define CW 1
-#define CCW 0
+#define CW 1	/**< DESCRIPTION PENDING */
+#define CCW 0	/**< DESCRIPTION PENDING */
 
-#define POSITION_REACHED 0x20
-#define VELOCITY_REACHED 0x10
-#define STANDSTILL 0x08
-#define STALLGUARD2 0x04
+#define POSITION_REACHED 0x20	/**< DESCRIPTION PENDING */
+#define VELOCITY_REACHED 0x10	/**< DESCRIPTION PENDING */
+#define STANDSTILL 0x08	/**< DESCRIPTION PENDING */
+#define STALLGUARD2 0x04	/**< DESCRIPTION PENDING */
 
 /**
  * @brief      Union to easily split a float into its binary representation
@@ -98,29 +175,29 @@ class uStepperS;
 #include <uStepperEncoder.h>
 #include <uStepperDriver.h>
 
-#define HARD 0
-#define SOFT 1
+#define HARD 0	/**< DESCRIPTION PENDING */
+#define SOFT 1	/**< DESCRIPTION PENDING */
 
-#define DRV_ENN PD4 
-#define SD_MODE PD5
-#define SPI_MODE PD6
+#define DRV_ENN PD4 	/**< DESCRIPTION PENDING */
+#define SD_MODE PD5	/**< DESCRIPTION PENDING */
+#define SPI_MODE PD6	/**< DESCRIPTION PENDING */
 
-#define CS_DRIVER PE2
-#define CS_ENCODER PD7 
+#define CS_DRIVER PE2	/**< DESCRIPTION PENDING */
+#define CS_ENCODER PD7 	/**< DESCRIPTION PENDING */
 
-#define MOSI1 PE3
-#define MOSI_ENC PC2
-#define MISO1 PC0  
-#define SCK1 PC1 
+#define MOSI1 PE3	/**< DESCRIPTION PENDING */
+#define MOSI_ENC PC2	/**< DESCRIPTION PENDING */
+#define MISO1 PC0  	/**< DESCRIPTION PENDING */
+#define SCK1 PC1 	/**< DESCRIPTION PENDING */
 
 /** Value defining normal mode*/	
-#define NORMAL 	0	
+#define NORMAL 	0		
 /** Value defining dropin mode for 3d printer/CNC controller boards*/
 #define DROPIN 	1						
 /** Value defining PID mode for normal library functions*/
 #define PID 	2	
 
-#define CLOCKFREQ 16000000.0
+#define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTFREQ 1000.0	
@@ -216,7 +293,7 @@ public:
 	 *                              	controller
 	 * @param[in]  iTerm            	The integral coefficent of the DROPIN PID
 	 *                              	controller
-	 * @param[in]  dterm            	The differential coefficent of the DROPIN PID
+	 * @param[in]  dTerm            	The differential coefficent of the DROPIN PID
 	 *                              	controller
 	 * @param[in]  dropinStepSize		number of steps per fullstep, send from
 	 *									external dropin controller   
@@ -304,25 +381,48 @@ public:
 	 *
 	 *             This function makes the motor perform a predefined number of
 	 *             steps, using the acceleration profile. The motor will accelerate
-	 *             at the rate set by setMaximumAcceleration(), and eventually reach the speed set
-	 *             by setMaximumVelocity() function. The direction of rotation
-	 *             is set by the argument "dir".
+	 *             at the rate set by setMaxAcceleration(), decelerate at the rate set by setMaxDeceleration() and eventually reach the speed set
+	 *             by setMaxVelocity() function. The direction of rotation
+	 *             is set by the sign of the commanded steps to perform
 	 *
-	 * @param[in]      steps     -	Number of steps to be performed.
+	 * @param[in]      steps     -	Number of steps to be performed. an input value of
+	 *								300 makes the motor go 300 steps in CW direction, and
+	 *								an input value of -300 makes the motor move 300 steps
+	 *								in CCW direction.
 	 */
 	void moveSteps( int32_t steps );
 
 	/**
-	 * @brief      	Moves the motor to a relative angle
+	 * @brief      	Moves the motor rotate a specific angle relative to the current position
 	 *
-	 * @param[in]  	    angle     -	Relative angle from current position (negative values allowed)
+	 *              This function makes the motor a rotate by a specific angle relative to 
+	 *			    the current position, using the acceleration profile. The motor will accelerate
+	 *              at the rate set by setMaxAcceleration(), decelerate at the rate set by 
+	 *				setMaxDeceleration() and eventually reach the speed set
+	 *              by setMaxVelocity() function. The direction of rotation
+	 *              is set by the sign of the commanded angle to move
+	 *
+	 * @param[in]  	    angle     -	Angle to move. an input value of
+	 *								300 makes the motor go 300 degrees in CW direction, and
+	 *								an input value of -300 makes the motor move 300 degrees
+	 *								in CCW direction.
 	 */
 	void moveAngle( float angle );
 
 	/**
-	 * @brief      	Moves the motor to an absolute angle
+	 * @brief      	Moves the motor rotate a specific angle relative to the current position
 	 *
-	 * @param[in]   	angle     -	Absolute angle (negative values allowed)
+	 *              This function makes the motor a rotate by a specific angle relative to 
+	 *			    the current position, using the acceleration profile. The motor will accelerate
+	 *              at the rate set by setMaxAcceleration(), decelerate at the rate set by 
+	 *				setMaxDeceleration() and eventually reach the speed set
+	 *              by setMaxVelocity() function. The direction of rotation
+	 *              is set by the sign of the commanded angle to move
+	 *
+	 * @param[in]  	    angle     -	Angle to move. an input value of
+	 *								300 makes the motor go 300 degrees in CW direction, and
+	 *								an input value of -300 makes the motor move 300 degrees
+	 *								in CCW direction.
 	 */
 	void moveToAngle( float angle );
 
@@ -337,9 +437,9 @@ public:
 	void runContinous( bool dir );
 
 	/**
-	 * @brief      Get the angle moved from reference position
+	 * @brief      Get the angle moved from reference position in degrees
 	 *
-	 * @return     The angle moved.
+	 * @return     The angle moved in degrees.
 	 */
 	float angleMoved( void );
 
@@ -349,27 +449,78 @@ public:
 	 *				This function is used to check some internal status flags of the driver.
 	 *				The argument is used to specify the flag to check
 	 *
-	 *	param[in]
+	 *	param[in]	statusType - status flag to check. Possible values:
+	 *					POSITION_REACHED - has last commanded position been reached?
+	 *					VELOCITY_REACHED - has last commanded velocity been reached?
+	 *					STANDSTILL - Are the motor currently stopped?
+	 *					STALLGUARD2 - Has the stallguard been trickered?
+	 *					
 	 *
 	 * @return     The angle moved.
 	 */
 	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
 
+	/**
+	 * @brief      Stop the motor
+	 *
+	 *             	This function stops any ongoing motor movement. The "mode" argument
+	 *				determines whether the motor should stop with or without
+	 *				a deceleration phase
+	 *
+	 * @param      mode  -	can be set to "HARD" for no deceleration phase
+	 *						or "SOFT" for deceleration phase.
+	 */
 	void stop( bool mode = HARD );
 
+	/**
+	 * @brief      	This method returns a bool variable indicating wether the motor
+	 *				is stalled or not
+	 *
+	 * @param[in]  	stallSensitivity - Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 *
+	 * @return     	0 = not stalled, 1 = stalled
+	 */
 	bool isStalled(float stallSensitivity = 0.992);
 
 	void brakeMotor(bool brake);
 
+	/**
+	 * @brief      	This method enables the PID after being disabled  (disablePid).
+	 *
+	 */
 	void enablePid(void);
+
+	/**
+	 * @brief      	This method disables the PID until calling enablePid.
+	 *
+	 */
 	void disablePid(void);
 
+	/**
+	 * @brief      	Moves the motor to its physical limit, without limit switch
+	 *
+	 *              This function, makes the motor run continously, untill the
+	 *				encoder detects a stall, at which point the motor is assumed
+	 *				to be at it's limit.
+	 *
+	 * @param[in]  	dir  Direction to search for limit
+	 *
+	 * @param[in]  	stallSensitivity  Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 *
+	 * @return 		Degrees turned from calling the function, till end was reached
+	 */
 	float moveToEnd(bool dir, float stallSensitivity = 0.992);
+
+	/**
+	 * @brief      This method returns the current PID error
+	 * @return     PID error (float)
+	 */	
 	float getPidError(void);
-		/**
+
+	/**
 	 * @brief      	This method is used to change the PID proportional parameter P.
 	 *
-	 * @param[in]  	PID proportional part P
+	 * @param[in]  	P - PID proportional part P
 	 *
 	 */
 	void setProportional(float P);
@@ -377,7 +528,7 @@ public:
 	/**
 	 * @brief      	This method is used to change the PID integral parameter I.
 	 *
-	 * @param[in]  	PID integral part I
+	 * @param[in]  	I - PID integral part I
 	 *
 	 */
 	void setIntegral(float I);
@@ -385,7 +536,7 @@ public:
 	/**
 	 * @brief      	This method is used to change the PID differential parameter D.
 	 *
-	 * @param[in]  	PID differential part D
+	 * @param[in]  	D - PID differential part D
 	 *
 	 */
 	void setDifferential(float D);
@@ -393,14 +544,14 @@ public:
 	/**
 	 * @brief      	This method is used to invert the drop-in direction pin interpretation.
 	 *
-	 * @param[in]  	0 = not inverted, 1 = inverted
+	 * @param[in]  	invert - 0 = not inverted, 1 = inverted
 	 *
 	 */
 	void invertDropinDir(bool invert);
 
 	/**
 	 * @brief      	This method is used to tune Drop-in parameters.
-	 *				After tuning uStepper S-lite the parameters are saved in EEPROM
+	 *				After tuning uStepper S, the parameters are saved in EEPROM
 	 *				
 	 * 				Usage:
 	 *				Set Proportional constant: 'P=10.002;'

@@ -1,3 +1,34 @@
+/********************************************************************************************
+* 	 	File: 		uStepperDriver.cpp														*
+*		Version:    1.0.1                                           						*
+*      	Date: 		May 14th, 2019  	                                    				*
+*      	Author: 	Thomas Hørring Olsen                                   					*
+*                                                   										*	
+*********************************************************************************************
+*	(C) 2019																				*
+*																							*
+*	uStepper ApS																			*
+*	www.ustepper.com 																		*
+*	administration@ustepper.com 															*
+*																							*
+*	The code contained in this file is released under the following open source license:	*
+*																							*
+*			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International			*
+* 																							*
+* 	The code in this file is provided without warranty of any kind - use at own risk!		*
+* 	neither uStepper ApS nor the author, can be held responsible for any damage				*
+* 	caused by the use of the code contained in this file ! 									*
+*                                                                                           *
+********************************************************************************************/
+/**
+* @file uStepperDriver.cpp
+*
+* @brief      Function implementations for the TMC5130 motor driver
+*
+*             This file contains class and function implementations for the TMC5130 motor driver.
+*
+* @author     Thomas Hørring Olsen (thomas@ustepper.com)
+*/
 #include <uStepperS.h>
 
 extern uStepperS * pointer;
@@ -62,6 +93,12 @@ void uStepperDriver::readMotorStatus(void)
 void uStepperDriver::setVelocity( uint32_t velocity )
 {
 	this->VMAX = velocity;
+
+	if(this->VMAX > 0x7FFE00)
+	{
+		this->VMAX = 0x7FFE00;
+	}
+	
 	this->writeRegister(VMAX_REG, this->VMAX);
 }
 
@@ -135,18 +172,6 @@ void uStepperDriver::setDirection( bool direction )
 	}else{
 		this->writeRegister( RAMPMODE, VELOCITY_MODE_NEG ); 
 	}
-}
-
-void uStepperDriver::setRampProfile( uint32_t speed, uint16_t acceleration, uint16_t deceleration ){
-
-	this->V1 = speed;
-	this->A1 = acceleration;
-	this->D1 = deceleration;
-
-	// Update the rampprofile 
-
-	this->setRampMode(POSITIONING_MODE);
-
 }
 
 void uStepperDriver::setRampMode( uint8_t mode ){

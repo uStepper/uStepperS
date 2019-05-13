@@ -47,13 +47,20 @@ To add the uStepper S library do the following:
 - Close Library Manager
 
 ## Documentation
-Currently the documentation of this library is non-existing, but we are working on getting this part up to speed ASAP (a few weeks)
+The documentation for this library can be found at the following URL:
+
+http://ustepper.com/docs/usteppers/html/index.html
 
 ### MAC (and a few Windows) Users:
 In order to make the uStepper S show up in the "ports" list, you need to install the VCP driver from the following link: 
 https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 
 ## Change Log
+1.0.1:
+- Fixed bug in functions to set acceleration and deceleration
+- moved a couple of functions in uStepperDriver.h from public to protected section of class
+- added documentation
+
 1.0.0:
 - Bug fixes
 - New Dropin PID code
@@ -64,7 +71,6 @@ https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vc
 - Bug fixes
 
 0.1.0:	
-
 - Initial release
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">uStepper</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="www.ustepper.com" property="cc:attributionName" rel="cc:attributionURL">ON Development</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.

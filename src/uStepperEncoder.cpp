@@ -1,3 +1,34 @@
+/********************************************************************************************
+* 	 	File: 		uStepperEncoder.cpp														*
+*		Version:    1.0.1                                           						*
+*      	Date: 		May 14th, 2019  	                                    				*
+*      	Author: 	Thomas Hørring Olsen                                   					*
+*                                                   										*	
+*********************************************************************************************
+*	(C) 2019																				*
+*																							*
+*	uStepper ApS																			*
+*	www.ustepper.com 																		*
+*	administration@ustepper.com 															*
+*																							*
+*	The code contained in this file is released under the following open source license:	*
+*																							*
+*			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International			*
+* 																							*
+* 	The code in this file is provided without warranty of any kind - use at own risk!		*
+* 	neither uStepper ApS nor the author, can be held responsible for any damage				*
+* 	caused by the use of the code contained in this file ! 									*
+*                                                                                           *
+********************************************************************************************/
+/**
+* @file uStepperEncoder.cpp
+*
+* @brief      Function implementations for the AEAT8800-Q24 Encoder
+*
+*             This file contains class and function implementations for the AEAT8800-Q24 Encoder.
+*
+* @author     Thomas Hørring Olsen (thomas@ustepper.com)
+*/
 #include <uStepperS.h>
 /* At initialition setup the SPI hardware protocal to communicate with SSI interface */
 extern uStepperS * pointer;

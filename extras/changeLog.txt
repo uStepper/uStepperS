@@ -1,5 +1,10 @@
 Changelog - uStepper S library
 ----------------------------
+Version 1.0.1:
+	- Fixed bug in functions to set acceleration and deceleration
+	- moved a couple of functions in uStepperDriver.h from public to protected section of class
+	- added documentation
+	
 Version 1.0.0:
 	- Bug fixes
 	- New Dropin PID code
