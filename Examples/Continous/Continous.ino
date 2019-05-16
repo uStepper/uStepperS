@@ -1,3 +1,11 @@
+/*
+*      Continous Example Sketch!
+*
+* This example demonstrates how the library can be used to make the motorrun continously,
+* in both directions and making it stop an ongoing movement.
+* For more information, check out the documentation:
+* http://ustepper.com/docs/usteppers/html/index.html
+*/
 #include <uStepperS.h>
 
 uStepperS stepper;

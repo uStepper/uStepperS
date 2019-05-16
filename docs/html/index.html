@@ -77,6 +77,18 @@ $(function() {
 </ul>
 <p>The library uses timer one in order to function properly, meaning that unless the user of this library can accept the loss of some functionality, this timer is unavailable and the registers associated with these timers should not be reconfigured.</p>
 <p>Timer one is used for sampling the encoder in order to provide the ability to keep track of both the current speed and the angle moved since the board was reset (or a new home position was configured). Also the drop-in features missed step detection and correction is done in this timer.</p>
+<dl class="section user"><dt>EEPROM Usage information</dt><dd></dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd></dd>
+<dd>
+Please be aware that the uStepper uses the EEPROM to store settings related to the Dropin application. </dd>
+<dd>
+If you are not using this, then this has no impact for your application, and you can ignore this section ! </dd>
+<dd>
+</dd>
+<dd>
+EEPROM address 0 to 15 contains the different settings for dropin. If your application uses the EEPROM, </dd>
+<dd>
+Please use another location than these !</dd></dl>
 <dl class="section user"><dt>Installation</dt><dd>To install the uStepper S library into the Arduino IDE, perform the following steps:</dd></dl>
 <ul>
 <li>Go to Sketch-&gt;Include Libraries-&gt;Manage Libraries... in the arduino IDE</li>
@@ -139,7 +151,7 @@ This is not (commonly) a problem for windows/linux users, as these drivers are m
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 13 2019 22:32:13 for uStepper S by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 16 2019 23:37:33 for uStepper S by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

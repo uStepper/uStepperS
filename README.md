@@ -5,6 +5,14 @@ The library is supported and tested with in Arduino IDE 1.8.8.
 
 For more information, visit www.ustepper.com
 
+## !! EEPROM Usage information !!
+
+Please be aware that the uStepper uses the EEPROM to store settings related to the Dropin application.
+If you are not using this, then this has no impact for your application, and you can ignore this section !
+
+EEPROM address 0 to 15 contains the different settings for dropin. If your application uses the EEPROM,
+Please use another location than these !
+
 ## Installation
 
 Installation is split into two parts - Hardware and Library. Both are required to use the uStepper S boards.

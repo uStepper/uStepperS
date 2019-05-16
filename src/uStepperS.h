@@ -52,6 +52,14 @@
 *	angle moved since the board was reset (or a new home position was configured). Also the drop-in features missed step detection and 
 *	correction is done in this timer. 
 *	
+*	\par EEPROM Usage information
+*	\warning
+*	\warning Please be aware that the uStepper uses the EEPROM to store settings related to the Dropin application.
+*	\warning If you are not using this, then this has no impact for your application, and you can ignore this section !
+*	\warning
+*	\warning EEPROM address 0 to 15 contains the different settings for dropin. If your application uses the EEPROM,
+*	\warning Please use another location than these !
+*
 *	\par Installation
 *	To install the uStepper S library into the Arduino IDE, perform the following steps:
 *

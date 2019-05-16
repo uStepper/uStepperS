@@ -1,3 +1,11 @@
+/*
+*      uStepper RC Servo Motor Example Sketch!
+*
+* This example demonstrates how the library can be used to control an RC servo connected to the uStepper.
+* For more information, check out the documentation:
+* http://ustepper.com/docs/usteppers/html/index.html
+*
+*/
 #include <uStepperS.h>
 
 uStepperServo servo;    //instantiate uStepperServo object

@@ -18,7 +18,7 @@ uStepperS stepper;
 void setup() {
 
   Serial.begin(9600);
-  stepper.setup(DROPIN, 200, 35, 0.0, 2.0);
+  stepper.setup(DROPIN, 200, 65, 3.0, 0.0);
 }
 
 void loop() {
