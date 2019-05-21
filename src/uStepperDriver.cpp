@@ -260,8 +260,8 @@ void uStepperDriver::setHome(void)
 int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	// Disabled interrupts until write is complete
-	cli();
-
+	//cli();
+	TIMSK1 &= ~(1 << OCIE1A);
 	// Enable SPI mode 3 to use TMC5130
 	this->pointer->setSPIMode(3);
 
@@ -284,15 +284,16 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	this->chipSelect(true); // Set CS HIGH
 
-	sei(); 
-
+	//sei(); 
+	TIMSK1 |= (1 << OCIE1A);
 	return package;
 }
 
 int32_t uStepperDriver::readRegister( uint8_t address )
 {
 	// Disabled interrupts until write is complete
-	cli();
+	//cli();
+	TIMSK1 &= ~(1 << OCIE1A);
 
 	// Enable SPI mode 3 to use TMC5130
 	this->pointer->setSPIMode(3);
@@ -320,7 +321,8 @@ int32_t uStepperDriver::readRegister( uint8_t address )
 	value |= this->pointer->SPI(0x00);
 	this->chipSelect(true);
 
-	sei(); 
+	//sei(); 
+	TIMSK1 |= (1 << OCIE1A);
 
 	return value;
 }

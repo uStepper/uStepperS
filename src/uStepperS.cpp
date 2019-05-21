@@ -544,7 +544,6 @@ void TIMER1_COMPA_vect(void)
 	}
 	pointer->encoder.angleMoved += deltaAngle;
 
-	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 	if(pointer->mode == DROPIN)
 	{	
 		cli();
@@ -561,7 +560,8 @@ void TIMER1_COMPA_vect(void)
 		}
 		return;
 	}
-	else if(pointer->mode == PID)
+	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
+	if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{
@@ -575,6 +575,7 @@ void TIMER1_COMPA_vect(void)
 			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
+
 	pointer->detectStall(stepsMoved);
 }
 
@@ -672,8 +673,8 @@ float uStepperS::pid(float error)
 
 	u += integral;
 	
-	differential *= 0.0;
-	differential += 1.0*((error - errorOld)*this->dTerm);
+	differential *= 0.9;
+	differential += 0.1*((error - errorOld)*this->dTerm);
 
 	errorOld = error;
 

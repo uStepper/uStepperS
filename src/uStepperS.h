@@ -96,7 +96,7 @@
 *	- Update comments
 *
 *	\par Known Bugs
-*	- No known bugs
+*	- does not properly release motor in dropin mode
 *
 *	\author Thomas Hørring Olsen (thomas@ustepper.com)
 *	\par Change Log

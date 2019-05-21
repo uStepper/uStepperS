@@ -63,6 +63,9 @@ http://ustepper.com/docs/usteppers/html/index.html
 In order to make the uStepper S show up in the "ports" list, you need to install the VCP driver from the following link: 
 https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 
+## Known bugs
+- does not properly release motor in dropin mode
+
 ## Change Log
 1.0.1:
 - Fixed bug in functions to set acceleration and deceleration
