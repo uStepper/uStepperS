@@ -1,3 +1,34 @@
+/********************************************************************************************
+* 	 	File: 		uStepperDriver.cpp														*
+*		Version:    1.0.1                                           						*
+*      	Date: 		May 14th, 2019  	                                    				*
+*      	Author: 	Thomas Hørring Olsen                                   					*
+*                                                   										*	
+*********************************************************************************************
+*	(C) 2019																				*
+*																							*
+*	uStepper ApS																			*
+*	www.ustepper.com 																		*
+*	administration@ustepper.com 															*
+*																							*
+*	The code contained in this file is released under the following open source license:	*
+*																							*
+*			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International			*
+* 																							*
+* 	The code in this file is provided without warranty of any kind - use at own risk!		*
+* 	neither uStepper ApS nor the author, can be held responsible for any damage				*
+* 	caused by the use of the code contained in this file ! 									*
+*                                                                                           *
+********************************************************************************************/
+/**
+* @file uStepperDriver.cpp
+*
+* @brief      Function implementations for the TMC5130 motor driver
+*
+*             This file contains class and function implementations for the TMC5130 motor driver.
+*
+* @author     Thomas Hørring Olsen (thomas@ustepper.com)
+*/
 #include <uStepperS.h>
 
 extern uStepperS * pointer;
@@ -61,19 +92,37 @@ void uStepperDriver::readMotorStatus(void)
 
 void uStepperDriver::setVelocity( uint32_t velocity )
 {
-	this->VMAX = ceil((float)velocity * VELOCITYCONVERSION);
+	this->VMAX = velocity;
+
+	if(this->VMAX > 0x7FFE00)
+	{
+		this->VMAX = 0x7FFE00;
+	}
+	
 	this->writeRegister(VMAX_REG, this->VMAX);
 }
 
 void uStepperDriver::setAcceleration( uint32_t acceleration )
 {
-	this->AMAX = ceil((float)acceleration * ACCELERATIONCONVERSION);
+	this->AMAX = acceleration;
+
+	if(this->AMAX > 0xFFFE)
+	{
+		this->AMAX = 0xFFFE;
+	}
+
 	this->writeRegister(AMAX_REG, this->AMAX);
 }
 
 void uStepperDriver::setDeceleration( uint32_t deceleration )
 {
-	this->DMAX = ceil((float)deceleration * ACCELERATIONCONVERSION);
+	this->DMAX = deceleration;
+
+	if(this->DMAX > 0xFFFE)
+	{
+		this->DMAX = 0xFFFE;
+	}
+
 	this->writeRegister(DMAX_REG, this->DMAX);
 }
 
@@ -123,18 +172,6 @@ void uStepperDriver::setDirection( bool direction )
 	}else{
 		this->writeRegister( RAMPMODE, VELOCITY_MODE_NEG ); 
 	}
-}
-
-void uStepperDriver::setRampProfile( uint32_t speed, uint16_t acceleration, uint16_t deceleration ){
-
-	this->V1 = speed;
-	this->A1 = acceleration;
-	this->D1 = deceleration;
-
-	// Update the rampprofile 
-
-	this->setRampMode(POSITIONING_MODE);
-
 }
 
 void uStepperDriver::setRampMode( uint8_t mode ){
@@ -223,8 +260,8 @@ void uStepperDriver::setHome(void)
 int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	// Disabled interrupts until write is complete
-	cli();
-
+	//cli();
+	TIMSK1 &= ~(1 << OCIE1A);
 	// Enable SPI mode 3 to use TMC5130
 	this->pointer->setSPIMode(3);
 
@@ -247,15 +284,16 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 
 	this->chipSelect(true); // Set CS HIGH
 
-	sei(); 
-
+	//sei(); 
+	TIMSK1 |= (1 << OCIE1A);
 	return package;
 }
 
 int32_t uStepperDriver::readRegister( uint8_t address )
 {
 	// Disabled interrupts until write is complete
-	cli();
+	//cli();
+	TIMSK1 &= ~(1 << OCIE1A);
 
 	// Enable SPI mode 3 to use TMC5130
 	this->pointer->setSPIMode(3);
@@ -283,7 +321,8 @@ int32_t uStepperDriver::readRegister( uint8_t address )
 	value |= this->pointer->SPI(0x00);
 	this->chipSelect(true);
 
-	sei(); 
+	//sei(); 
+	TIMSK1 |= (1 << OCIE1A);
 
 	return value;
 }

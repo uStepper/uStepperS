@@ -1,3 +1,34 @@
+/********************************************************************************************
+* 	 	File: 		uStepperS.cpp															*
+*		Version:    1.0.1                                           						*
+*      	Date: 		May 14th, 2019  	                                    				*
+*      	Author: 	Thomas Hørring Olsen                                   					*
+*                                                   										*	
+*********************************************************************************************
+*	(C) 2019																				*
+*																							*
+*	uStepper ApS																			*
+*	www.ustepper.com 																		*
+*	administration@ustepper.com 															*
+*																							*
+*	The code contained in this file is released under the following open source license:	*
+*																							*
+*			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International			*
+* 																							*
+* 	The code in this file is provided without warranty of any kind - use at own risk!		*
+* 	neither uStepper ApS nor the author, can be held responsible for any damage				*
+* 	caused by the use of the code contained in this file ! 									*
+*                                                                                           *
+********************************************************************************************/
+/**
+* @file uStepperS.cpp
+*
+* @brief      Function and class implementation for the uStepper S library
+*
+*             This file contains class and function implementations for the library.
+*
+* @author     Thomas Hørring Olsen (thomas@ustepper.com)
+*/
 #include <uStepperS.h>
 uStepperS * pointer;
 
@@ -81,12 +112,17 @@ void uStepperS::setup(	uint8_t mode,
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
 	this->init();
 
-	this->setCurrent(40.0);
-	this->setHoldCurrent(25.0);
-	this->setRPM(0);
+	this->setCurrent(0.0);
+	this->setHoldCurrent(0.0);
+
+	this->stop(HARD);
+
 	while(this->driver.readRegister(VACTUAL) != 0);
 
 	delay(500);
+
+	this->setCurrent(40.0);
+	this->setHoldCurrent(25.0);	
 
 	encoder.setHome();
 
@@ -105,8 +141,8 @@ void uStepperS::setup(	uint8_t mode,
 			delay(10000);
 			attachInterrupt(0, interrupt0, FALLING);
 			attachInterrupt(1, interrupt1, CHANGE);
-			this->driver.setDeceleration( 0xFFFFF );
-			this->driver.setAcceleration( 0xFFFFF );
+			this->driver.setDeceleration( 0xFFFE);
+			this->driver.setAcceleration( 0xFFFE );
 			Serial.begin(9600);
 
 			tempSettings.P.f = pTerm;
@@ -147,11 +183,11 @@ void uStepperS::setup(	uint8_t mode,
 		}
 	}
 
-	this->moveAngle(1.8);
+	this->moveAngle(10);
 
 	while(this->getMotorState());
 
-	if(this->encoder.getAngleMoved() < -0.8)
+	if(this->encoder.getAngleMoved() < -5)
 	{
 		this->driver.setShaftDirection(1);
 	}
@@ -322,17 +358,10 @@ uint8_t uStepperS::SPI(uint8_t data){
 void uStepperS::setMaxVelocity( float velocity )
 {
 	velocity *= (float)this->microSteps;
-	velocity = abs(velocity);
+	velocity = abs(velocity)*VELOCITYCONVERSION;
 
-	if( velocity > (float)0x7FFE00/VELOCITYCONVERSION)
-	{
-		this->maxVelocity = (float)0x7FFE00/VELOCITYCONVERSION;
-	}
-	else
-	{
-		this->maxVelocity = velocity;
-	}
-	
+	this->maxVelocity = velocity;
+
 	// Steps per second, has to be converted to microsteps
 	this->driver.setVelocity( (uint32_t)( this->maxVelocity  ) );
 }
@@ -340,16 +369,10 @@ void uStepperS::setMaxVelocity( float velocity )
 void uStepperS::setMaxAcceleration( float acceleration )
 {
 	acceleration *= (float)this->microSteps;
-	acceleration = abs(acceleration);
+	acceleration = abs(acceleration) * ACCELERATIONCONVERSION;
 
-	if( acceleration > (float)0xFFFFF/ACCELERATIONCONVERSION)
-	{
-		this->maxAcceleration = (float)0xFFFFF/ACCELERATIONCONVERSION;
-	}
-	else
-	{
-		this->maxAcceleration = acceleration;
-	}
+	this->maxAcceleration = acceleration;
+
 	
 	// Steps per second, has to be converted to microsteps
 	this->driver.setAcceleration( (uint32_t)(this->maxAcceleration ) );
@@ -358,16 +381,9 @@ void uStepperS::setMaxAcceleration( float acceleration )
 void uStepperS::setMaxDeceleration( float deceleration )
 {
 	deceleration *= (float)this->microSteps;
-	deceleration = abs(deceleration);
+	deceleration = abs(deceleration) * ACCELERATIONCONVERSION;
 	
-	if( deceleration > (float)0xFFFFF/ACCELERATIONCONVERSION)
-	{
-		this->maxDeceleration = (float)0xFFFFF/ACCELERATIONCONVERSION;
-	}
-	else
-	{
-		this->maxDeceleration = deceleration;
-	}
+	this->maxDeceleration = deceleration;
 	
 	// Steps per second, has to be converted to microsteps
 	this->driver.setDeceleration( (uint32_t)(this->maxDeceleration ) );
@@ -431,8 +447,8 @@ void uStepperS::stop( bool mode){
 
 	if(mode == HARD)
 	{
-		this->driver.setDeceleration( 0xFFFFF );
-		this->driver.setAcceleration( 0xFFFFF );
+		this->driver.setDeceleration( 0xFFFE );
+		this->driver.setAcceleration( 0xFFFE );
 		this->setRPM(0);
 		while(this->driver.readRegister(VACTUAL) != 0);
 		this->driver.setDeceleration( (uint32_t)( this->maxDeceleration ) );
@@ -528,7 +544,6 @@ void TIMER1_COMPA_vect(void)
 	}
 	pointer->encoder.angleMoved += deltaAngle;
 
-	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 	if(pointer->mode == DROPIN)
 	{	
 		cli();
@@ -545,7 +560,8 @@ void TIMER1_COMPA_vect(void)
 		}
 		return;
 	}
-	else if(pointer->mode == PID)
+	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
+	if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{
@@ -559,6 +575,7 @@ void TIMER1_COMPA_vect(void)
 			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
+
 	pointer->detectStall(stepsMoved);
 }
 
@@ -656,8 +673,8 @@ float uStepperS::pid(float error)
 
 	u += integral;
 	
-	differential *= 0.0;
-	differential += 1.0*((error - errorOld)*this->dTerm);
+	differential *= 0.9;
+	differential += 0.1*((error - errorOld)*this->dTerm);
 
 	errorOld = error;
 
@@ -665,8 +682,8 @@ float uStepperS::pid(float error)
 
 	u *= this->stepsPerSecondToRPM;
 	this->setRPM(u);
-	this->driver.setDeceleration( 0xFFFFF );
-	this->driver.setAcceleration( 0xFFFFF );
+	this->driver.setDeceleration( 0xFFFE );
+	this->driver.setAcceleration( 0xFFFE );
 }
 
 void uStepperS::setProportional(float P)
@@ -1122,7 +1139,7 @@ void uStepperS::dropinCli()
 
 void uStepperS::dropinPrintHelp()
 {
-	Serial.println(F("uStepper S-lite Dropin !"));
+	Serial.println(F("uStepper S Dropin !"));
 	Serial.println(F(""));
 	Serial.println(F("Usage:"));
 	Serial.println(F("Show this command list: 'help;'"));
