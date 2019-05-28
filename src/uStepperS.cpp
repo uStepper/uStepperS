@@ -183,11 +183,11 @@ void uStepperS::setup(	uint8_t mode,
 		}
 	}
 
-	this->moveAngle(1.8);
+	this->moveAngle(10);
 
 	while(this->getMotorState());
 
-	if(this->encoder.getAngleMoved() < -0.8)
+	if(this->encoder.getAngleMoved() < -5)
 	{
 		this->driver.setShaftDirection(1);
 	}
@@ -1139,7 +1139,7 @@ void uStepperS::dropinCli()
 
 void uStepperS::dropinPrintHelp()
 {
-	Serial.println(F("uStepper S-lite Dropin !"));
+	Serial.println(F("uStepper S Dropin !"));
 	Serial.println(F(""));
 	Serial.println(F("Usage:"));
 	Serial.println(F("Show this command list: 'help;'"));
