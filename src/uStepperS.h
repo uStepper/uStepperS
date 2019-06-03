@@ -488,7 +488,7 @@ public:
 	 *
 	 * @return     	0 = not stalled, 1 = stalled
 	 */
-	bool isStalled(float stallSensitivity = 0.992);
+	bool isStalled(float stallSensitivity = 0.6);
 
 	void brakeMotor(bool brake);
 
@@ -517,7 +517,7 @@ public:
 	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float stallSensitivity = 0.992);
+	float moveToEnd(bool dir, float stallSensitivity = 0.6);
 
 	/**
 	 * @brief      This method returns the current PID error
@@ -647,7 +647,7 @@ private:
 
 	volatile int32_t pidPositionStepsIssued = 0;
 	volatile float currentPidError;
-	float stallSensitivity = 0.992;
+	float stallSensitivity = 0.6;
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );

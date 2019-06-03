@@ -262,12 +262,12 @@ bool uStepperS::detectStall(int32_t stepsMoved)
 	float encoderPosition = ((float)this->encoder.angleMoved*ENCODERDATATOSTEP);
 	static float internalStall = 0.0;
 
-	encoderPositionChange *= 0.99;
-	encoderPositionChange += 0.01*(oldEncoderPosition - encoderPosition);
+	encoderPositionChange *= stallSensitivity;
+	encoderPositionChange += (1.0-stallSensitivity)*(oldEncoderPosition - encoderPosition);
 	oldEncoderPosition = encoderPosition;
 
-	targetPositionChange *= 0.99;
-	targetPositionChange += 0.01*(oldTargetPosition - stepsMoved);
+	targetPositionChange *= (1.0-stallSensitivity);
+	targetPositionChange += stallSensitivity*(oldTargetPosition - stepsMoved);
 	oldTargetPosition = stepsMoved;
 
 	if(abs(encoderPositionChange) < abs(targetPositionChange)*0.5)
@@ -280,7 +280,7 @@ bool uStepperS::detectStall(int32_t stepsMoved)
 		internalStall *= this->stallSensitivity;
 	}
 
-	if(internalStall >= 0.95)		//3 timeconstants
+	if(internalStall >= stallSensitivity)
 	{
 		this->stall = 1;
 	}
@@ -593,7 +593,7 @@ void uStepperS::disablePid(void)
 	sei();
 }
 
-float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.992)
+float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.6)
 {
 	float length = this->encoder.getAngleMoved();
 
@@ -605,9 +605,10 @@ float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.992)
 	{
 		this->setRPM(-10);
 	}
-	delay(1000);
+	delay(500);
 	while(!this->isStalled(stallSensitivity))
 	{
+		delay(10);
 	}
 	this->stop();
 
