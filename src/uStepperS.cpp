@@ -550,11 +550,11 @@ void TIMER1_COMPA_vect(void)
 			stepCntTemp = pointer->stepCnt;
 		sei();
 
-		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp);
+		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp/16);
 
 		if(!pointer->pidDisabled)
 		{
-			error = stepCntTemp - (pointer->encoder.angleMoved * ENCODERDATATOSTEP);
+			error = (stepCntTemp - (int32_t)(pointer->encoder.angleMoved * ENCODERDATATOSTEP))/16;
 			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator;
 			pointer->pid(error);
 		}
@@ -623,7 +623,7 @@ float uStepperS::getPidError(void)
 float uStepperS::pid(float error)
 {
 	float u;
-	float limit = abs(this->currentPidSpeed) + 150000.0;
+	float limit = abs(this->currentPidSpeed) + 10000.0;
 	static float integral;
 	static bool integralReset = 0;
 	static float errorOld, differential = 0.0;
@@ -649,16 +649,16 @@ float uStepperS::pid(float error)
 
 	integral += error*this->iTerm;
 
-	if(integral > 3000000.0)
+	if(integral > 200000.0)
 	{
-		integral = 3000000.0;
+		integral = 200000.0;
 	}
-	else if(integral < -3000000.0)
+	else if(integral < -200000.0)
 	{
-		integral = -3000000.0;
+		integral = -200000.0;
 	}
 
-	if(error > -100 && error < 100)
+	if(error > -10 && error < 10)
 	{
 		if(!integralReset)
 		{
@@ -680,7 +680,7 @@ float uStepperS::pid(float error)
 
 	u += differential;
 
-	u *= this->stepsPerSecondToRPM;
+	u *= this->stepsPerSecondToRPM * 16.0;
 	this->setRPM(u);
 	this->driver.setDeceleration( 0xFFFE );
 	this->driver.setAcceleration( 0xFFFE );
