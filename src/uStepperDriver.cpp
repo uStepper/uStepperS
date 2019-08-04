@@ -233,7 +233,7 @@ void uStepperDriver::stop( void )
 	this->setVelocity(0);
 }
 
-void uStepperDriver::setHome(void)
+void uStepperDriver::setHome(int32_t initialSteps)
 {
 	int32_t xActual, xTarget;
 
@@ -243,18 +243,18 @@ void uStepperDriver::setHome(void)
 		xTarget = this->readRegister(XTARGET);
 
 		xTarget -= xActual;
-		this->xTarget = xTarget;
-		this->writeRegister(XACTUAL, 0);
-		this->writeRegister(XTARGET, xTarget);
+		this->xTarget = xTarget + initialSteps;
+		this->writeRegister(XACTUAL, initialSteps);
+		this->writeRegister(XTARGET, this->xTarget);
 	}
 	else
 	{
-		this->xTarget = 0;
-		this->writeRegister(XACTUAL, 0);
-		this->writeRegister(XTARGET, 0);
+		this->xTarget = initialSteps;
+		this->writeRegister(XACTUAL, initialSteps);
+		this->writeRegister(XTARGET, initialSteps);
 	}
 
-	pointer->pidPositionStepsIssued = 0;
+	pointer->pidPositionStepsIssued = initialSteps;
 }
 
 int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){

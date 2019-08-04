@@ -49,6 +49,9 @@
 /** Constant to convert raw encoder data to revolutions */
 #define ENCODERDATATOREVOLUTIONS 60.0/65536.0
 
+/** Constant to convert angle to raw encoder data */
+#define ANGLETOENCODERDATA 65535.0/360.0
+
 /**
  * @brief      Prototype of class for the AEAT8800-Q24 encoder
  *
@@ -78,8 +81,10 @@ class uStepperEncoder
 		 *
 		 *             This function redefines the reference position to the current
 		 *             angle of the shaft
+		 * 
+		 * 	@param[in]  initialAngle - Home position offset from zero
 		 */
-		void setHome( void );
+		void setHome( float initialAngle = 0 );
 
 		/**
 		 * @brief      Return the current shaft angle in degrees
@@ -243,6 +248,7 @@ class uStepperEncoder
 
 		/** Status bits from the encoder */
 		uint8_t status; 
+		int32_t userAngleOffset = 0;
 
 		
 

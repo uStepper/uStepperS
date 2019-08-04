@@ -257,8 +257,10 @@ friend class uStepperS;
 
 		/**
 		 * @brief		Resets the internal position counter of the motor driver
+		 * 
+		 * @param[in]  initialSteps - Home step offset from zero
 		 */
-		void setHome(void);
+		void setHome(int32_t initialSteps = 0);
 		
 		/**
 		 * @brief		Write a register of the motor driver

@@ -72,16 +72,16 @@ void uStepperEncoder::init(uStepperS * _pointer)
 	sei();
 }
 
-void uStepperEncoder::setHome(void)
+void uStepperEncoder::setHome(float initialAngle)
 {
 	cli();
 
 	this->encoderOffset = this->captureAngle();
 	this->oldAngle = 0;
 	this->angle = 0;
-	this->angleMoved = 0;
+	this->angleMoved = ANGLETOENCODERDATA * initialAngle;
 	this->revolutions = 0;
-	pointer->driver.setHome();
+	pointer->driver.setHome(this->angleMoved * ENCODERDATATOSTEP);
 	this->encoderFilter.posError = 0.0;
 	this->encoderFilter.posEst = 0.0;
 	this->encoderFilter.velIntegrator = 0.0;
