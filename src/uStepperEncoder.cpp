@@ -120,7 +120,7 @@ uint16_t uStepperEncoder::captureAngle(void)
 
 	/* Write dummy and read the incoming 8 bits */
 	value |= pointer->SPI(0x00);
-	value >>= 4;
+	value &= 0xFFF0;
 
 	/* Write dummy and read the incoming 8 bits */
 	this->status = pointer->SPI(0x00);
