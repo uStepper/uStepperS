@@ -110,7 +110,6 @@ uint16_t uStepperEncoder::captureAngle(void)
 	pointer->setSPIMode(2);
 
 	uint16_t value = 0;
-	uint8_t stats = 0;
 
 	chipSelect(true);  // Set CS HIGH
 	
