@@ -466,7 +466,7 @@ public:
 	 *
 	 * @return     The angle moved.
 	 */
-	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
+	bool getMotorState(uint8_t statusType = POSITION_REACHED);
 
 	/**
 	 * @brief      Stop the motor
