@@ -265,7 +265,7 @@ int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
 	// Enable SPI mode 3 to use TMC5130
 	this->pointer->setSPIMode(3);
 
-	uint32_t package;
+	uint32_t package = 0;
 
 	// Add the value of WRITE_ACCESS to enable register write
 	address += WRITE_ACCESS;
