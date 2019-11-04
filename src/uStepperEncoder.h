@@ -62,6 +62,7 @@ class uStepperEncoder
 {
 	public:
 
+		uint16_t cmpfunc (const void * a, const void * b);
 		/**
 		 * @brief	Constructor of uStepperEncoder class
 		 */
