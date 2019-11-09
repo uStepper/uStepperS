@@ -98,12 +98,14 @@ void uStepperS::setup(	uint8_t mode,
 							bool setHome,
 							uint8_t invert,
 							uint8_t runCurrent,
-							uint8_t holdCurrent)
+							uint8_t holdCurrent,
+							float hysteresis)
 {
 	dropinCliSettings_t tempSettings;
 	this->pidDisabled = 1;
 	// Should setup mode etc. later
 	this->mode = mode;
+	this->hysteresis = hysteresis;
 	this->fullSteps = stepsPerRevolution;
 	this->dropinStepSize = 256/dropinStepSize;
 	this->angleToStep = (float)this->fullSteps * (float)this->microSteps / 360.0;
@@ -566,13 +568,11 @@ void TIMER1_COMPA_vect(void)
 		if(!pointer->pidDisabled)
 		{
 			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
-			if(abs(pointer->currentPidError) >= 10.0 )
+			if(abs(pointer->currentPidError) >= pointer->hysteresis )
 			{
 				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
 			}
-			
-			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
 
@@ -593,17 +593,17 @@ void uStepperS::disablePid(void)
 	sei();
 }
 
-float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.6)
+float uStepperS::moveToEnd(bool dir, float stallSensitivity, uint16_t RPM)
 {
 	float length = this->encoder.getAngleMoved();
 
 	if(dir == CW)
 	{
-		this->setRPM(10);
+		this->setRPM(RPM);
 	}
 	else
 	{
-		this->setRPM(-10);
+		this->setRPM(-RPM);
 	}
 	delay(500);
 	while(!this->isStalled(stallSensitivity))
@@ -659,7 +659,7 @@ float uStepperS::pid(float error)
 		integral = -200000.0;
 	}
 
-	if(error > -10 && error < 10)
+	if(error > -this->hysteresis && error < this->hysteresis)
 	{
 		if(!integralReset)
 		{
