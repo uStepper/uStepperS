@@ -124,7 +124,7 @@ void uStepperS::setup(	uint8_t mode,
 	this->setCurrent(40.0);
 	this->setHoldCurrent(25.0);	
 
-	encoder.setHome();
+  unsigned int tempInitialEncoderAngle = this->encoder.getAngle();
 
 	if(this->mode)
 	{
@@ -187,7 +187,7 @@ void uStepperS::setup(	uint8_t mode,
 
 	while(this->getMotorState());
 
-	if(this->encoder.getAngleMoved() < -5)
+	if(tempInitialEncoderAngle - this->encoder.getAngle() < -5)
 	{
 		this->driver.setShaftDirection(1);
 	}
@@ -196,8 +196,11 @@ void uStepperS::setup(	uint8_t mode,
 		this->driver.setShaftDirection(0);
 	}
 	
-	encoder.setHome();
-
+	if(setHome)
+  {
+    encoder.setHome();
+  }
+  
 	this->pidDisabled = 0;
 
 	DDRB |= (1 << 4);
