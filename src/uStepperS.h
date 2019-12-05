@@ -323,7 +323,8 @@ public:
 				bool setHome = true,
 				uint8_t invert = 0,
 				uint8_t runCurrent = 50,
-				uint8_t holdCurrent = 30);	
+				uint8_t holdCurrent = 30,
+				float hysteresis = 10);	
 
 
 	/**
@@ -515,9 +516,11 @@ public:
 	 *
 	 * @param[in]  	stallSensitivity  Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
 	 *
+	 * @param[in]  	RPM Limit search speed - positive integer value required
+	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float stallSensitivity = 0.6);
+	float moveToEnd(bool dir, float stallSensitivity = 0.6, uint16_t RPM = 10);
 
 	/**
 	 * @brief      This method returns the current PID error
@@ -633,8 +636,11 @@ private:
 	/** This variable is used to indicate which mode the uStepper is
 	* running in (Normal, dropin or pid)*/
 	uint8_t mode;	
+	/** This variable contains the error hysteresis for the closed loop control */
+	float hysteresis;
+	/** This variable contains the proportional coefficient used by the Drop-in */
 	float pTerm;	
-	/** This variable contains the integral coefficient used by the PID */
+	/** This variable contains the integral coefficient used by the Drop-in */
 	float iTerm;		
 
 	float dTerm;

@@ -49,7 +49,7 @@ uStepperEncoder::uStepperEncoder(void)
 void uStepperEncoder::init(uStepperS * _pointer)
 {
 	this->pointer = _pointer;
-
+int abe;
 	angle = 0;
 
 	/* Set the interrupt mode to 14 with a prescaler of 1 */
@@ -105,12 +105,19 @@ bool uStepperEncoder::detectMagnet(void)
 	return 1;
 }
 
+uint16_t uStepperEncoder::cmpfunc (const void * a, const void * b) {
+   return ( *(uint16_t*)a - *(uint16_t*)b );
+}
+
 uint16_t uStepperEncoder::captureAngle(void)
 {
 	pointer->setSPIMode(2);
 
 	uint16_t value = 0;
-	uint8_t stats = 0;
+	static uint16_t oldValue = 0;
+	static int32_t smoothValue;
+	static uint8_t Beta = 6;
+	static int32_t deltaAngle;
 
 	chipSelect(true);  // Set CS HIGH
 	
@@ -120,19 +127,43 @@ uint16_t uStepperEncoder::captureAngle(void)
 
 	/* Write dummy and read the incoming 8 bits */
 	value |= pointer->SPI(0x00);
-
 	/* Write dummy and read the incoming 8 bits */
 	this->status = pointer->SPI(0x00);
 
 	chipSelect(false);  // Set CS LOW
 
+	deltaAngle = (int32_t)oldValue - (int32_t)value;
 
-	return value;
+	if(deltaAngle < -32768 || deltaAngle > 32768)//wrap around detection to get sharp transition from 0 to 360 deg
+	{
+		smoothValue=value;
+	}
+	else
+	{
+		smoothValue = (smoothValue<< Beta)-smoothValue; 
+   		smoothValue += value;
+   		smoothValue >>= Beta;
+	}
+	oldValue=value;
+
+	return (uint16_t)smoothValue;
+
+	/*if(i>=32){
+		qsort(buff, 32, sizeof(uint16_t), cmpfunc);
+		smoothValue = buff[15];
+		i=0;
+		buff[i] = value;
+	}
+	else{
+		buff[i] = value;
+		i++;
+	}	*/
+	
 }
 
 float uStepperEncoder::getAngle(void)
 {
-	return (float)angle * 0.005493164;	//360/65536
+	return (float)angle * 0.005493164;	//360/65536  0.087890625
 }
 
 uint16_t uStepperEncoder::getAngleRaw(void)
