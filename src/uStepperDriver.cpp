@@ -244,12 +244,14 @@ void uStepperDriver::setHome(int32_t initialSteps)
 
 		xTarget -= xActual;
 		this->xTarget = xTarget + initialSteps;
+		this->xActual = initialSteps;
 		this->writeRegister(XACTUAL, initialSteps);
 		this->writeRegister(XTARGET, this->xTarget);
 	}
 	else
 	{
 		this->xTarget = initialSteps;
+		this->xActual = initialSteps;
 		this->writeRegister(XACTUAL, initialSteps);
 		this->writeRegister(XTARGET, initialSteps);
 	}

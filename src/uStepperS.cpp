@@ -73,6 +73,7 @@ void uStepperS::init( void ){
 	*  MSTR  = 1: Master
 	*  SPR0  = 0 & SPR1 = 0: fOSC/4 = 4Mhz
 	*/
+	SPSR1 |= (1 << 0);
 	SPCR1 = (1<<SPE1)|(1<<MSTR1);	
 
 	driver.init( this );
@@ -515,14 +516,20 @@ void interrupt0(void)
 	}
 }
 
+volatile float debugAngle;
+
 void TIMER1_COMPA_vect(void)
 {
 	uint16_t curAngle;
 	int32_t deltaAngle;
 	int32_t stepsMoved;
 	int32_t stepCntTemp;
+	static float angleMovedUnFilt;
 	float error;
 	float output;
+	static uint8_t loopCnt = 0;
+	DDRB |= (1 << 4);
+	PORTB |= (1 << 4);
 	sei();
 	
 	curAngle = pointer->encoder.captureAngle();
@@ -530,7 +537,7 @@ void TIMER1_COMPA_vect(void)
 	
 	curAngle -= pointer->encoder.encoderOffset;
 	pointer->encoder.angle = curAngle;
-
+	return;
 	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
 	pointer->encoder.oldAngle = curAngle;
 
@@ -543,30 +550,34 @@ void TIMER1_COMPA_vect(void)
 		deltaAngle -= 65535;
 	}
 	pointer->encoder.angleMoved += deltaAngle;
-
+	
 	if(pointer->mode == DROPIN)
 	{	
+		
 		cli();
 			stepCntTemp = pointer->stepCnt;
 		sei();
 
-		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp/16);
+		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp >> 4);
 
 		if(!pointer->pidDisabled)
 		{
-			error = (stepCntTemp - (int32_t)(pointer->encoder.angleMoved * ENCODERDATATOSTEP))/16;
+			error = (stepCntTemp - (int32_t)(pointer->encoder.angleMoved * ENCODERDATATOSTEP)) >> 4;
 			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator;
+			
 			pointer->pid(error);
 		}
 		return;
 	}
 	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
+	debugAngle *= 0.95;
+	debugAngle += pointer->encoder.encoderFilter.posEst*0.05;
 	if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{
 			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
-			if(abs(pointer->currentPidError) >= 10.0 )
+			if(abs(pointer->currentPidError) >= 1.0 )
 			{
 				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
@@ -623,12 +634,13 @@ float uStepperS::getPidError(void)
 
 float uStepperS::pid(float error)
 {
+	
 	float u;
 	float limit = abs(this->currentPidSpeed) + 10000.0;
 	static float integral;
 	static bool integralReset = 0;
 	static float errorOld, differential = 0.0;
-
+	static bool innerTriggered = 0;
 	this->currentPidError = error;
 
 	u = error*this->pTerm;
@@ -682,9 +694,12 @@ float uStepperS::pid(float error)
 	u += differential;
 
 	u *= this->stepsPerSecondToRPM * 16.0;
+
 	this->setRPM(u);
 	this->driver.setDeceleration( 0xFFFE );
 	this->driver.setAcceleration( 0xFFFE );
+
+	PORTB &= ~(1 << 4);
 }
 
 void uStepperS::setProportional(float P)

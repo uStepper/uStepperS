@@ -52,6 +52,9 @@
 /** Constant to convert angle to raw encoder data */
 #define ANGLETOENCODERDATA 65535.0/360.0
 
+/** Constant to raw encoder data to angle*/
+#define ENCODERDATATOANGLE 1/ANGLETOENCODERDATA
+
 /**
  * @brief      Prototype of class for the AEAT8800-Q24 encoder
  *
