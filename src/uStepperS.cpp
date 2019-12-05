@@ -579,11 +579,7 @@ void TIMER1_COMPA_vect(void)
 		if(!pointer->pidDisabled)
 		{
 			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
-<<<<<<< HEAD
-			if(abs(pointer->currentPidError) >= 1.0 )
-=======
 			if(abs(pointer->currentPidError) >= pointer->hysteresis )
->>>>>>> c61e56ed992d1d50711cb321bac53fde28ea8e91
 			{
 				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
