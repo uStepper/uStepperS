@@ -514,10 +514,12 @@ public:
 	 * @param[in]  	dir  Direction to search for limit
 	 *
 	 * @param[in]  	stallSensitivity  Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 * 
+	 * @param[in]  	velocity  Speed at which to move, in RPM
 	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float stallSensitivity = 0.6);
+	float moveToEnd(bool dir, float stallSensitivity = 0.6, bool internalVelocitySetting = 0);
 
 	/**
 	 * @brief      This method returns the current PID error

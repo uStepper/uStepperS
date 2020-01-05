@@ -593,19 +593,21 @@ void uStepperS::disablePid(void)
 	sei();
 }
 
-float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.6)
+float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.6, bool internalVelocitySetting = 0)
 {
 	float length = this->encoder.getAngleMoved();
 
 	if(dir == CW)
 	{
-		this->setRPM(10);
+		if(internalVelocitySetting) {this->setRPM((1.0/rpmToVelocity)*maxVelocity);}
+		else {this->setRPM(10);}
 	}
 	else
 	{
-		this->setRPM(-10);
+		if(internalVelocitySetting) {this->setRPM(-(1.0/rpmToVelocity)*maxVelocity);}
+		else {this->setRPM(-10);}
 	}
-	delay(500);
+	delay(100);
 	while(!this->isStalled(stallSensitivity))
 	{
 		delay(10);
