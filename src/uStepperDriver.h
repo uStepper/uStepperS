@@ -293,6 +293,9 @@ friend class uStepperS;
 		/** target position in microsteps*/
 		volatile int32_t xTarget = 0;
 
+		/** current position in microsteps*/
+		volatile int32_t xActual = 0;
+
 
 	protected:
 		/** Status bits from the driver */
