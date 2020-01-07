@@ -258,6 +258,25 @@ void uStepperS::moveToAngle( float angle )
 
 bool uStepperS::detectStall(int32_t stepsMoved)
 {
+	int32_t encoderPosition = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
+	static int32_t offset = 0;
+	static uint8_t stallCnt = 0;
+
+	if(abs(encoderPosition)-abs(offset)>10*stallCnt){
+		stallCnt++;
+	}
+	else{
+		stallCnt=0;
+		offset = encoderPosition;
+	}
+	if(stallCnt > 3){
+		this->stall = 1;
+		offset = encoderPosition;
+	}
+	else{
+		this->stall = 0;
+	}
+	/*
 	static float oldTargetPosition;
 	static float oldEncoderPosition;
 	static float encoderPositionChange;
@@ -290,7 +309,7 @@ bool uStepperS::detectStall(int32_t stepsMoved)
 	else
 	{
 		this->stall = 0;
-	}
+	}*/
 }
 
 bool uStepperS::isStalled( float stallSensitivity )
@@ -616,7 +635,7 @@ float uStepperS::moveToEnd(bool dir, float stallSensitivity, uint16_t RPM)
 	{
 		this->setRPM(-RPM);
 	}
-	delay(100);
+	//delay(100);
 	while(!this->isStalled(stallSensitivity))
 	{
 		delay(10);
