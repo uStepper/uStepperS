@@ -58,7 +58,7 @@ int abe;
 
 	/* Reset Timer1 and set compare interrupt each: 62.5 ns * 16000 = 1 milliseconds */
 	TCNT1 = 0;
-	ICR1 = 16000; 
+	ICR1 = 5333; 
 
 	TIFR1 = 0;
 
@@ -116,7 +116,7 @@ uint16_t uStepperEncoder::captureAngle(void)
 	uint16_t value = 0;
 	static uint16_t oldValue = 0;
 	static int32_t smoothValue;
-	static uint8_t Beta = 0;
+	static uint8_t Beta = 5;
 	static int32_t deltaAngle;
 
 	chipSelect(true);  // Set CS HIGH
@@ -133,31 +133,17 @@ uint16_t uStepperEncoder::captureAngle(void)
 	chipSelect(false);  // Set CS LOW
 
 	deltaAngle = (int32_t)oldValue - (int32_t)value;
+	smoothValue = (smoothValue<< Beta)-smoothValue; 
+   	smoothValue += value;
+   	smoothValue >>= Beta;
 
 	if(deltaAngle < -32768 || deltaAngle > 32768)//wrap around detection to get sharp transition from 0 to 360 deg
 	{
 		smoothValue=value;
 	}
-	else
-	{
-		smoothValue = (smoothValue<< Beta)-smoothValue; 
-   		smoothValue += value;
-   		smoothValue >>= Beta;
-	}
 	oldValue=value;
 
 	return (uint16_t)smoothValue;
-
-	/*if(i>=32){
-		qsort(buff, 32, sizeof(uint16_t), cmpfunc);
-		smoothValue = buff[15];
-		i=0;
-		buff[i] = value;
-	}
-	else{
-		buff[i] = value;
-		i++;
-	}	*/
 	
 }
 

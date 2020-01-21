@@ -208,7 +208,7 @@ class uStepperS;
 #define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
-#define ENCODERINTFREQ 1000.0	
+#define ENCODERINTFREQ 333.3125	
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		
 /** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
@@ -323,8 +323,7 @@ public:
 				bool setHome = true,
 				uint8_t invert = 0,
 				uint8_t runCurrent = 50,
-				uint8_t holdCurrent = 30,
-				float hysteresis = 10);	
+				uint8_t holdCurrent = 30);	
 
 
 	/**
@@ -518,11 +517,9 @@ public:
 	 * 
 	 * @param[in]  	velocity  Speed at which to move, in RPM
 	 *
-	 * @param[in]  	RPM Limit search speed - positive integer value required
-	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float stallSensitivity = 0.6, uint16_t RPM = 10);
+	float moveToEnd(bool dir, float stallSensitivity = 0.6, bool internalVelocitySetting = 0);
 
 	/**
 	 * @brief      This method returns the current PID error
@@ -638,11 +635,8 @@ private:
 	/** This variable is used to indicate which mode the uStepper is
 	* running in (Normal, dropin or pid)*/
 	uint8_t mode;	
-	/** This variable contains the error hysteresis for the closed loop control */
-	float hysteresis;
-	/** This variable contains the proportional coefficient used by the Drop-in */
 	float pTerm;	
-	/** This variable contains the integral coefficient used by the Drop-in */
+	/** This variable contains the integral coefficient used by the PID */
 	float iTerm;		
 
 	float dTerm;
@@ -663,6 +657,7 @@ private:
 	void chipSelect( uint8_t pin , bool state );
 
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
+	void encoderSpeed(posFilter_t *filter, int32_t angle);
 
 	float pid(float error);
 	bool detectStall(int32_t stepsMoved);
