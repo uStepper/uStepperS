@@ -124,7 +124,6 @@ void uStepperS::setup(	uint8_t mode,
 	this->setCurrent(40.0);
 	this->setHoldCurrent(25.0);	
 
-	encoder.setHome();
 
 	if(this->mode)
 	{
@@ -196,7 +195,9 @@ void uStepperS::setup(	uint8_t mode,
 		this->driver.setShaftDirection(0);
 	}
 	
-	encoder.setHome();
+	if(setHome == true){
+		encoder.setHome();
+	}
 
 	this->pidDisabled = 0;
 
