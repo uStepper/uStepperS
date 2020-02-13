@@ -259,6 +259,11 @@ friend class uStepperS;
 		 * @brief		Resets the internal position counter of the motor driver
 		 */
 		void setHome(void);
+
+
+		void enableStallguard( void );
+
+		void enableStallguard( int8_t threshold );
 		
 		/**
 		 * @brief		Write a register of the motor driver
@@ -291,7 +296,6 @@ friend class uStepperS;
 		/** target position in microsteps*/
 		volatile int32_t xTarget = 0;
 
-
 	protected:
 		/** Status bits from the driver */
 		uint8_t status; 
@@ -314,6 +318,10 @@ friend class uStepperS;
 		uint16_t AMAX	= 600;
 		uint16_t DMAX	= 600;
 		uint16_t D1 	= 600;
+
+		/** Default threshold for stallGuard */
+
+		int8_t stallThreshold = 16;
 
 		void chipSelect(bool state);
 

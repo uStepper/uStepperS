@@ -334,3 +334,26 @@ void uStepperDriver::chipSelect(bool state)
 	else
 		PORTE |= (1 << CS_DRIVER); // Set CS HIGH
 }
+
+void uStepperDriver::enableStallguard( void ){
+
+	// Set default stallguard threshold
+	this->enableStallguard( this->stallThreshold ); 
+
+}
+
+void uStepperDriver::enableStallguard( int8_t threshold )
+{
+
+	if( threshold > 63)
+		threshold = 63;
+	else if( threshold < -64)
+		threshold = -64;
+	
+	// Set TCOOLTHRS to max speed value (enable stallguard for all speeds)
+	this->writeRegister( TCOOLTHRS, this->VMAX ); // Max value is 20bit = 0xFFFFF
+
+	// Configure COOLCONF for stallguard
+	this->writeRegister( COOLCONF, SGT(threshold) | SEMIN(2) | SEMAX(5) | SEDN(1) );
+
+}
