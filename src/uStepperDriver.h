@@ -64,6 +64,7 @@
 #define XTARGET				0x2D	/**< Target position for ramp mode*/
 #define VDCMIN				0x33	/**< DESCRIPTION PENDING */
 #define SW_MODE 			0x34	/**< Switch mode configuration*/
+#define SG_STOP(n)			(((n)&0x1)<<10)	/**< DESCRIPTION PENDING */
 #define RAMP_STAT			0x35	/**< Ramp status and switch event status*/
 #define XLATCH				0x36	/**< Latches  XACTUAL  upon  a programmable switch event*/
 
@@ -264,6 +265,8 @@ friend class uStepperS;
 		void enableStallguard( void );
 
 		void enableStallguard( int8_t threshold );
+
+		void enableStallguard( bool stop, int8_t threshold );
 		
 		/**
 		 * @brief		Write a register of the motor driver
@@ -293,6 +296,10 @@ friend class uStepperS;
 		 */
 		int32_t readRegister( uint8_t address );
 
+		uint16_t getStallValue( void );
+
+		void clearStallguard( void );
+
 		/** target position in microsteps*/
 		volatile int32_t xTarget = 0;
 
@@ -321,7 +328,7 @@ friend class uStepperS;
 
 		/** Default threshold for stallGuard */
 
-		int8_t stallThreshold = 16;
+		int8_t stallThreshold = 8;
 
 		void chipSelect(bool state);
 

@@ -337,12 +337,19 @@ void uStepperDriver::chipSelect(bool state)
 
 void uStepperDriver::enableStallguard( void ){
 
-	// Set default stallguard threshold
-	this->enableStallguard( this->stallThreshold ); 
+	// Set default stallguard threshold and disable stop on stall
+	this->enableStallguard( false, this->stallThreshold ); 
 
 }
 
-void uStepperDriver::enableStallguard( int8_t threshold )
+void uStepperDriver::enableStallguard( int8_t threshold ){
+
+	// Set default stallguard threshold and disable stop on stall
+	this->enableStallguard( false, threshold ); 
+
+}
+
+void uStepperDriver::enableStallguard( bool stop, int8_t threshold )
 {
 
 	if( threshold > 63)
@@ -350,10 +357,29 @@ void uStepperDriver::enableStallguard( int8_t threshold )
 	else if( threshold < -64)
 		threshold = -64;
 	
-	// Set TCOOLTHRS to max speed value (enable stallguard for all speeds)
-	this->writeRegister( TCOOLTHRS, this->VMAX ); // Max value is 20bit = 0xFFFFF
+	/* Disable StealthChop for stallguard operation */
+	this->writeRegister( GCONF, EN_PWM_MODE(0) | I_SCALE_ANALOG(1) ); 
+
 
 	// Configure COOLCONF for stallguard
-	this->writeRegister( COOLCONF, SGT(threshold) | SEMIN(2) | SEMAX(5) | SEDN(1) );
+	this->writeRegister( COOLCONF, SGT(threshold) );
+	// 
 
+	// Set TCOOLTHRS to max speed value (enable stallguard for all speeds)
+	this->writeRegister( TCOOLTHRS, 0xFFFFE ); // Max value is 20bit = 0xFFFFF
+
+	// Enable stop on stall dectection
+	if( stop )
+		this->writeRegister( SW_MODE, SG_STOP(1) );
+
+}
+
+uint16_t uStepperDriver::getStallValue( void ){
+
+	return this->readRegister(DRV_STATUS) & 0x3FF;
+
+}
+
+void uStepperDriver::clearStallguard( void ){
+	this->readRegister( RAMP_STAT );
 }
