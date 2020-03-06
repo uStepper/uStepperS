@@ -466,7 +466,23 @@ public:
 	 *
 	 * @return     The angle moved.
 	 */
-	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
+	bool getMotorState(uint8_t statusType = POSITION_REACHED);
+
+	/**
+	 * @brief      Get the current motor driver state
+	 *
+	 *				This function is used to check some internal status flags of the driver.
+	 *				The argument is used to specify the flag to check
+	 *
+	 *	param[in]	statusType - status flag to check. Possible values:
+	 *					POSITION_REACHED - has last commanded position been reached?
+	 *					VELOCITY_REACHED - has last commanded velocity been reached?
+	 *					STANDSTILL - Are the motor currently stopped?
+	 *					STALLGUARD2 - Has the stallguard been trickered?
+	 *
+	 * @return     The state of the flag, f.x. true if the position is reached. 
+	 */
+	bool getDriveState(uint8_t statusType);
 
 	/**
 	 * @brief      Stop the motor

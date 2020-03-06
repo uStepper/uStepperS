@@ -89,6 +89,15 @@ bool uStepperS::getMotorState(uint8_t statusType)
 	return 1;
 }
 
+
+bool uStepperS::getDriveState(uint8_t statusType)
+{
+	this->driver.readMotorStatus();
+	if(this->driver.status & statusType)
+		return 1;
+	return 0;
+}
+
 void uStepperS::setup(	uint8_t mode, 
 							uint16_t stepsPerRevolution,
 							float pTerm, 
