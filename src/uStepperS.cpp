@@ -73,7 +73,6 @@ void uStepperS::init( void ){
 	*  MSTR  = 1: Master
 	*  SPR0  = 0 & SPR1 = 0: fOSC/4 = 4Mhz
 	*/
-	SPSR1 |= (1 << 0);
 	SPCR1 = (1<<SPE1)|(1<<MSTR1);	
 
 	driver.init( this );
@@ -99,14 +98,12 @@ void uStepperS::setup(	uint8_t mode,
 							bool setHome,
 							uint8_t invert,
 							uint8_t runCurrent,
-							uint8_t holdCurrent,
-							float hysteresis)
+							uint8_t holdCurrent)
 {
 	dropinCliSettings_t tempSettings;
 	this->pidDisabled = 1;
 	// Should setup mode etc. later
 	this->mode = mode;
-	this->hysteresis = hysteresis;
 	this->fullSteps = stepsPerRevolution;
 	this->dropinStepSize = 256/dropinStepSize;
 	this->angleToStep = (float)this->fullSteps * (float)this->microSteps / 360.0;
@@ -127,7 +124,6 @@ void uStepperS::setup(	uint8_t mode,
 	this->setCurrent(40.0);
 	this->setHoldCurrent(25.0);	
 
-	encoder.setHome();
 
 	if(this->mode)
 	{
@@ -199,7 +195,9 @@ void uStepperS::setup(	uint8_t mode,
 		this->driver.setShaftDirection(0);
 	}
 	
-	encoder.setHome();
+	if(setHome == true){
+		encoder.setHome();
+	}
 
 	this->pidDisabled = 0;
 
@@ -262,54 +260,20 @@ bool uStepperS::detectStall(int32_t stepsMoved)
 	static int32_t offset = 0;
 	static uint8_t stallCnt = 0;
 
-	if(abs(encoderPosition)-abs(offset)>10*stallCnt){
+	if(abs(encoderPosition)-abs(offset)>20*this->stallSensitivity*stallCnt){
 		stallCnt++;
 	}
 	else{
 		stallCnt=0;
 		offset = encoderPosition;
 	}
-	if(stallCnt > 3){
+	if(stallCnt > 10*this->stallSensitivity){
 		this->stall = 1;
 		offset = encoderPosition;
 	}
 	else{
 		this->stall = 0;
 	}
-	/*
-	static float oldTargetPosition;
-	static float oldEncoderPosition;
-	static float encoderPositionChange;
-	static float targetPositionChange;
-	float encoderPosition = ((float)this->encoder.angleMoved*ENCODERDATATOSTEP);
-	static float internalStall = 0.0;
-
-	encoderPositionChange *= stallSensitivity;
-	encoderPositionChange += (1.0-stallSensitivity)*(oldEncoderPosition - encoderPosition);
-	oldEncoderPosition = encoderPosition;
-
-	targetPositionChange *= (1.0-stallSensitivity);
-	targetPositionChange += stallSensitivity*(oldTargetPosition - stepsMoved);
-	oldTargetPosition = stepsMoved;
-
-	if(abs(encoderPositionChange) < abs(targetPositionChange)*0.5)
-	{
-		internalStall *= this->stallSensitivity;
-		internalStall += 1.0-this->stallSensitivity;
-	}
-	else
-	{
-		internalStall *= this->stallSensitivity;
-	}
-
-	if(internalStall >= stallSensitivity)
-	{
-		this->stall = 1;
-	}
-	else
-	{
-		this->stall = 0;
-	}*/
 }
 
 bool uStepperS::isStalled( float stallSensitivity )
@@ -490,6 +454,22 @@ void uStepperS::filterSpeedPos(posFilter_t *filter, int32_t steps)
 	filter->velEst = (filter->posError * PULSEFILTERKP) + filter->velIntegrator;
 }
 
+void uStepperS::encoderSpeed(posFilter_t *filter, int32_t angle)
+{
+	static int32_t old=0;
+	static int32_t tmp=0;
+	tmp=angle-old;
+
+	if(tmp<36 && tmp>-36){
+		filter->velIntegrator=0;
+	}
+	else{
+		filter->velIntegrator=tmp*3;
+	}
+	old=angle;
+}
+
+
 void interrupt1(void)
 {
 	if(PIND & 0x04)
@@ -537,20 +517,15 @@ void interrupt0(void)
 	}
 }
 
-volatile float debugAngle;
-
 void TIMER1_COMPA_vect(void)
 {
 	uint16_t curAngle;
 	int32_t deltaAngle;
 	int32_t stepsMoved;
 	int32_t stepCntTemp;
-	static float angleMovedUnFilt;
 	float error;
 	float output;
-	static uint8_t loopCnt = 0;
-	DDRB |= (1 << 4);
-	PORTB |= (1 << 4);
+	static uint16_t i=0;
 	sei();
 	
 	curAngle = pointer->encoder.captureAngle();
@@ -558,51 +533,53 @@ void TIMER1_COMPA_vect(void)
 	
 	curAngle -= pointer->encoder.encoderOffset;
 	pointer->encoder.angle = curAngle;
-	return;
+
 	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
 	pointer->encoder.oldAngle = curAngle;
 
 	if(deltaAngle < -32768)
 	{
-		deltaAngle += 65535;
+		deltaAngle += 65536;
 	}
 	else if(deltaAngle > 32768)
 	{
-		deltaAngle -= 65535;
+		deltaAngle -= 65536;
 	}
 	pointer->encoder.angleMoved += deltaAngle;
-	
+
 	if(pointer->mode == DROPIN)
 	{	
-		
 		cli();
 			stepCntTemp = pointer->stepCnt;
 		sei();
 
-		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp >> 4);
+		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp/16);
 
 		if(!pointer->pidDisabled)
 		{
-			error = (stepCntTemp - (int32_t)(pointer->encoder.angleMoved * ENCODERDATATOSTEP)) >> 4;
+			error = (stepCntTemp - (int32_t)(pointer->encoder.angleMoved * ENCODERDATATOSTEP))/16;
 			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator;
-			
 			pointer->pid(error);
 		}
 		return;
 	}
-	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
-	debugAngle *= 0.95;
-	debugAngle += pointer->encoder.encoderFilter.posEst*0.05;
+	if(i>999){
+		i=0;
+		pointer->encoderSpeed(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
+	}
+	i++;
 	if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{
 			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
-			if(abs(pointer->currentPidError) >= pointer->hysteresis )
+			if(abs(pointer->currentPidError) >= 10.0 )
 			{
 				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
 			}
+			
+			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
 
@@ -623,19 +600,21 @@ void uStepperS::disablePid(void)
 	sei();
 }
 
-float uStepperS::moveToEnd(bool dir, float stallSensitivity, uint16_t RPM)
+float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.6, bool internalVelocitySetting = 0)
 {
 	float length = this->encoder.getAngleMoved();
 
 	if(dir == CW)
 	{
-		this->setRPM(RPM);
+		if(internalVelocitySetting) {this->setRPM((1.0/rpmToVelocity)*maxVelocity);}
+		else {this->setRPM(10);}
 	}
 	else
 	{
-		this->setRPM(-RPM);
+		if(internalVelocitySetting) {this->setRPM(-(1.0/rpmToVelocity)*maxVelocity);}
+		else {this->setRPM(-10);}
 	}
-	//delay(100);
+	
 	while(!this->isStalled(stallSensitivity))
 	{
 		delay(10);
@@ -653,13 +632,12 @@ float uStepperS::getPidError(void)
 
 float uStepperS::pid(float error)
 {
-	
 	float u;
 	float limit = abs(this->currentPidSpeed) + 10000.0;
 	static float integral;
 	static bool integralReset = 0;
 	static float errorOld, differential = 0.0;
-	static bool innerTriggered = 0;
+
 	this->currentPidError = error;
 
 	u = error*this->pTerm;
@@ -690,7 +668,7 @@ float uStepperS::pid(float error)
 		integral = -200000.0;
 	}
 
-	if(error > -this->hysteresis && error < this->hysteresis)
+	if(error > -10 && error < 10)
 	{
 		if(!integralReset)
 		{
@@ -713,12 +691,9 @@ float uStepperS::pid(float error)
 	u += differential;
 
 	u *= this->stepsPerSecondToRPM * 16.0;
-
 	this->setRPM(u);
 	this->driver.setDeceleration( 0xFFFE );
 	this->driver.setAcceleration( 0xFFFE );
-
-	PORTB &= ~(1 << 4);
 }
 
 void uStepperS::setProportional(float P)
