@@ -1,0 +1,5 @@
+- moved the absolute position counter into the encoder getangle function
+- added a LP filter on the absolute position data in the encoder function (so, getAngleMoved is filtered)
+- stall detection removed from timer1
+- samplerate on timer1 doubled to 2kHz
+- TODO: remove stall function & edit functions using stalldetection

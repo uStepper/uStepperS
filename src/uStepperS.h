@@ -208,7 +208,7 @@ class uStepperS;
 #define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
-#define ENCODERINTFREQ 333.3125	
+#define ENCODERINTFREQ 500	
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		
 /** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
@@ -634,7 +634,7 @@ private:
 	float currentPidSpeed;
 	/** This variable is used to indicate which mode the uStepper is
 	* running in (Normal, dropin or pid)*/
-	uint8_t mode;	
+	volatile uint8_t mode;	
 	float pTerm;	
 	/** This variable contains the integral coefficient used by the PID */
 	float iTerm;		
@@ -657,7 +657,6 @@ private:
 	void chipSelect( uint8_t pin , bool state );
 
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
-	void encoderSpeed(posFilter_t *filter, int32_t angle);
 
 	float pid(float error);
 	bool detectStall(int32_t stepsMoved);

@@ -454,22 +454,6 @@ void uStepperS::filterSpeedPos(posFilter_t *filter, int32_t steps)
 	filter->velEst = (filter->posError * PULSEFILTERKP) + filter->velIntegrator;
 }
 
-void uStepperS::encoderSpeed(posFilter_t *filter, int32_t angle)
-{
-	static int32_t old=0;
-	static int32_t tmp=0;
-	tmp=angle-old;
-
-	if(tmp<36 && tmp>-36){
-		filter->velIntegrator=0;
-	}
-	else{
-		filter->velIntegrator=tmp*3;
-	}
-	old=angle;
-}
-
-
 void interrupt1(void)
 {
 	if(PIND & 0x04)
@@ -519,33 +503,15 @@ void interrupt0(void)
 
 void TIMER1_COMPA_vect(void)
 {
-	uint16_t curAngle;
-	int32_t deltaAngle;
+	
 	int32_t stepsMoved;
 	int32_t stepCntTemp;
 	float error;
 	float output;
-	static uint16_t i=0;
 	sei();
-	
-	curAngle = pointer->encoder.captureAngle();
+
+	pointer->encoder.captureAngle();
 	stepsMoved = pointer->driver.getPosition();
-	
-	curAngle -= pointer->encoder.encoderOffset;
-	pointer->encoder.angle = curAngle;
-
-	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
-	pointer->encoder.oldAngle = curAngle;
-
-	if(deltaAngle < -32768)
-	{
-		deltaAngle += 65536;
-	}
-	else if(deltaAngle > 32768)
-	{
-		deltaAngle -= 65536;
-	}
-	pointer->encoder.angleMoved += deltaAngle;
 
 	if(pointer->mode == DROPIN)
 	{	
@@ -561,13 +527,11 @@ void TIMER1_COMPA_vect(void)
 			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator;
 			pointer->pid(error);
 		}
+		PORTB &= ~(1 << 5);
 		return;
 	}
-	if(i>999){
-		i=0;
-		pointer->encoderSpeed(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
-	}
-	i++;
+
+	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 	if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
@@ -582,8 +546,6 @@ void TIMER1_COMPA_vect(void)
 			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
-
-	pointer->detectStall(stepsMoved);
 }
 
 void uStepperS::enablePid(void)
