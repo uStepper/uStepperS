@@ -32,6 +32,11 @@
 */
 #include <Arduino.h>
 #include <uStepperS.h>
+
+#define FREEWHEELBRAKE 0
+#define COOLBRAKE 1
+#define HARDBRAKE 2
+
 /*  TMC5130 Register Address Defines */
 
 #define GCONF				0x00 	/**< Global configuration flags */
@@ -307,7 +312,7 @@ friend class uStepperS;
 		uStepperS * pointer; 	
 
 		uint8_t current = 16;
-		uint8_t holdCurrent = 10;
+		uint8_t holdCurrent = 0;
 		uint8_t holdDelay = 0;
 
 		/** Default acceleration profile for positioning mode */

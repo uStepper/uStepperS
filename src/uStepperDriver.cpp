@@ -211,7 +211,7 @@ void uStepperDriver::enableStealth()
 	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) ); 
 
 	/* Set PWMCONF for StealthChop */
-	this->writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(1) ); 
+	this->writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(2) ); 
 
 	/* Specifies the upper velocity (lower time delay) for operation in stealthChop voltage PWM mode */
 	this->writeRegister( TPWMTHRS, 5000 ); 

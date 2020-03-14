@@ -89,16 +89,39 @@ bool uStepperS::getMotorState(uint8_t statusType)
 	return 1;
 }
 
+void uStepperS::checkOrientation()
+{
+	float startAngle = this->encoder.getAngleMoved();
+	this->driver.setShaftDirection(0);
+	this->moveAngle(10);
+
+	while(this->getMotorState());
+
+	startAngle -= 5.0;
+	if(this->encoder.getAngleMoved() < startAngle)
+	{
+		this->driver.setShaftDirection(1);
+	}
+	else
+	{
+		this->driver.setShaftDirection(0);
+	}
+	
+	this->moveAngle(-10);
+
+	while(this->getMotorState());
+}
+
 void uStepperS::setup(	uint8_t mode, 
-							uint16_t stepsPerRevolution,
-							float pTerm, 
-							float iTerm,
-							float dTerm,
-							uint16_t dropinStepSize,
-							bool setHome,
-							uint8_t invert,
-							uint8_t runCurrent,
-							uint8_t holdCurrent)
+						uint16_t stepsPerRevolution,
+						float pTerm, 
+						float iTerm,
+						float dTerm,
+						uint16_t dropinStepSize,
+						bool setHome,
+						uint8_t invert,
+						uint8_t runCurrent,
+						uint8_t holdCurrent)
 {
 	dropinCliSettings_t tempSettings;
 	this->pidDisabled = 1;
@@ -122,7 +145,7 @@ void uStepperS::setup(	uint8_t mode,
 	delay(500);
 
 	this->setCurrent(40.0);
-	this->setHoldCurrent(25.0);	
+	this->setHoldCurrent(0.0);	
 
 
 	if(this->mode)
@@ -182,19 +205,6 @@ void uStepperS::setup(	uint8_t mode,
 		}
 	}
 
-	this->moveAngle(10);
-
-	while(this->getMotorState());
-
-	if(this->encoder.getAngleMoved() < -5)
-	{
-		this->driver.setShaftDirection(1);
-	}
-	else
-	{
-		this->driver.setShaftDirection(0);
-	}
-	
 	if(setHome == true){
 		encoder.setHome();
 	}
@@ -293,9 +303,25 @@ bool uStepperS::isStalled( float stallSensitivity )
 	return this->stall;
 }
 
-void uStepperS::brakeMotor( bool brake )
+void uStepperS::setBrakeMode( uint8_t mode, float brakeCurrent )
 {
-
+	int32_t registerContent = this->driver.readRegister(PWMCONF);
+	registerContent &= ~(3UL << 20);
+	if(mode == FREEWHEELBRAKE)
+	{
+		this->setHoldCurrent(0.0);
+		this->driver.writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(1) ); 
+	}
+	else if(mode == COOLBRAKE)
+	{
+		this->setHoldCurrent(0.0);
+		this->driver.writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(2) );  
+	}
+	else
+	{
+		this->setHoldCurrent(brakeCurrent);
+		this->driver.writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(0) ); 
+	}
 }
 
 void uStepperS::setRPM( float rpm)

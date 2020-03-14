@@ -325,7 +325,6 @@ public:
 				uint8_t runCurrent = 50,
 				uint8_t holdCurrent = 30);	
 
-
 	/**
 	 * @brief      Set the velocity in rpm
 	 *
@@ -466,7 +465,7 @@ public:
 	 *
 	 * @return     The angle moved.
 	 */
-	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
+	bool getMotorState(uint8_t statusType = POSITION_REACHED);
 
 	/**
 	 * @brief      Stop the motor
@@ -490,7 +489,7 @@ public:
 	 */
 	bool isStalled(float stallSensitivity = 0.6);
 
-	void brakeMotor(bool brake);
+	void setBrakeMode( uint8_t mode, float brakeCurrent = 0.0 );
 
 	/**
 	 * @brief      	This method enables the PID after being disabled  (disablePid).
@@ -601,6 +600,8 @@ public:
 	 *
 	 */	
 	void dropinPrintHelp();
+
+	void checkOrientation();
 	
 private: 
 
