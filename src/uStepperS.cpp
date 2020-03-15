@@ -64,7 +64,7 @@ void uStepperS::init( void ){
 	DDRD = (1<<DRV_ENN)|(1<<SD_MODE)|(1<<CS_ENCODER);
 	DDRE = (1<<MOSI1)|(1<<CS_DRIVER);
 
-	PORTD &= ~(1 << DRV_ENN);  // Set DRV_ENN LOW  
+	PORTD |= (1 << DRV_ENN);  // Set DRV_ENN HIGH, while configuring
 	PORTD &= ~(1 << SD_MODE);  // Set SD_MODE LOW  
 
 	/* 
@@ -77,6 +77,7 @@ void uStepperS::init( void ){
 
 	driver.init( this );
 	encoder.init( this );
+	PORTD &= ~(1 << DRV_ENN);  // Set DRV_ENN LOW
 }
 
 bool uStepperS::getMotorState(uint8_t statusType)
@@ -174,14 +175,11 @@ void uStepperS::setup(	uint8_t mode,
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
 	this->init();
 
+	this->driver.setDeceleration( (uint32_t)( this->maxDeceleration ) );
+	this->driver.setAcceleration( (uint32_t)(this->maxAcceleration ) );
+
 	this->setCurrent(0.0);
 	this->setHoldCurrent(0.0);
-
-	this->stop(HARD);
-
-	while(this->driver.readRegister(VACTUAL) != 0);
-
-	delay(500);
 
 	this->setCurrent(40.0);
 	this->setHoldCurrent(0.0);	
@@ -202,7 +200,7 @@ void uStepperS::setup(	uint8_t mode,
 			delay(10000);
 			attachInterrupt(0, interrupt0, FALLING);
 			attachInterrupt(1, interrupt1, CHANGE);
-			this->driver.setDeceleration( 0xFFFE);
+			this->driver.setDeceleration( 0xFFFE );
 			this->driver.setAcceleration( 0xFFFE );
 			Serial.begin(9600);
 

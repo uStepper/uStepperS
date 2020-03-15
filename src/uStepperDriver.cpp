@@ -82,6 +82,13 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Reset position */
 	this->writeRegister(XACTUAL, 0);
 	this->writeRegister(XTARGET, 0);
+	
+	this->setDeceleration( 0xFFFE );
+	this->setAcceleration( 0xFFFE );
+	
+	this->stop();
+
+	while(this->readRegister(VACTUAL) != 0);
 }
 
 void uStepperDriver::readMotorStatus(void)
