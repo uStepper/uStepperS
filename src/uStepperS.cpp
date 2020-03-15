@@ -91,8 +91,12 @@ bool uStepperS::getMotorState(uint8_t statusType)
 
 void uStepperS::checkOrientation()
 {
-	float startAngle = this->encoder.getAngleMoved();
+	float startAngle;
+	uint8_t inverted = 0;
+	uint8_t noninverted = 0;
 	this->driver.setShaftDirection(0);
+	
+	startAngle = this->encoder.getAngleMoved();
 	this->moveAngle(10);
 
 	while(this->getMotorState());
@@ -100,16 +104,51 @@ void uStepperS::checkOrientation()
 	startAngle -= 5.0;
 	if(this->encoder.getAngleMoved() < startAngle)
 	{
-		this->driver.setShaftDirection(1);
+		inverted++;
 	}
 	else
 	{
-		this->driver.setShaftDirection(0);
+		noninverted++;
 	}
-	
+
+	startAngle = this->encoder.getAngleMoved();
 	this->moveAngle(-10);
 
 	while(this->getMotorState());
+
+	startAngle += 5.0;
+	if(this->encoder.getAngleMoved() > startAngle)
+	{
+		inverted++;
+	}
+	else
+	{
+		noninverted++;
+	}
+
+	startAngle = this->encoder.getAngleMoved();
+	this->moveAngle(10);
+
+	while(this->getMotorState());
+
+	startAngle -= 5.0;
+	if(this->encoder.getAngleMoved() < startAngle)
+	{
+		inverted++;
+	}
+	else
+	{
+		noninverted++;
+	}
+
+	this->moveAngle(-10);
+	
+	while(this->getMotorState());
+
+	if(inverted > noninverted)
+	{
+		this->driver.setShaftDirection(1);
+	}
 }
 
 void uStepperS::setup(	uint8_t mode, 
