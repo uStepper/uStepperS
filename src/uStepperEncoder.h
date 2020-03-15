@@ -235,6 +235,9 @@ class uStepperEncoder
 		/** Object to hold speed filter */
 		volatile posFilter_t encoderFilter;
 
+		/** Filter constant for encoder feedback **/
+		uint8_t Beta = 5;
+
 	private:
 		
 		/** Reference to the main object */
@@ -249,9 +252,7 @@ class uStepperEncoder
 
 		/** Status bits from the encoder */
 		uint8_t status; 
-		int32_t userAngleOffset = 0;
-
-		
+		int32_t userAngleOffset = 0;	
 
 };
 

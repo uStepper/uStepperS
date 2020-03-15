@@ -5,3 +5,12 @@
 - added 3 moves in "checkOrientation()" function in uStepper Class, to check orientation instead of just 1
 - removed check for motor cable orientation from "setup()" function in uStepper Class. Users actively needs to call the "checkOrientation" function from uStepper Class, if they need this feature, AFTER calling the "setup()" function
 - disabled driver on MCU reset while setting up, to avoid the motor spinning on startup if power was removed during motor movement
+- moved the absolute position counter into the encoder getangle function
+- added a LP filter on the absolute position data in the encoder function (so, getAngleMoved is filtered)
+- stall detection removed from timer1
+- samplerate on timer1 doubled to 2kHz
+- Variable filter depending on mode set in setup routine
+- removed obsolete things in setuproutine and timer1
+- made new velocity measurement for encoder values
+- made the control threshold for closed loop control variable and intrduced a function for editing it
+- TODO: remove stall function & edit functions using stalldetection

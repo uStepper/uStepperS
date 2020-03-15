@@ -184,12 +184,13 @@ void uStepperS::setup(	uint8_t mode,
 	this->setCurrent(40.0);
 	this->setHoldCurrent(0.0);	
 
-
+	this->encoder.Beta=5;
 	if(this->mode)
 	{
 		if(this->mode == DROPIN)
 		{
 			//Set Enable, Step and Dir signal pins from 3dPrinter controller as inputs
+			this->encoder.Beta = 2;
 			pinMode(2,INPUT);		
 			pinMode(3,INPUT);
 			pinMode(4,INPUT);
@@ -235,10 +236,7 @@ void uStepperS::setup(	uint8_t mode,
 		}		
 		else
 		{
-			//Scale supplied controller coefficents. This is done to enable the user to use easier to manage numbers for these coefficients.
-			this->pTerm = pTerm; 
-			this->iTerm = iTerm * ENCODERINTPERIOD;    
-			this->dTerm = dTerm * ENCODERINTFREQ;    
+			this->encoder.Beta = 3; 
 		}
 	}
 
@@ -582,38 +580,19 @@ void interrupt0(void)
 
 void TIMER1_COMPA_vect(void)
 {
-	uint16_t curAngle;
-	int32_t deltaAngle;
+	
 	int32_t stepsMoved;
 	int32_t stepCntTemp;
 	float error;
 	float output;
-	static uint16_t i=0;
 	sei();
-	
-	curAngle = pointer->encoder.captureAngle();
+
+	pointer->encoder.captureAngle();
 	stepsMoved = pointer->driver.getPosition();
 	
 	curAngle -= pointer->encoder.encoderOffset;
 	pointer->encoder.angle = curAngle;
-
-	deltaAngle = (int32_t)pointer->encoder.oldAngle - (int32_t)curAngle;
-	pointer->encoder.oldAngle = curAngle;
-
-	if(deltaAngle < -32768)
-	{
-		deltaAngle += 65536;
-	}
-	else if(deltaAngle > 32768)
-	{
-		deltaAngle -= 65536;
-	}
-	pointer->encoder.angleMoved += deltaAngle;
-
-	if(pointer->mode == DROPIN)
-	{	
 		cli();
-			stepCntTemp = pointer->stepCnt;
 		sei();
 
 		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp/16);
@@ -624,31 +603,25 @@ void TIMER1_COMPA_vect(void)
 			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator;
 			pointer->pid(error);
 		}
+		PORTB &= ~(1 << 5);
 		return;
 	}
-	if(i>999){
-		i=0;
-		pointer->encoderSpeed(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
-	}
-	i++;
 	if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{
 			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
-			if(abs(pointer->currentPidError) >= 10.0 )
+			if(abs(pointer->currentPidError) >= pointer->controlThreshold)
 			{
 				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
 			}
-			
-			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
-		}
 	}
 
-	pointer->detectStall(stepsMoved);
+void uStepperS::setControlThreshold(float threshold)
+{
+	this->controlThreshold = threshold;
 }
-
 void uStepperS::enablePid(void)
 {
 	cli();

@@ -58,7 +58,7 @@ int abe;
 
 	/* Reset Timer1 and set compare interrupt each: 62.5 ns * 16000 = 1 milliseconds */
 	TCNT1 = 0;
-	ICR1 = 5333; 
+	ICR1 = 8000; 
 
 	TIFR1 = 0;
 
@@ -116,8 +116,9 @@ uint16_t uStepperEncoder::captureAngle(void)
 	uint16_t value = 0;
 	static uint16_t oldValue = 0;
 	static int32_t smoothValue;
-	static uint8_t Beta = 5;
-	static int32_t deltaAngle;
+	int32_t deltaAngle;
+	static int32_t tmp;
+	uint16_t curAngle;
 
 	chipSelect(true);  // Set CS HIGH
 	
@@ -132,18 +133,31 @@ uint16_t uStepperEncoder::captureAngle(void)
 
 	chipSelect(false);  // Set CS LOW
 
-	deltaAngle = (int32_t)oldValue - (int32_t)value;
-	smoothValue = (smoothValue<< Beta)-smoothValue; 
-   	smoothValue += value;
-   	smoothValue >>= Beta;
+	curAngle = value;
+	curAngle -= this->encoderOffset;
+	this->angle = curAngle;
 
-	if(deltaAngle < -32768 || deltaAngle > 32768)//wrap around detection to get sharp transition from 0 to 360 deg
+	deltaAngle = (int32_t)this->oldAngle - (int32_t)curAngle;
+	this->oldAngle = curAngle;
+
+	if(deltaAngle < -32768)
 	{
-		smoothValue=value;
+		deltaAngle += 65536;
 	}
-	oldValue=value;
+	else if(deltaAngle > 32768)
+	{
+		deltaAngle -= 65536;
+	}
 
-	return (uint16_t)smoothValue;
+	tmp += deltaAngle;
+	pointer->driver.readRegister(VACTUAL);
+	smoothValue = (smoothValue<< this->Beta)-smoothValue; 
+   	smoothValue += tmp;
+   	smoothValue >>= this->Beta;
+   	pointer->encoder.encoderFilter.velIntegrator = (smoothValue-this->angleMoved)*ENCODERINTFREQ;
+	this->angleMoved=smoothValue;
+
+	return (uint16_t)value;
 	
 }
 
