@@ -2,4 +2,5 @@
 - Implemented "setBrakeMode()" function in uStepper Class to choose between freewheel, braking with low side fets shorted and brake with specified hold current. default = brake with low side fets shorted
 - "setHome" argument of ustepper class "setup" function is now used
 - Implemented "checkOrientation()" function in uStepper Class, to check the orientation of the motor cable, and invert direction if needed.
+- added 3 moves in "checkOrientation()" function in uStepper Class, to check orientation instead of just 1
 - removed check for motor cable orientation from "setup()" function in uStepper Class. Users actively needs to call the "checkOrientation" function from uStepper Class, if they need this feature, AFTER calling the "setup()" function
