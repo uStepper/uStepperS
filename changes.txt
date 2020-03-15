@@ -14,3 +14,5 @@
 - made new velocity measurement for encoder values
 - made the control threshold for closed loop control variable and intrduced a function for editing it
 - TODO: remove stall function & edit functions using stalldetection
+- changed interrupt frequency to 1KhZ for DROPIN mode only
+- added option to choose how long the "checkOrientation()" function in UstepperS class should move during check

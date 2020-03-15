@@ -208,11 +208,9 @@ class uStepperS;
 #define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
-#define ENCODERINTFREQ 2000	
+#define ENCODERINTFREQ 1000	
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		
-/** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
-#define ENCODERSPEEDCONSTANT ENCODERINTFREQ/65535.0	
 /**	P term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
 #define PULSEFILTERKP 120.0
 /**	I term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
@@ -607,7 +605,7 @@ public:
 	 */	
 	void dropinPrintHelp();
 
-	void checkOrientation();
+	void checkOrientation(float distance = 10);
 	
 private: 
 

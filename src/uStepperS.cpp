@@ -90,7 +90,7 @@ bool uStepperS::getMotorState(uint8_t statusType)
 	return 1;
 }
 
-void uStepperS::checkOrientation()
+void uStepperS::checkOrientation(float distance)
 {
 	float startAngle;
 	uint8_t inverted = 0;
@@ -98,11 +98,11 @@ void uStepperS::checkOrientation()
 	this->driver.setShaftDirection(0);
 	
 	startAngle = this->encoder.getAngleMoved();
-	this->moveAngle(10);
+	this->moveAngle(distance);
 
 	while(this->getMotorState());
 
-	startAngle -= 5.0;
+	startAngle -= distance/2.0;
 	if(this->encoder.getAngleMoved() < startAngle)
 	{
 		inverted++;
@@ -113,11 +113,11 @@ void uStepperS::checkOrientation()
 	}
 
 	startAngle = this->encoder.getAngleMoved();
-	this->moveAngle(-10);
+	this->moveAngle(-distance);
 
 	while(this->getMotorState());
 
-	startAngle += 5.0;
+	startAngle += distance/2.0;
 	if(this->encoder.getAngleMoved() > startAngle)
 	{
 		inverted++;
@@ -128,11 +128,11 @@ void uStepperS::checkOrientation()
 	}
 
 	startAngle = this->encoder.getAngleMoved();
-	this->moveAngle(10);
+	this->moveAngle(distance);
 
 	while(this->getMotorState());
 
-	startAngle -= 5.0;
+	startAngle -= distance/2.0;
 	if(this->encoder.getAngleMoved() < startAngle)
 	{
 		inverted++;
@@ -142,7 +142,7 @@ void uStepperS::checkOrientation()
 		noninverted++;
 	}
 
-	this->moveAngle(-10);
+	this->moveAngle(-distance);
 	
 	while(this->getMotorState());
 
@@ -509,9 +509,25 @@ void uStepperS::stop( bool mode){
 
 void uStepperS::filterSpeedPos(posFilter_t *filter, int32_t steps)
 {
-	filter->posEst += filter->velEst * ENCODERINTPERIOD;
+	if(this->mode != DROPIN)
+	{
+		filter->posEst += filter->velEst * ENCODERINTPERIOD * 0.5f;
+	}
+	else
+	{
+		filter->posEst += filter->velEst * ENCODERINTPERIOD;
+	}
+	
+	
 	filter->posError = (float)steps - filter->posEst;
-	filter->velIntegrator += filter->posError * PULSEFILTERKI;
+	if(this->mode != DROPIN)
+	{
+		filter->velIntegrator += filter->posError * PULSEFILTERKI * 0.5f;
+	}
+	else
+	{
+		filter->velIntegrator += filter->posError * PULSEFILTERKI;
+	}
 	filter->velEst = (filter->posError * PULSEFILTERKP) + filter->velIntegrator;
 }
 

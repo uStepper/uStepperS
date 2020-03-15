@@ -58,7 +58,14 @@ int abe;
 
 	/* Reset Timer1 and set compare interrupt each: 62.5 ns * 16000 = 1 milliseconds */
 	TCNT1 = 0;
-	ICR1 = 8000; 
+	if(pointer->mode == DROPIN)
+	{
+		ICR1 = 16000; 
+	}
+	else{
+		ICR1 = 8000;
+	}
+	
 
 	TIFR1 = 0;
 
@@ -154,7 +161,15 @@ uint16_t uStepperEncoder::captureAngle(void)
 	smoothValue = (smoothValue<< this->Beta)-smoothValue; 
    	smoothValue += tmp;
    	smoothValue >>= this->Beta;
-   	pointer->encoder.encoderFilter.velIntegrator = (smoothValue-this->angleMoved)*ENCODERINTFREQ;
+	if(pointer->mode != DROPIN)
+	{
+		pointer->encoder.encoderFilter.velIntegrator = (smoothValue-this->angleMoved)*ENCODERINTFREQ*2.0f;
+	}
+	else
+	{
+		pointer->encoder.encoderFilter.velIntegrator = (smoothValue-this->angleMoved)*ENCODERINTFREQ;
+	}
+   	
 	this->angleMoved=smoothValue;
 
 	return (uint16_t)value;
