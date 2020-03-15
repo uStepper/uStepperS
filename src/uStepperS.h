@@ -468,21 +468,6 @@ public:
 	 */
 	bool getMotorState(uint8_t statusType = POSITION_REACHED);
 
-	/**
-	 * @brief      Get the current motor driver state
-	 *
-	 *				This function is used to check some internal status flags of the driver.
-	 *				The argument is used to specify the flag to check
-	 *
-	 *	param[in]	statusType - status flag to check. Possible values:
-	 *					POSITION_REACHED - has last commanded position been reached?
-	 *					VELOCITY_REACHED - has last commanded velocity been reached?
-	 *					STANDSTILL - Are the motor currently stopped?
-	 *					STALLGUARD2 - Has the stallguard been trickered?
-	 *
-	 * @return     The state of the flag, f.x. true if the position is reached. 
-	 */
-	bool getDriveState(uint8_t statusType);
 
 	/**
 	 * @brief      Stop the motor
@@ -497,14 +482,44 @@ public:
 	void stop( bool mode = HARD );
 
 	/**
-	 * @brief      	This method returns a bool variable indicating wether the motor
-	 *				is stalled or not
+	 * @brief      Enable TMC5130 StallGuard 
 	 *
-	 * @param[in]  	stallSensitivity - Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 *             	This function enables the builtin stallguard offered from TMC5130 stepper driver.
+	 * 				The threshold should be tuned as to trigger stallguard before a step i lost.
+	 *
+	 * @param      stopOnStall  - should the driver automatic stop the motor on a stall
+	 * @param	   threshold 	- stall sensitivity. A value between -64 and +63
+	 */
+	void enableStallguard( bool stopOnStall = false, int8_t threshold = 6 );
+
+	/**
+	 * @brief      	Disables the builtin stallguard offered from TMC5130, and reenables StealthChop.
+	 */
+	void disableStallguard( void );
+
+	/**
+	 * @brief      	Clear the stallguard, reenabling the motor to return to its previous operation.
+	 */
+	void clearStall( void );
+
+	/**
+	 * @brief      	This method returns a bool variable indicating wether the motor
+	 *				is stalled or not.
 	 *
 	 * @return     	0 = not stalled, 1 = stalled
 	 */
-	bool isStalled(float stallSensitivity = 0.992);
+	bool isStalled(void);
+
+
+	/**
+	 * @brief      	This method returns a bool variable indicating wether the motor
+	 *				is stalled or not.
+	 *
+	 * @param       threshold  -  Threshold for stallguard. A value between -64 and +63
+	 * 
+	 * @return     	0 = not stalled, 1 = stalled		
+	*/
+	bool isStalled( int8_t threshold );
 
 	void brakeMotor(bool brake);
 
@@ -529,11 +544,13 @@ public:
 	 *
 	 * @param[in]  	dir  Direction to search for limit
 	 *
-	 * @param[in]  	stallSensitivity  Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 * @param[in]   rpm   RPM of the motor while searching for limit
+	 * 
+	 * @param[in]  	threshold  Sensitivity of stall detection (-64 to +63), low is more sensitive
 	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float stallSensitivity = 0.992);
+	float moveToEnd(bool dir, float rpm = 20.0, int8_t threshold = 5);
 
 	/**
 	 * @brief      This method returns the current PID error
@@ -663,7 +680,12 @@ private:
 
 	volatile int32_t pidPositionStepsIssued = 0;
 	volatile float currentPidError;
-	float stallSensitivity = 0.992;
+
+	/** This variable is used to check if the stallguard threshold has changed. */
+	int8_t stallThreshold = 5;
+	bool stallStop = false; 
+	bool stallEnabled = false;;
+
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );
@@ -673,7 +695,7 @@ private:
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
 
 	float pid(float error);
-	bool detectStall(int32_t stepsMoved);
+	
 	dropinCliSettings_t dropinSettings;
 	bool loadDropinSettings(void);
 	void saveDropinSettings(void);

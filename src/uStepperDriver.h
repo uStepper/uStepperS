@@ -44,6 +44,7 @@
 #define X_COMPARE 			0x05	/**< Position  comparison  register*/
 #define IHOLD_IRUN			0x10	/**< Driver current control*/
 #define TPOWERDOWN			0x11	/**< DESCRIPTION PENDING */
+#define TSTEP				0x12
 #define TPWMTHRS			0x13	/**< DESCRIPTION PENDING */
 #define TCOOLTHRS			0x14	/**< This is the lower threshold velocity for switching on smart energy coolStep and stallGuard feature.*/
 #define THIGH				0x15	/**< DESCRIPTION PENDING */
@@ -260,13 +261,6 @@ friend class uStepperS;
 		 * @brief		Resets the internal position counter of the motor driver
 		 */
 		void setHome(void);
-
-
-		void enableStallguard( void );
-
-		void enableStallguard( int8_t threshold );
-
-		void enableStallguard( bool stop, int8_t threshold );
 		
 		/**
 		 * @brief		Write a register of the motor driver
@@ -298,7 +292,9 @@ friend class uStepperS;
 
 		uint16_t getStallValue( void );
 
-		void clearStallguard( void );
+		void clearStall( void );
+
+		bool isStalled( void );
 
 		/** target position in microsteps*/
 		volatile int32_t xTarget = 0;
@@ -322,13 +318,10 @@ friend class uStepperS;
 		uint32_t VMAX	= 200000;
 		uint32_t VSTOP 	= 10;
 		uint16_t A1 	= 600;
-		uint16_t AMAX	= 600;
+		uint16_t AMAX	= 100;
 		uint16_t DMAX	= 600;
 		uint16_t D1 	= 600;
 
-		/** Default threshold for stallGuard */
-
-		int8_t stallThreshold = 8;
 
 		void chipSelect(bool state);
 
@@ -350,5 +343,12 @@ friend class uStepperS;
 
 		void enableStealth( void);
 
+		void enableStallguard( bool stopOnStall, int8_t threshold );
+
+		void disableStallguard( void );
+
 		void readMotorStatus(void);
+
+
+
 };

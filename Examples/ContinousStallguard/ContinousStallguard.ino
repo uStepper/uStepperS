@@ -11,7 +11,6 @@
 
 uStepperS stepper;
 
-bool isStall = true;
 uint16_t stallValue = 0;
 
 void setup() {
@@ -20,30 +19,33 @@ void setup() {
 
   stepper.setup();
 
+  // Do not use stallguard below 10 RPM, as it is very unstable
+  stepper.setRPM(100);
+
   // Enable stop on stallGuard with threshold 8.
   // Tune to your needs: -64 to +63
-  stepper.driver.enableStallguard(true, 8);
+  stepper.driver.enableStallguard(true, 5);
 
-  stepper.runContinous(CW);
+  Serial.println("Stallguard ready");
+
+  // Eliminate false positive stallguard on startup
+  delay(100);
 
 }
 
 void loop() {
 
-  isStall = stepper.getMotorState(STALLGUARD2);
+  // Get and print load/stall value to debug
   stallValue = stepper.driver.getStallValue();
+  Serial.println( stallValue );
 
-  Serial.print("Stall value: ");
-  Serial.println(stallValue);
-
-  if( isStall == 0 ){
+  if( stepper.driver.isStalled() ){
 
     Serial.println("Motor stalled");
-    stepper.driver.clearStallguard();
-   
-    delay(1000); // !!!!!! TO-DO: Not sure why it doesn't matter to put the delay before or after clearStallguard().
-  }
+    delay(2000);
 
-  delay(10);
+    // Clear the stallguard (continue movement)
+    stepper.driver.clearStallguard();
+  }
 
 }
