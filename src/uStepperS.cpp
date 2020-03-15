@@ -236,7 +236,7 @@ void uStepperS::setup(	uint8_t mode,
 		}		
 		else
 		{
-			this->encoder.Beta = 3; 
+			this->encoder.Beta = 4; 
 		}
 	}
 
@@ -589,10 +589,10 @@ void TIMER1_COMPA_vect(void)
 
 	pointer->encoder.captureAngle();
 	stepsMoved = pointer->driver.getPosition();
-	
-	curAngle -= pointer->encoder.encoderOffset;
-	pointer->encoder.angle = curAngle;
+	if(pointer->mode == DROPIN)
+	{	
 		cli();
+			stepCntTemp = pointer->stepCnt;
 		sei();
 
 		pointer->filterSpeedPos(&pointer->externalStepInputFilter, stepCntTemp/16);
@@ -616,7 +616,11 @@ void TIMER1_COMPA_vect(void)
 				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
 			}
+			
+			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
+		}
 	}
+}
 
 void uStepperS::setControlThreshold(float threshold)
 {
