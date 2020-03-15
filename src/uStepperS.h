@@ -208,7 +208,7 @@ class uStepperS;
 #define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
-#define ENCODERINTFREQ 500	
+#define ENCODERINTFREQ 2000	
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		
 /** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
@@ -505,6 +505,12 @@ public:
 	void disablePid(void);
 
 	/**
+	 * @brief      	This method sets the control threshold for the closed loop position control in microsteps - i.e. it is the allowed control error. 10 microsteps is suitable in most applications.
+	 *
+	 */
+	void setControlThreshold(float threshold);
+
+	/**
 	 * @brief      	Moves the motor to its physical limit, without limit switch
 	 *
 	 *              This function, makes the motor run continously, untill the
@@ -642,6 +648,8 @@ private:
 	float dTerm;
 	bool brake;
 	volatile bool pidDisabled;
+	/** This variable sets the threshold for activating/deactivating closed loop position control - i.e. it is the allowed error in steps for the control**/
+	volatile float controlThreshold = 10;
 	/** This variable holds information on wether the motor is stalled or not.
 	0 = OK, 1 = stalled */
 	volatile bool stall;

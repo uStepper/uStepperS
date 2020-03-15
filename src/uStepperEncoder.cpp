@@ -116,7 +116,6 @@ uint16_t uStepperEncoder::captureAngle(void)
 	uint16_t value = 0;
 	static uint16_t oldValue = 0;
 	static int32_t smoothValue;
-	static uint8_t Beta = 6;
 	int32_t deltaAngle;
 	static int32_t tmp;
 	uint16_t curAngle;
@@ -152,12 +151,13 @@ uint16_t uStepperEncoder::captureAngle(void)
 
 	tmp += deltaAngle;
 	pointer->driver.readRegister(VACTUAL);
-	smoothValue = (smoothValue<< Beta)-smoothValue; 
+	smoothValue = (smoothValue<< this->Beta)-smoothValue; 
    	smoothValue += tmp;
-   	smoothValue >>= Beta;
+   	smoothValue >>= this->Beta;
+   	pointer->encoder.encoderFilter.velIntegrator = (smoothValue-this->angleMoved)*ENCODERINTFREQ;
 	this->angleMoved=smoothValue;
 
-	return (uint16_t)smoothValue;
+	return (uint16_t)value;
 	
 }
 

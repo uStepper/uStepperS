@@ -2,4 +2,8 @@
 - added a LP filter on the absolute position data in the encoder function (so, getAngleMoved is filtered)
 - stall detection removed from timer1
 - samplerate on timer1 doubled to 2kHz
+- Variable filter depending on mode set in setup routine
+- removed obsolete things in setuproutine and timer1
+- made new velocity measurement for encoder values
+- made the control threshold for closed loop control variable and intrduced a function for editing it
 - TODO: remove stall function & edit functions using stalldetection

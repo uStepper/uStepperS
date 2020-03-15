@@ -124,12 +124,13 @@ void uStepperS::setup(	uint8_t mode,
 	this->setCurrent(40.0);
 	this->setHoldCurrent(25.0);	
 
-
+	this->encoder.Beta=5;
 	if(this->mode)
 	{
 		if(this->mode == DROPIN)
 		{
 			//Set Enable, Step and Dir signal pins from 3dPrinter controller as inputs
+			this->encoder.Beta = 2;
 			pinMode(2,INPUT);		
 			pinMode(3,INPUT);
 			pinMode(4,INPUT);
@@ -175,14 +176,11 @@ void uStepperS::setup(	uint8_t mode,
 		}		
 		else
 		{
-			//Scale supplied controller coefficents. This is done to enable the user to use easier to manage numbers for these coefficients.
-			this->pTerm = pTerm; 
-			this->iTerm = iTerm * ENCODERINTPERIOD;    
-			this->dTerm = dTerm * ENCODERINTFREQ;    
+			this->encoder.Beta = 3; 
 		}
 	}
 
-	this->moveAngle(10);
+	this->moveAngle(30);
 
 	while(this->getMotorState());
 
@@ -531,23 +529,24 @@ void TIMER1_COMPA_vect(void)
 		return;
 	}
 
-	pointer->filterSpeedPos(&pointer->encoder.encoderFilter, pointer->encoder.angleMoved);
 	if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{
 			pointer->currentPidError = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
-			if(abs(pointer->currentPidError) >= 10.0 )
+			if(abs(pointer->currentPidError) >= pointer->controlThreshold)
 			{
 				pointer->driver.writeRegister(XACTUAL,pointer->encoder.angleMoved * ENCODERDATATOSTEP);
 				pointer->driver.writeRegister(XTARGET,pointer->driver.xTarget);
 			}
-			
-			pointer->currentPidSpeed = pointer->encoder.encoderFilter.velIntegrator * ENCODERDATATOSTEP;
 		}
 	}
 }
 
+void uStepperS::setControlThreshold(float threshold)
+{
+	this->controlThreshold = threshold;
+}
 void uStepperS::enablePid(void)
 {
 	cli();
