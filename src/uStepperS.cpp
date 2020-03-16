@@ -253,13 +253,13 @@ void uStepperS::moveToAngle( float angle )
 	}
 }
 
-void uStepperS::enableStallguard( bool stopOnStall, int8_t threshold )
+void uStepperS::enableStallguard( int8_t threshold, bool stopOnStall )
 {
 	this->clearStall();
 	this->stallThreshold = threshold;
 	this->stallStop = stopOnStall;
 
-	pointer->driver.enableStallguard( stopOnStall, threshold );
+	pointer->driver.enableStallguard( threshold, stopOnStall);
 
 	this->stallEnabled = true;
 }
@@ -286,12 +286,13 @@ bool uStepperS::isStalled( int8_t threshold )
 	// If the threshold is different from what is configured..
 	if( threshold != this->stallThreshold || this->stallEnabled == false ){
 		// Reconfigure stallguard
-		Serial.println("Reconfigured stallguard");
-		this->enableStallguard( this->stallStop, threshold );
+		this->enableStallguard( threshold, this->stallStop );
 	}
 
-	pointer->driver.readMotorStatus();
-	return pointer->driver.status & STALLGUARD2;
+	int32_t stats = pointer->driver.readRegister(RAMP_STAT);
+
+	// Only interested in 'status_sg', with bit position 13 (last bit in RAMP_STAT).
+	return ( stats >> 13 );
 }
 
 void uStepperS::brakeMotor( bool brake )
@@ -587,7 +588,7 @@ float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 		rpm = 20.0;
 
 	// Enable stallguard to detect hardware stop (use driver directly, as to not override user stall settings)
-	pointer->driver.enableStallguard(true, threshold);
+	pointer->driver.enableStallguard( threshold, true );
 
 	float length = this->encoder.getAngleMoved();
 

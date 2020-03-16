@@ -485,12 +485,12 @@ public:
 	 * @brief      Enable TMC5130 StallGuard 
 	 *
 	 *             	This function enables the builtin stallguard offered from TMC5130 stepper driver.
-	 * 				The threshold should be tuned as to trigger stallguard before a step i lost.
+	 * 				The threshold should be tuned as to trigger stallguard before a step is lost.
 	 *
-	 * @param      stopOnStall  - should the driver automatic stop the motor on a stall
 	 * @param	   threshold 	- stall sensitivity. A value between -64 and +63
+	 * @param      stopOnStall  - should the driver automatic stop the motor on a stall
 	 */
-	void enableStallguard( bool stopOnStall = false, int8_t threshold = 6 );
+	void enableStallguard( int8_t threshold = 4, bool stopOnStall = false);
 
 	/**
 	 * @brief      	Disables the builtin stallguard offered from TMC5130, and reenables StealthChop.
@@ -503,8 +503,8 @@ public:
 	void clearStall( void );
 
 	/**
-	 * @brief      	This method returns a bool variable indicating wether the motor
-	 *				is stalled or not.
+	 * @brief      	This method returns a bool variable indicating wether the motor is stalled or not. 
+	 * 				Uses the default stallguard threshold, unless this has been changed by .enableStallguard()
 	 *
 	 * @return     	0 = not stalled, 1 = stalled
 	 */
@@ -512,8 +512,7 @@ public:
 
 
 	/**
-	 * @brief      	This method returns a bool variable indicating wether the motor
-	 *				is stalled or not.
+	 * @brief      	This method returns a bool variable indicating wether the motor is stalled or not.
 	 *
 	 * @param       threshold  -  Threshold for stallguard. A value between -64 and +63
 	 * 
@@ -550,7 +549,7 @@ public:
 	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float rpm = 20.0, int8_t threshold = 5);
+	float moveToEnd(bool dir, float rpm = 40.0, int8_t threshold = 4);
 
 	/**
 	 * @brief      This method returns the current PID error
@@ -681,9 +680,13 @@ private:
 	volatile int32_t pidPositionStepsIssued = 0;
 	volatile float currentPidError;
 
-	/** This variable is used to check if the stallguard threshold has changed. */
-	int8_t stallThreshold = 5;
+	/** This variable holds the default stall threshold, but can be updated by the user. */
+	int8_t stallThreshold = 4;
+
+	/** This variable hold the default state for Stallguard (stopOnStall) */
 	bool stallStop = false; 
+
+	/** Flag to keep track of stallguard */
 	bool stallEnabled = false;;
 
 	uint8_t SPI( uint8_t data );

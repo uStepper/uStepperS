@@ -290,11 +290,10 @@ friend class uStepperS;
 		 */
 		int32_t readRegister( uint8_t address );
 
+		/**
+		 * @brief		Returns the load measurement used for Stall detection
+		 */
 		uint16_t getStallValue( void );
-
-		void clearStall( void );
-
-		bool isStalled( void );
 
 		/** target position in microsteps*/
 		volatile int32_t xTarget = 0;
@@ -341,11 +340,13 @@ friend class uStepperS;
 
 		void reset( void );
 
-		void enableStealth( void);
+		void enableStealth( void );
 
-		void enableStallguard( bool stopOnStall, int8_t threshold );
+		void enableStallguard( int8_t threshold, bool stopOnStall );
 
 		void disableStallguard( void );
+
+		void clearStall( void );
 
 		void readMotorStatus(void);
 
