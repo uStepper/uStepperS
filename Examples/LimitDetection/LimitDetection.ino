@@ -18,9 +18,13 @@
 
 uStepperS stepper;
 
+// Desired rpm for homing
+int8_t rpm = 50;
+
 void setup() {
   // put your setup code here, to run once:
   stepper.setup();
+  stepper.checkOrientation(10.0);       //Check orientation of motor connector
   stepper.setMaxAcceleration(2000);//use an acceleration of 2000 fullsteps/s^2
   stepper.setMaxVelocity(500);//Max velocity of 500 fullsteps/s
   Serial.begin(9600);
@@ -29,9 +33,9 @@ void setup() {
 void loop() {
   float railLength;
 
-  stepper.moveToEnd(CW, STALLSENSITIVITY);      //Reset to CW endpoint
+  stepper.moveToEnd(CW, rpm, 4);      //Reset to CW endpoint
   Serial.println(railLength*MMPRDEG);//find end positions and read out the recorded end position
-  railLength = stepper.moveToEnd(CCW, STALLSENSITIVITY);    //Go to CCW end
+  railLength = stepper.moveToEnd(CCW, rpm, 4);    //Go to CCW end
   Serial.println(railLength*MMPRDEG);//find end positions and read out the recorded end position
   
   while(1);

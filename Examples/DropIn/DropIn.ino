@@ -32,6 +32,8 @@ uStepperS stepper;
 void setup() {
 
   Serial.begin(9600);
+  stepper.setup();        //Initialisation of the uStepper S
+  stepper.checkOrientation(10.0);       //Check orientation of motor connector
   stepper.setup(DROPIN, 200, 75, 7.0, 1.0);				// Dropin mode, 
   														// 200 fullsteps per revolution,
   														// P = 75

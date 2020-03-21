@@ -13,19 +13,13 @@ uStepperS stepper;
 void setup() {
   // put your setup code here, to run once:
   stepper.setup();
-
-  stepper.driver.enableStallguard();
-
+  stepper.checkOrientation(10.0);       //Check orientation of motor connector
   Serial.begin(9600);
   stepper.runContinous(CCW);
 }
 
 void loop() {
   char cmd;
-
-  bool stall = stepper.getMotorState(STALLGUARD2);
-
-  Serial.println("Stall status: " + String(stall));
 
   // put your main code here, to run repeatedly:
   while(!Serial.available());

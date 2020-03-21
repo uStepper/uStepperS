@@ -8,11 +8,9 @@
 - moved the absolute position counter into the encoder getangle function
 - added a LP filter on the absolute position data in the encoder function (so, getAngleMoved is filtered)
 - stall detection removed from timer1
-- samplerate on timer1 doubled to 2kHz
 - Variable filter depending on mode set in setup routine
 - removed obsolete things in setuproutine and timer1
 - made new velocity measurement for encoder values
 - made the control threshold for closed loop control variable and intrduced a function for editing it
-- TODO: remove stall function & edit functions using stalldetection
-- changed interrupt frequency to 1KhZ for DROPIN mode only
+- changed timer1 interrupt frequency to 2KhZ for all other modes than DROPIN
 - added option to choose how long the "checkOrientation()" function in UstepperS class should move during check

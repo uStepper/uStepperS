@@ -18,6 +18,8 @@ uStepperS stepper;
 void setup(void)
 {
   Serial.begin(9600);
+  stepper.setup();        //Initialisation of the uStepper S
+  stepper.checkOrientation(10.0);       //Check orientation of motor connector
   stepper.setup(PID,200);     //Initiate the stepper object to use closed loop control
                                                 //note that the closed loop control are NOT using a PID controller
                                                 //Which is why P, I and D are not configured

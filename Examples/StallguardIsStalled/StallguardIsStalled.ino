@@ -1,7 +1,4 @@
-/*
-  Name:   StallguardIsStalled
-  Author: SolidGeek
-  
+/*  
   Info:   This example demonstrates how Stallguard can be used to detect motor stall, and automatic stop before any steps is lost.
           The for-loop applies six different velocities, but only shifts to the next when a stall is detected.  
           For more information, check out the documentation:
