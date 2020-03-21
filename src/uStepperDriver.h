@@ -49,6 +49,7 @@
 #define X_COMPARE 			0x05	/**< Position  comparison  register*/
 #define IHOLD_IRUN			0x10	/**< Driver current control*/
 #define TPOWERDOWN			0x11	/**< DESCRIPTION PENDING */
+#define TSTEP				0x12
 #define TPWMTHRS			0x13	/**< DESCRIPTION PENDING */
 #define TCOOLTHRS			0x14	/**< This is the lower threshold velocity for switching on smart energy coolStep and stallGuard feature.*/
 #define THIGH				0x15	/**< DESCRIPTION PENDING */
@@ -69,6 +70,7 @@
 #define XTARGET				0x2D	/**< Target position for ramp mode*/
 #define VDCMIN				0x33	/**< DESCRIPTION PENDING */
 #define SW_MODE 			0x34	/**< Switch mode configuration*/
+#define SG_STOP(n)			(((n)&0x1)<<10)	/**< DESCRIPTION PENDING */
 #define RAMP_STAT			0x35	/**< Ramp status and switch event status*/
 #define XLATCH				0x36	/**< Latches  XACTUAL  upon  a programmable switch event*/
 
@@ -295,6 +297,11 @@ friend class uStepperS;
 		 */
 		int32_t readRegister( uint8_t address );
 
+		/**
+		 * @brief		Returns the load measurement used for Stall detection
+		 */
+		uint16_t getStallValue( void );
+
 		/** target position in microsteps*/
 		volatile int32_t xTarget = 0;
 
@@ -321,9 +328,10 @@ friend class uStepperS;
 		uint32_t VMAX	= 200000;
 		uint32_t VSTOP 	= 10;
 		uint16_t A1 	= 600;
-		uint16_t AMAX	= 600;
+		uint16_t AMAX	= 100;
 		uint16_t DMAX	= 600;
 		uint16_t D1 	= 600;
+
 
 		void chipSelect(bool state);
 
@@ -343,7 +351,16 @@ friend class uStepperS;
 
 		void reset( void );
 
-		void enableStealth( void);
+		void enableStealth( void );
+
+		void enableStallguard( int8_t threshold, bool stopOnStall );
+
+		void disableStallguard( void );
+
+		void clearStall( void );
 
 		void readMotorStatus(void);
+
+
+
 };

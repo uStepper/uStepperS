@@ -299,43 +299,46 @@ void uStepperS::moveToAngle( float angle )
 	}
 }
 
-bool uStepperS::detectStall(int32_t stepsMoved)
+void uStepperS::enableStallguard( int8_t threshold, bool stopOnStall )
 {
-	int32_t encoderPosition = stepsMoved - pointer->encoder.angleMoved * ENCODERDATATOSTEP;
-	static int32_t offset = 0;
-	static uint8_t stallCnt = 0;
+	this->clearStall();
+	this->stallThreshold = threshold;
+	this->stallStop = stopOnStall;
 
-	if(abs(encoderPosition)-abs(offset)>20*this->stallSensitivity*stallCnt){
-		stallCnt++;
-	}
-	else{
-		stallCnt=0;
-		offset = encoderPosition;
-	}
-	if(stallCnt > 10*this->stallSensitivity){
-		this->stall = 1;
-		offset = encoderPosition;
-	}
-	else{
-		this->stall = 0;
-	}
+	pointer->driver.enableStallguard( threshold, stopOnStall);
+
+	this->stallEnabled = true;
 }
 
-bool uStepperS::isStalled( float stallSensitivity )
+void uStepperS::disableStallguard( void )
 {
-	if(this->stallSensitivity > 1.0)
-  	{
-  		this->stallSensitivity = 1.0;
-  	}
-  	else if(this->stallSensitivity < 0.0)
-  	{
-  		this->stallSensitivity = 0.0;
-  	}
-  	else{
-  		this->stallSensitivity = stallSensitivity;
-  	}
-  	
-	return this->stall;
+	pointer->driver.disableStallguard();
+
+	this->stallEnabled = false;
+}
+
+void uStepperS::clearStall( void ) 
+{
+	pointer->driver.clearStall();
+}
+
+bool uStepperS::isStalled( void )
+{
+	return this->isStalled( this->stallThreshold );
+}
+
+bool uStepperS::isStalled( int8_t threshold )
+{	
+	// If the threshold is different from what is configured..
+	if( threshold != this->stallThreshold || this->stallEnabled == false ){
+		// Reconfigure stallguard
+		this->enableStallguard( threshold, this->stallStop );
+	}
+
+	int32_t stats = pointer->driver.readRegister(RAMP_STAT);
+
+	// Only interested in 'status_sg', with bit position 13 (last bit in RAMP_STAT).
+	return ( stats >> 13 );
 }
 
 void uStepperS::setBrakeMode( uint8_t mode, float brakeCurrent )
@@ -656,26 +659,30 @@ void uStepperS::disablePid(void)
 	sei();
 }
 
-float uStepperS::moveToEnd(bool dir, float stallSensitivity = 0.6, bool internalVelocitySetting = 0)
+float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 {
+	// Lowest reliable speed for stallguard
+	if (rpm < 20.0)
+		rpm = 20.0;
+
+	// Enable stallguard to detect hardware stop (use driver directly, as to not override user stall settings)
+	pointer->driver.enableStallguard( threshold, true );
+
 	float length = this->encoder.getAngleMoved();
 
 	if(dir == CW)
-	{
-		if(internalVelocitySetting) {this->setRPM((1.0/rpmToVelocity)*maxVelocity);}
-		else {this->setRPM(10);}
-	}
+		this->setRPM(abs(rpm));
 	else
-	{
-		if(internalVelocitySetting) {this->setRPM(-(1.0/rpmToVelocity)*maxVelocity);}
-		else {this->setRPM(-10);}
-	}
+		this->setRPM(-abs(rpm));
 	
-	while(!this->isStalled(stallSensitivity))
-	{
-		delay(10);
-	}
+	delay(100);
+	
+	while( !this->isStalled() ){}
 	this->stop();
+	pointer->driver.clearStall();
+
+	// Return to normal operation
+	pointer->driver.disableStallguard();
 
 	length -= this->encoder.getAngleMoved();
 	return abs(length);

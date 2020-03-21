@@ -478,14 +478,43 @@ public:
 	void stop( bool mode = HARD );
 
 	/**
-	 * @brief      	This method returns a bool variable indicating wether the motor
-	 *				is stalled or not
+	 * @brief      Enable TMC5130 StallGuard 
 	 *
-	 * @param[in]  	stallSensitivity - Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 *             	This function enables the builtin stallguard offered from TMC5130 stepper driver.
+	 * 				The threshold should be tuned as to trigger stallguard before a step is lost.
+	 *
+	 * @param	   threshold 	- stall sensitivity. A value between -64 and +63
+	 * @param      stopOnStall  - should the driver automatic stop the motor on a stall
+	 */
+	void enableStallguard( int8_t threshold = 4, bool stopOnStall = false);
+
+	/**
+	 * @brief      	Disables the builtin stallguard offered from TMC5130, and reenables StealthChop.
+	 */
+	void disableStallguard( void );
+
+	/**
+	 * @brief      	Clear the stallguard, reenabling the motor to return to its previous operation.
+	 */
+	void clearStall( void );
+
+	/**
+	 * @brief      	This method returns a bool variable indicating wether the motor is stalled or not. 
+	 * 				Uses the default stallguard threshold, unless this has been changed by .enableStallguard()
 	 *
 	 * @return     	0 = not stalled, 1 = stalled
 	 */
-	bool isStalled(float stallSensitivity = 0.6);
+	bool isStalled(void);
+
+
+	/**
+	 * @brief      	This method returns a bool variable indicating wether the motor is stalled or not.
+	 *
+	 * @param       threshold  -  Threshold for stallguard. A value between -64 and +63
+	 * 
+	 * @return     	0 = not stalled, 1 = stalled		
+	*/
+	bool isStalled( int8_t threshold );
 
 	void setBrakeMode( uint8_t mode, float brakeCurrent = 0.0 );
 
@@ -516,13 +545,13 @@ public:
 	 *
 	 * @param[in]  	dir  Direction to search for limit
 	 *
-	 * @param[in]  	stallSensitivity  Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 * @param[in]   rpm   RPM of the motor while searching for limit
 	 * 
-	 * @param[in]  	velocity  Speed at which to move, in RPM
+	 * @param[in]  	threshold  Sensitivity of stall detection (-64 to +63), low is more sensitive
 	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float stallSensitivity = 0.6, bool internalVelocitySetting = 0);
+	float moveToEnd(bool dir, float rpm = 40.0, int8_t threshold = 4);
 
 	/**
 	 * @brief      This method returns the current PID error
@@ -656,7 +685,16 @@ private:
 
 	volatile int32_t pidPositionStepsIssued = 0;
 	volatile float currentPidError;
-	float stallSensitivity = 0.6;
+
+	/** This variable holds the default stall threshold, but can be updated by the user. */
+	int8_t stallThreshold = 4;
+
+	/** This variable hold the default state for Stallguard (stopOnStall) */
+	bool stallStop = false; 
+
+	/** Flag to keep track of stallguard */
+	bool stallEnabled = false;
+
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );
@@ -667,7 +705,7 @@ private:
 	void encoderSpeed(posFilter_t *filter, int32_t angle);
 
 	float pid(float error);
-	bool detectStall(int32_t stepsMoved);
+	
 	dropinCliSettings_t dropinSettings;
 	bool loadDropinSettings(void);
 	void saveDropinSettings(void);
