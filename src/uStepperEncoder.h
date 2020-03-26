@@ -254,5 +254,7 @@ class uStepperEncoder
 		uint8_t status; 
 		int32_t userAngleOffset = 0;	
 
+		volatile int32_t angleMovedRaw = 0;
+
 };
 

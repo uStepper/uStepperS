@@ -622,7 +622,6 @@ void TIMER1_COMPA_vect(void)
 			pointer->currentPidSpeed = pointer->externalStepInputFilter.velIntegrator;
 			pointer->pid(error);
 		}
-		PORTB &= ~(1 << 5);
 		return;
 	}
 	if(pointer->mode == PID)
@@ -685,6 +684,7 @@ float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 	pointer->driver.disableStallguard();
 
 	length -= this->encoder.getAngleMoved();
+	delay(1000);
 	return abs(length);
 }
 

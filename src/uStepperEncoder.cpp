@@ -82,11 +82,11 @@ int abe;
 void uStepperEncoder::setHome(float initialAngle)
 {
 	cli();
-
 	this->encoderOffset = this->captureAngle();
 	this->oldAngle = 0;
 	this->angle = 0;
 	this->angleMoved = ANGLETOENCODERDATA * initialAngle;
+	this->angleMovedRaw=this->angleMoved;
 	this->revolutions = 0;
 	pointer->driver.setHome(this->angleMoved * ENCODERDATATOSTEP);
 	this->encoderFilter.posError = 0.0;
@@ -124,7 +124,6 @@ uint16_t uStepperEncoder::captureAngle(void)
 	static uint16_t oldValue = 0;
 	static int32_t smoothValue;
 	int32_t deltaAngle;
-	static int32_t tmp;
 	uint16_t curAngle;
 
 	chipSelect(true);  // Set CS HIGH
@@ -156,10 +155,10 @@ uint16_t uStepperEncoder::captureAngle(void)
 		deltaAngle -= 65536;
 	}
 
-	tmp += deltaAngle;
+	angleMovedRaw += deltaAngle;
 	pointer->driver.readRegister(VACTUAL);
 	smoothValue = (smoothValue<< this->Beta)-smoothValue; 
-   	smoothValue += tmp;
+   	smoothValue += angleMovedRaw;
    	smoothValue >>= this->Beta;
 	if(pointer->mode != DROPIN)
 	{

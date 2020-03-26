@@ -7,6 +7,8 @@
 
 #include <uStepperS.h>
 
+#define STALLSENSITIVITY 4//sensitivity of the stall detection, between -64 and 63 - high number is less sensitive
+
 uStepperS stepper;
 uint8_t rpm[6] = {50, 60, 70, 80, 90, 100};
 
@@ -19,7 +21,7 @@ void setup() {
 
   // Enabled stallguard, with threshold 4 and stop automatic on stall.
   // Hint: If stopOnStall is set to false, you have to use .stop() or setRPM(0) in order to stop the motor on stall. 
-  stepper.enableStallguard(4, true);
+  stepper.enableStallguard(STALLSENSITIVITY, true);
   
 }
 
