@@ -94,6 +94,7 @@ void uStepperEncoder::setHome(float initialAngle)
 	this->encoderFilter.posEst = 0.0;
 	this->encoderFilter.velIntegrator = 0.0;
 	this->encoderFilter.velEst = 0.0;
+	this->speedSmoothValue = 0.0;
 	sei();
 }
 
