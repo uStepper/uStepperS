@@ -49,7 +49,6 @@ uStepperEncoder::uStepperEncoder(void)
 void uStepperEncoder::init(uStepperS * _pointer)
 {
 	this->pointer = _pointer;
-int abe;
 	angle = 0;
 
 	/* Set the interrupt mode to 14 with a prescaler of 1 */

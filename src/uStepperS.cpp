@@ -486,15 +486,6 @@ float uStepperS::angleMoved ( void )
 
 void uStepperS::stop( bool mode){
 
-	// Check which mode is used
-
-	// if positioning mode  
-		// Update XTARGET to current postion
-	// else
-		// Set VMAX = 0
-
-	// Side 76 TMC5130
-
 	if(mode == HARD)
 	{
 		this->driver.setDeceleration( 0xFFFE );

@@ -36,8 +36,6 @@
 #include <Arduino.h>
 #include <inttypes.h>
 
-#define NO_ANGLE (0xff)
-
 /**
  * @brief      Prototype of class for ustepper servo.
  */

@@ -101,7 +101,7 @@ uStepperServo *uStepperServo::first;
 
 
 
-uStepperServo::uStepperServo() : pin(0),angle(NO_ANGLE),pulse(0),min16(92),max16(150),next(0)
+uStepperServo::uStepperServo() : pin(0),angle(0xff),pulse(0),min16(92),max16(150),next(0)
 {
 
 }
@@ -119,7 +119,7 @@ void uStepperServo::setMaximumPulse(uint16_t t)
 uint8_t uStepperServo::attach(int pinArg)
 {
     pin = pinArg;
-    angle = NO_ANGLE;
+    angle = 0xff;
     pulse = 0;
     next = first;
     first = this;

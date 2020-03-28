@@ -81,7 +81,6 @@ void uStepperDriver::init( uStepperS * _pointer ){
 
 	/* Set all-round chopper configuration */
 	this->writeRegister( CHOPCONF, TOFF(2) | TBL(2) | HSTRT_TFD(4) | HEND(0));
-	//this->writeRegister( SW_MODE, this->readRegister(SW_MODE) & ~(1 << 11));
 
 	/* Set startup ramp mode */
 	this->setRampMode( POSITIONING_MODE );
