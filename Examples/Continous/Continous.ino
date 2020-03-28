@@ -15,7 +15,7 @@ void setup() {
   stepper.setup();
   stepper.checkOrientation(10.0);       //Check orientation of motor connector
   Serial.begin(9600);
-  stepper.runContinous(CCW);
+  stepper.setRPM(100);
 }
 
 void loop() {
@@ -27,12 +27,12 @@ void loop() {
   cmd = Serial.read();
   if(cmd == '1')                      //Run continous clockwise
   {
-    stepper.runContinous(CW);
+    stepper.setRPM(-100);
   }
   
   else if(cmd == '2')                 //Run continous counter clockwise
   {
-    stepper.runContinous(CCW);
+    stepper.setRPM(100);
   }
   
   else if(cmd == '3')                 //Stop without deceleration and block motor

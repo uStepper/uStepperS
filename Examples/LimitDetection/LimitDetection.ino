@@ -14,12 +14,12 @@
 #define STEPPRMM 53.55//step pr. mm for the rail used in the demo
 #define MMPRSTEP 1/STEPPRMM//mm pr. step
 #define MMPRDEG MMPRSTEP*RES//mm pr. degree
-#define STALLSENSITIVITY 4//sensitivity of the stall detection, between -64 and 63 - higher number is less sensitive
+#define STALLSENSITIVITY 2//sensitivity of the stall detection, between -64 and 63 - higher number is less sensitive
 
 uStepperS stepper;
 
 // Desired rpm for homing
-int8_t rpm = 50;
+int16_t rpm = 50;
 
 void setup() {
   // put your setup code here, to run once:

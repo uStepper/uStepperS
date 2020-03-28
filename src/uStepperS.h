@@ -207,7 +207,10 @@ class uStepperS;
 
 #define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
 
-/** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
+/** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed 
+ * 	Frequency is 1kHz in dropin and 2kHz for all other modes. base define is 1kHz, and if the mode
+ * is not dropin, it is multiplied by 2 in the relevant places of the code 
+*/
 #define ENCODERINTFREQ 1000	
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
 #define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		
@@ -516,7 +519,7 @@ public:
 	*/
 	bool isStalled( int8_t threshold );
 
-	void setBrakeMode( uint8_t mode, float brakeCurrent = 0.0 );
+	void setBrakeMode( uint8_t mode, float brakeCurrent = 25.0 );
 
 	/**
 	 * @brief      	This method enables the PID after being disabled  (disablePid).
@@ -702,7 +705,6 @@ private:
 	void chipSelect( uint8_t pin , bool state );
 
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
-	void encoderSpeed(posFilter_t *filter, int32_t angle);
 
 	float pid(float error);
 	

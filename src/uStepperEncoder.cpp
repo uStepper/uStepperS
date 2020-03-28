@@ -82,12 +82,13 @@ int abe;
 void uStepperEncoder::setHome(float initialAngle)
 {
 	cli();
+	TCNT1 = 0;
 	this->encoderOffset = this->captureAngle();
 	this->oldAngle = 0;
 	this->angle = 0;
 	this->angleMoved = ANGLETOENCODERDATA * initialAngle;
 	this->angleMovedRaw=this->angleMoved;
-	this->revolutions = 0;
+	this->smoothValue = this->angleMoved;
 	pointer->driver.setHome(this->angleMoved * ENCODERDATATOSTEP);
 	this->encoderFilter.posError = 0.0;
 	this->encoderFilter.posEst = 0.0;
@@ -112,17 +113,11 @@ bool uStepperEncoder::detectMagnet(void)
 	return 1;
 }
 
-uint16_t uStepperEncoder::cmpfunc (const void * a, const void * b) {
-   return ( *(uint16_t*)a - *(uint16_t*)b );
-}
-
 uint16_t uStepperEncoder::captureAngle(void)
 {
 	pointer->setSPIMode(2);
 
 	uint16_t value = 0;
-	static uint16_t oldValue = 0;
-	static int32_t smoothValue;
 	int32_t deltaAngle;
 	uint16_t curAngle;
 
@@ -157,19 +152,18 @@ uint16_t uStepperEncoder::captureAngle(void)
 
 	angleMovedRaw += deltaAngle;
 	pointer->driver.readRegister(VACTUAL);
-	smoothValue = (smoothValue<< this->Beta)-smoothValue; 
-   	smoothValue += angleMovedRaw;
-   	smoothValue >>= this->Beta;
+	this->smoothValue = (this->smoothValue<< this->Beta)-this->smoothValue; 
+   	this->smoothValue += angleMovedRaw;
+   	this->smoothValue >>= this->Beta;
+
 	if(pointer->mode != DROPIN)
 	{
-		pointer->encoder.encoderFilter.velIntegrator = (smoothValue-this->angleMoved)*ENCODERINTFREQ*2.0f;
-	}
-	else
-	{
-		pointer->encoder.encoderFilter.velIntegrator = (smoothValue-this->angleMoved)*ENCODERINTFREQ;
+		this->speedSmoothValue *= 0.99;
+		this->speedSmoothValue += (this->smoothValue-this->angleMoved)*0.01;
+		pointer->encoder.encoderFilter.velIntegrator = this->speedSmoothValue*ENCODERINTFREQ*2.0f;
 	}
    	
-	this->angleMoved=smoothValue;
+	this->angleMoved=this->smoothValue;
 
 	return (uint16_t)value;
 	

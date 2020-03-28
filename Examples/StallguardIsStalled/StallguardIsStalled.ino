@@ -7,7 +7,7 @@
 
 #include <uStepperS.h>
 
-#define STALLSENSITIVITY 4//sensitivity of the stall detection, between -64 and 63 - high number is less sensitive
+#define STALLSENSITIVITY 2//sensitivity of the stall detection, between -64 and 63 - high number is less sensitive
 
 uStepperS stepper;
 uint8_t rpm[6] = {50, 60, 70, 80, 90, 100};

@@ -534,22 +534,6 @@ void uStepperS::filterSpeedPos(posFilter_t *filter, int32_t steps)
 	filter->velEst = (filter->posError * PULSEFILTERKP) + filter->velIntegrator;
 }
 
-void uStepperS::encoderSpeed(posFilter_t *filter, int32_t angle)
-{
-	static int32_t old=0;
-	static int32_t tmp=0;
-	tmp=angle-old;
-
-	if(tmp<36 && tmp>-36){
-		filter->velIntegrator=0;
-	}
-	else{
-		filter->velIntegrator=tmp*3;
-	}
-	old=angle;
-}
-
-
 void interrupt1(void)
 {
 	if(PIND & 0x04)
@@ -624,7 +608,7 @@ void TIMER1_COMPA_vect(void)
 		}
 		return;
 	}
-	if(pointer->mode == PID)
+	else if(pointer->mode == PID)
 	{
 		if(!pointer->pidDisabled)
 		{

@@ -61,8 +61,6 @@
 class uStepperEncoder
 {
 	public:
-
-		uint16_t cmpfunc (const void * a, const void * b);
 		/**
 		 * @brief	Constructor of uStepperEncoder class
 		 */
@@ -203,9 +201,10 @@ class uStepperEncoder
 		 */
 		bool detectMagnet(void);
 
-
+		volatile int32_t smoothValue;
+		volatile float speedSmoothValue;
 		/** Angle of the shaft at the reference position. */
-		uint16_t encoderOffset;
+		volatile uint16_t encoderOffset;
 
 		/** This variable always contain the current rotor angle, relative
 		  * to a single revolution */
@@ -222,12 +221,6 @@ class uStepperEncoder
 		volatile uint16_t oldAngle;
 
 
-		/** This variable contains the number of revolutions in either
-		  * direction, since last home position was set. negative numbers
-		  * corresponds to CCW turns, and positive to CW turns */
-		volatile int16_t revolutions;
-
-
 		/** Variable used to store the last measured rotational speed of
 		* the motor shaft */
 		volatile float curSpeed;
@@ -236,7 +229,7 @@ class uStepperEncoder
 		volatile posFilter_t encoderFilter;
 
 		/** Filter constant for encoder feedback **/
-		uint8_t Beta = 5;
+		volatile  uint8_t Beta = 5;
 
 	private:
 		
