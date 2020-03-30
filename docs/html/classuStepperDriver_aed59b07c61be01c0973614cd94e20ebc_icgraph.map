@@ -1,0 +1,5 @@
+<map id="uStepperDriver::setHome" name="uStepperDriver::setHome">
+<area shape="rect" id="node1" title="Resets the internal position counter of the motor driver." alt="" coords="432,5,619,32"/>
+<area shape="rect" id="node2" href="$classuStepperEncoder.html#a42c9667e532981996758163dfe471682" title="Define new reference(home) position." alt="" coords="185,5,384,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="5,5,137,32"/>
+</map>

@@ -43,6 +43,8 @@ isStalled KEYWORD2
 setBrakeMode KEYWORD2
 enablePid KEYWORD2
 disablePid KEYWORD2
+enableClosedLoop KEYWORD2
+disableClosedLoop KEYWORD2
 setControlThreshold KEYWORD2
 moveToEnd KEYWORD2
 getPidError KEYWORD2
@@ -68,6 +70,7 @@ DROPIN KEYWORD2
 PID KEYWORD2
 HARD KEYWORD2
 SOFT KEYWORD2
+CLOSEDLOOP KEYWORD2
 
 #######################################
 # uStepperDriver Class

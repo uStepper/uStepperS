@@ -1,0 +1,4 @@
+<map id="uStepperS::stop" name="uStepperS::stop">
+<area shape="rect" id="node1" title="Stop the motor." alt="" coords="224,5,348,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="5,5,176,32"/>
+</map>

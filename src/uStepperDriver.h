@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	 	File: 		uStepperDriver.h														*
-*		Version:    1.0.1                                           						*
-*      	Date: 		May 14th, 2019  	                                    				*
+*		Version:    2.0.0                                           						*
+*      	Date: 		March 30th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
@@ -32,10 +32,6 @@
 */
 #include <Arduino.h>
 #include <uStepperS.h>
-
-#define FREEWHEELBRAKE 0
-#define COOLBRAKE 1
-#define HARDBRAKE 2
 
 /*  TMC5130 Register Address Defines */
 
@@ -138,9 +134,9 @@
 #define VELOCITY_MODE_NEG	0x02		/**< negativ VMAX, using AMAX acceleration*/
 #define HOLD_MODE			0x03		/**< velocity remains unchanged, unless stop event occurs*/
 
-#define DRIVER_STOP 0					/**< DESCRIPTION PENDING */
-#define DRIVER_VELOCITY 1	/**< DESCRIPTION PENDING */
-#define DRIVER_POSITION 2	/**< DESCRIPTION PENDING */
+#define DRIVER_STOP 0					/**< Define label for indicating driver is in standstill mode */
+#define DRIVER_VELOCITY 1	/**< Define label for indicating driver is in velocity mode */
+#define DRIVER_POSITION 2	/**< Define label for indicating driver is in position mode */
 
 #define ACCELERATIONCONVERSION 1.0/116.415321827	/**< page 74 datasheet*/
 #define VELOCITYCONVERSION 1.0/0.953674316	/**< page 74 datasheet*/

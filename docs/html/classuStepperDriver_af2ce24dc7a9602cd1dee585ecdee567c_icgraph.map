@@ -1,0 +1,13 @@
+<map id="uStepperDriver::setRampMode" name="uStepperDriver::setRampMode">
+<area shape="rect" id="node1" title="Set motor driver to position mode or velocity mode." alt="" coords="957,81,1180,108"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="735,31,884,57"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#abbe885c71e6dadc13b8c954221ac47eb" title="Make the motor rotate continuously." alt="" coords="718,81,901,108"/>
+<area shape="rect" id="node7" href="$classuStepperDriver.html#af8c6752ef8ca1516154ef8186f1494ac" title="Set the motor position." alt="" coords="709,132,909,159"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="518,31,635,57"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="286,5,418,32"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="271,56,433,83"/>
+<area shape="rect" id="node8" href="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113" title="Make the motor perform a predefined number of steps." alt="" coords="492,132,661,159"/>
+<area shape="rect" id="node9" href="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="267,119,437,145"/>
+<area shape="rect" id="node11" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="260,169,444,196"/>
+<area shape="rect" id="node10" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,119,212,145"/>
+</map>

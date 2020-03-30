@@ -1,0 +1,9 @@
+<map id="uStepperDriver::setDirection" name="uStepperDriver::setDirection">
+<area shape="rect" id="node1" title=" " alt="" coords="627,31,833,57"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#abbe885c71e6dadc13b8c954221ac47eb" title="Make the motor rotate continuously." alt="" coords="396,5,579,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#a5b754b633f5938b43f0b4db9f75c8874" title="Set the velocity in rpm." alt="" coords="415,56,560,83"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="5,31,176,57"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#a26ed0d754a0d95eab0bea0225f471e6e" title=" " alt="" coords="228,107,344,133"/>
+<area shape="rect" id="node7" href="$classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd" title="Stop the motor." alt="" coords="224,56,348,83"/>
+<area shape="rect" id="node6" href="$uStepperS_8h.html#a8bc7a9f474f12ea128e6ea6fde8382a5" title="Interrupt routine for critical tasks." alt="" coords="10,107,171,133"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="uStepperS::moveAngle" name="uStepperS::moveAngle">
+<area shape="rect" id="node1" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="260,5,431,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,5,212,32"/>
+</map>

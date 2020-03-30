@@ -1,0 +1,4 @@
+<map id="uStepperS::disableClosedLoop" name="uStepperS::disableClosedLoop">
+<area shape="rect" id="node1" title="This method disables the closed loop mode until calling enableClosedLoop." alt="" coords="5,5,224,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a610b77accac093bccb34b6fc7404fc0b" title="This method disables the PID until calling enablePid." alt="" coords="272,5,435,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="uStepperDriver::readMotorStatus" name="uStepperDriver::readMotorStatus">
+<area shape="rect" id="node1" title=" " alt="" coords="497,5,692,47"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#afacfd0440b99f607b2af14f103c4e71f" title="Get the current motor driver state." alt="" coords="260,13,449,39"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,13,212,39"/>
+</map>

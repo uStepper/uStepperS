@@ -1,0 +1,7 @@
+<map id="uStepperDriver::setDeceleration" name="uStepperDriver::setDeceleration">
+<area shape="rect" id="node1" title="Set motor deceleration." alt="" coords="5,56,236,83"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="284,56,499,83"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="547,5,741,32"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="558,56,730,83"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="586,107,702,133"/>
+</map>

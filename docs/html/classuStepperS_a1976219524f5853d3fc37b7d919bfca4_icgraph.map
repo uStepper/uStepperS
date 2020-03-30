@@ -1,0 +1,4 @@
+<map id="uStepperS::angleMoved" name="uStepperS::angleMoved">
+<area shape="rect" id="node1" title="Get the angle moved from reference position in degrees." alt="" coords="237,5,413,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="5,5,189,32"/>
+</map>

@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	 	File: 		uStepperS.cpp															*
-*		Version:    1.0.1                                           						*
-*      	Date: 		May 14th, 2019  	                                    				*
+*		Version:    2.0.0                                           						*
+*      	Date: 		March 30th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
@@ -599,7 +599,7 @@ void TIMER1_COMPA_vect(void)
 		}
 		return;
 	}
-	else if(pointer->mode == PID)
+	else if(pointer->mode == CLOSEDLOOP)
 	{
 		if(!pointer->pidDisabled)
 		{
@@ -631,6 +631,16 @@ void uStepperS::disablePid(void)
 	cli();
 	this->pidDisabled = 1;
 	sei();
+}
+
+void uStepperS::enableClosedLoop(void)
+{
+	this->enablePid();
+}
+
+void uStepperS::disableClosedLoop(void)
+{
+	this->disablePid();
 }
 
 float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)

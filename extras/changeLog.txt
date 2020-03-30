@@ -1,5 +1,24 @@
 Changelog - uStepper S library
 ----------------------------
+Version 2.0.0:
+	- Changed name of "brake()" function in uStepper Class to "setBrakeMode()"
+	- Implemented "setBrakeMode()" function in uStepper Class to choose between freewheel, braking with low side fets shorted and brake with specified hold current. default = brake with low side fets shorted
+	- "setHome" argument of ustepper class "setup" function is now used
+	- Implemented "checkOrientation()" function in uStepper Class, to check the orientation of the motor cable, and invert direction if needed.
+	- Added 3 moves in "checkOrientation()" function in uStepper Class, to check orientation instead of just 1
+	- Removed check for motor cable orientation from "setup()" function in uStepper Class. Users actively needs to call the "checkOrientation" function from uStepper Class, if they need this feature, AFTER calling the "setup()" function
+	- Disabled driver on MCU reset while setting up, to avoid the motor spinning on startup if power was removed during motor movement
+	- Moved the absolute position counter into the encoder getangle function
+	- Added a LP filter on the absolute position data in the encoder function (so, getAngleMoved is filtered)
+	- Stall detection removed from timer1
+	- Variable filter depending on mode set in setup routine
+	- Removed obsolete things in setup routine and timer1
+	- Made new velocity measurement for encoder values
+	- Made the control threshold for closed loop control variable and intrduced a function for editing it
+	- Changed timer1 interrupt frequency to 2KhZ for all other modes than DROPIN
+	- Added option to choose how long the "checkOrientation()" function in UstepperS class should move during check
+	- Renamed "PID" to "CLOSEDLOOP" to avoid confusing the closed loop position mode with a PID controller. PID keyword is stall accepted for backwards compatibility
+
 Version 1.0.1:
 	- Fixed bug in functions to set acceleration and deceleration
 	- moved a couple of functions in uStepperDriver.h from public to protected section of class

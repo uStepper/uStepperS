@@ -1,0 +1,4 @@
+<map id="uStepperS::angleMoved" name="uStepperS::angleMoved">
+<area shape="rect" id="node1" title="Get the angle moved from reference position in degrees." alt="" coords="5,13,181,39"/>
+<area shape="rect" id="node2" href="$classuStepperEncoder.html#a2eceb2b57d672fce865b4bd778ba06c5" title="Returns the angle moved from reference position in degrees." alt="" coords="229,5,428,47"/>
+</map>

@@ -10,7 +10,7 @@
 #include <uStepperS.h>
 
 #define STEPSPERREV 200 //Number of steps pr revolution. 200 for a 1.8deg motor, 400 for a 0.9deg motor
-#define RES (200.0*256)/360.0//calculate step pr. degree
+#define RES (STEPSPERREV *256)/360.0//calculate step pr. degree
 #define STEPPRMM 53.55//step pr. mm for the rail used in the demo
 #define MMPRSTEP 1/STEPPRMM//mm pr. step
 #define MMPRDEG MMPRSTEP*RES//mm pr. degree
@@ -23,7 +23,7 @@ int16_t rpm = 50;
 
 void setup() {
   // put your setup code here, to run once:
-  stepper.setup();
+  stepper.setup(NORMAL, STEPSPERREV); 
   stepper.checkOrientation(10.0);       //Check orientation of motor connector
   stepper.setMaxAcceleration(2000);//use an acceleration of 2000 fullsteps/s^2
   stepper.setMaxVelocity(500);//Max velocity of 500 fullsteps/s

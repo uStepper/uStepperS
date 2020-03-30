@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	 	File: 		uStepperEncoder.cpp														*
-*		Version:    1.0.1                                           						*
-*      	Date: 		May 14th, 2019  	                                    				*
+*		Version:    2.0.0                                           						*
+*      	Date: 		March 30th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
@@ -180,14 +180,32 @@ uint16_t uStepperEncoder::getAngleRaw(void)
 }
 
 
-float uStepperEncoder::getAngleMoved(void)
+float uStepperEncoder::getAngleMoved(bool filtered)
 {
-	return this->angleMoved * 0.005493164;	//360/65536
+	if(filtered == true)
+	{
+		return this->angleMoved * 0.005493164;	//360/65536
+	}
+	else
+	{
+		return this->angleMovedRaw * 0.005493164;	//360/65536
+	}
+	
+	
 }
 
-int32_t uStepperEncoder::getAngleMovedRaw(void)
+int32_t uStepperEncoder::getAngleMovedRaw(bool filtered)
 {
-	return angleMoved;
+	if(filtered == true)
+	{
+		return this->angleMoved;
+	}
+	else
+	{
+		return this->angleMovedRaw;
+	}
+	
+	
 }
 
 

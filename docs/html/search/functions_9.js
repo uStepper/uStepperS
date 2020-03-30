@@ -1,23 +1,5 @@
 var searchData=
 [
-  ['setacceleration',['setAcceleration',['../classuStepperDriver.html#a1668657b55a0839ced16aa728f90bc7f',1,'uStepperDriver']]],
-  ['setcurrent',['setCurrent',['../classuStepperDriver.html#ad766a6a6f52387d96e1435943c8591b4',1,'uStepperDriver::setCurrent()'],['../classuStepperS.html#ac74e343f7ad81aa5c54a68f2514807fe',1,'uStepperS::setCurrent()']]],
-  ['setdeceleration',['setDeceleration',['../classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c',1,'uStepperDriver']]],
-  ['setdifferential',['setDifferential',['../classuStepperS.html#a32eafb41bd5ffd75d62447c97b448d2e',1,'uStepperS']]],
-  ['setholdcurrent',['setHoldCurrent',['../classuStepperDriver.html#ab697c4a73fb3aada7fa8f9e30694ff30',1,'uStepperDriver::setHoldCurrent()'],['../classuStepperS.html#a57e019bb84dee27bc4681a311e44e27e',1,'uStepperS::setHoldCurrent()']]],
-  ['sethome',['setHome',['../classuStepperDriver.html#a75026ba166af298f142eae9b2fbe3808',1,'uStepperDriver::setHome()'],['../classuStepperEncoder.html#abf3fc82540c092e8a6c68d4580bedbf9',1,'uStepperEncoder::setHome()']]],
-  ['setintegral',['setIntegral',['../classuStepperS.html#a4fe1d311b2ab6d3addc09ec250587cfd',1,'uStepperS']]],
-  ['setmaxacceleration',['setMaxAcceleration',['../classuStepperS.html#a432ca4ebf99c41e00730e2f1072e9ae0',1,'uStepperS']]],
-  ['setmaxdeceleration',['setMaxDeceleration',['../classuStepperS.html#a386a51f45a4f1e45db75c4f0c59263cf',1,'uStepperS']]],
-  ['setmaximumpulse',['setMaximumPulse',['../classuStepperServo.html#ac652e02642d454decf639fa4610dac2c',1,'uStepperServo']]],
-  ['setmaxvelocity',['setMaxVelocity',['../classuStepperS.html#a0e84f3aa5a3e33b39586697bc7bc741e',1,'uStepperS']]],
-  ['setminimumpulse',['setMinimumPulse',['../classuStepperServo.html#ab13e0ad35c868d6202364ffbe7129c39',1,'uStepperServo']]],
-  ['setposition',['setPosition',['../classuStepperDriver.html#af8c6752ef8ca1516154ef8186f1494ac',1,'uStepperDriver']]],
-  ['setproportional',['setProportional',['../classuStepperS.html#a494a3410f8cd3c6a9afec97a88ad68aa',1,'uStepperS']]],
-  ['setrampmode',['setRampMode',['../classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c',1,'uStepperDriver']]],
-  ['setrpm',['setRPM',['../classuStepperS.html#a5b754b633f5938b43f0b4db9f75c8874',1,'uStepperS']]],
-  ['setshaftdirection',['setShaftDirection',['../classuStepperDriver.html#a9182900a27f84224e9428022e4cd2e12',1,'uStepperDriver']]],
-  ['setup',['setup',['../classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861',1,'uStepperS']]],
-  ['setvelocity',['setVelocity',['../classuStepperDriver.html#ace949223744d3ecb544ddb879a1146d6',1,'uStepperDriver']]],
-  ['stop',['stop',['../classuStepperDriver.html#a990e6d0c64db890f0aecbc00a934f109',1,'uStepperDriver::stop()'],['../classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd',1,'uStepperS::stop()']]]
+  ['parsecommand_335',['parseCommand',['../classuStepperS.html#a31f72b85450c8e35e683e5e762f12bde',1,'uStepperS']]],
+  ['pid_336',['pid',['../classuStepperS.html#a26ed0d754a0d95eab0bea0225f471e6e',1,'uStepperS']]]
 ];

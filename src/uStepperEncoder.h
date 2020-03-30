@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	 	File: 		uStepperEncoder.h														*
-*		Version:    1.0.1                                           						*
-*      	Date: 		May 14th, 2019  	                                    				*
+*		Version:    2.0.0                                           						*
+*      	Date: 		March 30th, 2020 	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
@@ -31,26 +31,15 @@
 * @author     Thomas Hørring Olsen (thomas@ustepper.com)
 */
 #include <Arduino.h>
-/** Chip select for AEAT-8800-Q24 - Pin 10 on ATmega328pB */
-#define CS PB2 
 
-/** Data in for AEAT-8800-Q24 - Pin 11 on ATmega328pB (MOSI) */
-#define DIN PB3 
+#define CS PB2 /**< Chip select for AEAT-8800-Q24 - Pin 10 on ATmega328pB */
+#define DIN PB3 /**< Data in for AEAT-8800-Q24 - Pin 11 on ATmega328pB (MOSI) */
+#define DO PB4 /**< Data out for AEAT-8800-Q24 - Pin 12 on ATmega328pB (MISO) */
+#define CLK PB5 /**< Clock signal for AEAT-8800-Q24 - Pin 13 on ATmega328pB (SCK) */
 
-/** Data out for AEAT-8800-Q24 - Pin 12 on ATmega328pB (MISO) */
-#define DO PB4 
-
-/** Clock signal for AEAT-8800-Q24 - Pin 13 on ATmega328pB (SCK) */
-#define CLK PB5 
-
-/** Constant to convert raw encoder data to 1/256th steps*/
-#define ENCODERDATATOSTEP 51200.0/65536.0
-
-/** Constant to convert raw encoder data to revolutions */
-#define ENCODERDATATOREVOLUTIONS 60.0/65536.0
-
-/** Constant to convert angle to raw encoder data */
-#define ANGLETOENCODERDATA 65535.0/360.0
+#define ENCODERDATATOSTEP 51200.0/65536.0 /**< Constant to convert raw encoder data to 1/256th steps*/
+#define ENCODERDATATOREVOLUTIONS 60.0/65536.0 /**< Constant to convert raw encoder data to revolutions */
+#define ANGLETOENCODERDATA 65535.0/360.0 /**< Constant to convert angle to raw encoder data */
 
 /**
  * @brief      Prototype of class for the AEAT8800-Q24 encoder
@@ -123,10 +112,12 @@ class uStepperEncoder
 		 *
 		 *             The reference position can be reset at any point in time, by
 		 *             use of the setHome() function.
+		 * 
+		 * @param[in]  filtered - if true, the function returns the filtered angle. if false, the unfiltered angle is returned
 		 *
 		 * @return     The angle moved in degrees.
 		 */
-		float getAngleMoved( void );
+		float getAngleMoved( bool filtered = true);
 
 		/**
 		 * @brief      Returns the angle moved from reference position in raw encoder readings
@@ -141,10 +132,12 @@ class uStepperEncoder
 		 *
 		 *             The reference position can be reset at any point in time, by
 		 *             use of the setHome() function.
+		 * 
+		 * @param[in]  filtered - if true, the function returns the filtered angle. if false, the unfiltered angle is returned
 		 *
 		 * @return     The angle moved in raw encoder readings.
 		 */
-		int32_t getAngleMovedRaw( void );
+		int32_t getAngleMovedRaw( bool filtered = true );
 
 		/**
 		 * @brief      Measure the current speed of the motor
@@ -201,8 +194,12 @@ class uStepperEncoder
 		 */
 		bool detectMagnet(void);
 
+		/** variable used for filtering the encoder readings*/
 		volatile int32_t smoothValue;
+		
+		/** variable used for filtering the encoder speed estimation*/
 		volatile float speedSmoothValue;
+
 		/** Angle of the shaft at the reference position. */
 		volatile uint16_t encoderOffset;
 
