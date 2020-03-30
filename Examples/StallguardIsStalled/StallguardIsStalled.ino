@@ -19,7 +19,7 @@ void setup() {
   // Configure uStepper
   stepper.setup();
 
-  // Enabled stallguard, with threshold 4 and stop automatic on stall.
+  // Enabled stallguard, with threshold set by STALLSENSITIVITY and stop automatic on stall.
   // Hint: If stopOnStall is set to false, you have to use .stop() or setRPM(0) in order to stop the motor on stall. 
   stepper.enableStallguard(STALLSENSITIVITY, true);
   

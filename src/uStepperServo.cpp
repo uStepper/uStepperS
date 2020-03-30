@@ -70,7 +70,7 @@
 *   After this, the library is ready to control the Servo!                                  *
 *                                                                                           *
 *********************************************************************************************
-*   (C) 2019                                                                                *
+*   (C) 2020                                                                                *
 *                                                                                           *
 *   uStepper ApS                                                                            *
 *   www.ustepper.com                                                                        *

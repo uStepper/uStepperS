@@ -5,7 +5,7 @@
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
-*	(C) 2019																				*
+*	(C) 2020																				*
 *																							*
 *	uStepper ApS																			*
 *	www.ustepper.com 																		*
@@ -77,7 +77,7 @@
 *
 *	\par Copyright
 *
-*	(C)2019 uStepper ApS	
+*	(C)2020 uStepper ApS	
 *																	
 *	www.ustepper.com 																	
 *
@@ -128,13 +128,13 @@
 #include <EEPROM.h>
 #include <inttypes.h>
 #include <uStepperServo.h>
-#define CW 1	/**< DESCRIPTION PENDING */
-#define CCW 0	/**< DESCRIPTION PENDING */
+#define CW 1	/**< Define label users can use as argument for runContinous() function to specify clockwise direction */
+#define CCW 0	/**< Define label users can use as argument for runContinous() function to specify counterclockwise direction */
 
-#define POSITION_REACHED 0x20	/**< DESCRIPTION PENDING */
-#define VELOCITY_REACHED 0x10	/**< DESCRIPTION PENDING */
-#define STANDSTILL 0x08	/**< DESCRIPTION PENDING */
-#define STALLGUARD2 0x04	/**< DESCRIPTION PENDING */
+#define POSITION_REACHED 0x20	/**< Define label users can use as argument for getMotorState() function to check if target position has been reached*/
+#define VELOCITY_REACHED 0x10	/**< Define label users can use as argument for getMotorState() function to check if target velocity has been reached */
+#define STANDSTILL 0x08	/**< Define label users can use as argument for getMotorState() function to check if motor is not currently running */
+#define STALLGUARD2 0x04	/**< Define label users can use as argument for getMotorState() function to check stallguard status */
 
 /**
  * @brief      Union to easily split a float into its binary representation
@@ -183,20 +183,20 @@ class uStepperS;
 #include <uStepperEncoder.h>
 #include <uStepperDriver.h>
 
-#define HARD 0	/**< DESCRIPTION PENDING */
-#define SOFT 1	/**< DESCRIPTION PENDING */
+#define HARD 0	/**< Define label users can use as argument for stop() function to specify that the motor should stop immediately (without decelerating) */
+#define SOFT 1	/**< Define label users can use as argument for stop() function to specify that the motor should decelerate before stopping */
 
-#define DRV_ENN PD4 	/**< DESCRIPTION PENDING */
-#define SD_MODE PD5	/**< DESCRIPTION PENDING */
-#define SPI_MODE PD6	/**< DESCRIPTION PENDING */
+#define DRV_ENN PD4 	/**< Define label for driver DRV_ENN pin. Not normally needed for users */
+#define SD_MODE PD5	/**< Define label for driver chip SD_MODE pin. Not normally needed for users */
+#define SPI_MODE PD6	/**< Define label for driver SPI_MODE pin. Not normally needed for users */
 
-#define CS_DRIVER PE2	/**< DESCRIPTION PENDING */
-#define CS_ENCODER PD7 	/**< DESCRIPTION PENDING */
+#define CS_DRIVER PE2	/**< Define label for driver chip select pin. Not normally needed for users */
+#define CS_ENCODER PD7 	/**< Define label for encoder chip select pin. Not normally needed for users */
 
-#define MOSI1 PE3	/**< DESCRIPTION PENDING */
-#define MOSI_ENC PC2	/**< DESCRIPTION PENDING */
-#define MISO1 PC0  	/**< DESCRIPTION PENDING */
-#define SCK1 PC1 	/**< DESCRIPTION PENDING */
+#define MOSI1 PE3	/**< Define label for driver chip MOSI pin. Not normally needed for users */
+#define MOSI_ENC PC2	/**< Define label for encoder chip MOSI pin. Not normally needed for users */
+#define MISO1 PC0  	/**< Define label for driver chip MISO pin. Not normally needed for users */
+#define SCK1 PC1 	/**< Define label for driver chip SCK pin. Not normally needed for users */
 
 /** Value defining normal mode*/	
 #define NORMAL 	0		
@@ -205,7 +205,7 @@ class uStepperS;
 /** Value defining PID mode for normal library functions*/
 #define PID 	2	
 
-#define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
+#define CLOCKFREQ 16000000.0	/**< MCU Clock frequency */
 
 /** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed 
  * 	Frequency is 1kHz in dropin and 2kHz for all other modes. base define is 1kHz, and if the mode
@@ -401,7 +401,7 @@ public:
 	void moveSteps( int32_t steps );
 
 	/**
-	 * @brief      	Moves the motor rotate a specific angle relative to the current position
+	 * @brief      	Makes the motor rotate a specific angle relative to the current position
 	 *
 	 *              This function makes the motor a rotate by a specific angle relative to 
 	 *			    the current position, using the acceleration profile. The motor will accelerate
@@ -418,7 +418,7 @@ public:
 	void moveAngle( float angle );
 
 	/**
-	 * @brief      	Moves the motor rotate a specific angle relative to the current position
+	 * @brief      	Makes the motor rotate a specific angle relative to the current position
 	 *
 	 *              This function makes the motor a rotate by a specific angle relative to 
 	 *			    the current position, using the acceleration profile. The motor will accelerate
