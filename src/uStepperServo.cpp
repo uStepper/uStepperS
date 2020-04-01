@@ -1,7 +1,7 @@
 /********************************************************************************************
 *       File:       uStepperServo.cpp                                                       *
-*       Version:    1.0.1                                                                   *
-*       Date:       May 14th, 2019                                                          *
+*       Version:    2.0.0                                                                   *
+*       Date:       March 30th, 2020                                                          *
 *       Author:     Thomas Hørring Olsen                                                    *
 *                                                                                           *   
 *********************************************************************************************
@@ -70,7 +70,7 @@
 *   After this, the library is ready to control the Servo!                                  *
 *                                                                                           *
 *********************************************************************************************
-*   (C) 2019                                                                                *
+*   (C) 2020                                                                                *
 *                                                                                           *
 *   uStepper ApS                                                                            *
 *   www.ustepper.com                                                                        *
@@ -101,7 +101,7 @@ uStepperServo *uStepperServo::first;
 
 
 
-uStepperServo::uStepperServo() : pin(0),angle(NO_ANGLE),pulse(0),min16(92),max16(150),next(0)
+uStepperServo::uStepperServo() : pin(0),angle(0xff),pulse(0),min16(92),max16(150),next(0)
 {
 
 }
@@ -119,7 +119,7 @@ void uStepperServo::setMaximumPulse(uint16_t t)
 uint8_t uStepperServo::attach(int pinArg)
 {
     pin = pinArg;
-    angle = NO_ANGLE;
+    angle = 0xff;
     pulse = 0;
     next = first;
     first = this;

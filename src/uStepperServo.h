@@ -1,11 +1,11 @@
 /********************************************************************************************
 *       File:       uStepperServo.h                                                         *
-*       Version:    1.0.1                                                                   *
-*       Date:       May 14th, 2019                                                          *
+*       Version:    2.0.0                                                                   *
+*       Date:       March 30th, 2020                                                        *
 *       Author:     Thomas Hørring Olsen                                                    *
 *                                                                                           *   
 *********************************************************************************************
-*   (C) 2019                                                                                *
+*   (C) 2020                                                                                *
 *                                                                                           *
 *   uStepper ApS                                                                            *
 *   www.ustepper.com                                                                        *
@@ -35,8 +35,6 @@
 
 #include <Arduino.h>
 #include <inttypes.h>
-
-#define NO_ANGLE (0xff)
 
 /**
  * @brief      Prototype of class for ustepper servo.

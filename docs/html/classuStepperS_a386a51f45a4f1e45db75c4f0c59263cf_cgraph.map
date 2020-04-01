@@ -1,0 +1,8 @@
+<map id="uStepperS::setMaxDeceleration" name="uStepperS::setMaxDeceleration">
+<area shape="rect" id="node1" title="Set the maximum deceleration of the stepper motor." alt="" coords="5,56,232,83"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c" title="Set motor deceleration." alt="" coords="280,56,511,83"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="559,56,773,83"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="821,5,1016,32"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="833,56,1005,83"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="861,107,977,133"/>
+</map>

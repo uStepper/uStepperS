@@ -6,57 +6,133 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-uStepper 	KEYWORD1
+uStepperS KEYWORD1
 uStepperEncoder	KEYWORD1
+uStepperDriver KEYWORD1
+uStepperServo KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-getTemp	KEYWORD2
-getAngle	KEYWORD2
-getSpeed	KEYWORD2
-getStrength	KEYWORD2
-getAgc	KEYWORD2
-detectMagnet	KEYWORD2
-getAngleMoved	KEYWORD2
-setHome	KEYWORD2
-setMaxAcceleration	KEYWORD2
-getMaxAcceleration	KEYWORD2
-setMaxVelocity	KEYWORD2
-getMaxVelocity	KEYWORD2
-runContinous	KEYWORD2
-moveSteps	KEYWORD2
-hardStop	KEYWORD2
-softStop	KEYWORD2
-setup	KEYWORD2
-getCurrentDirection	KEYWORD2	
-getMotorState	KEYWORD2
-getStepsSinceReset	KEYWORD2
-readByte	KEYWORD2
-read	KEYWORD2
-start	KEYWORD2
-restart	KEYWORD2
-writeByte	KEYWORD2
-write	KEYWORD2
-stop	KEYWORD2
-getStatus	KEYWORD2
-begin	KEYWORD2
-pwmD8	KEYWORD2
-pwmD3	KEYWORD2
-getStepsSinceReset	KEYWORD2
-encoder	KEYWORD2
-temp	KEYWORD2
-PID	KEYWORD2
-DROPIN	KEYWORD2
-NORMAL	KEYWORD2
-CW	KEYWORD2
-CCW	KEYWORD2
-SIXTEEN	KEYWORD2
-EIGHT	KEYWORD2
-QUARTER	KEYWORD2
-HALF	KEYWORD2
-FULL	KEYWORD2
-setCurrent	KEYWORD2
-moveToAngle	KEYWORD2
-moveAngle	KEYWORD2
-moveToEnd	KEYWORD2
+
+#######################################
+# uStepperS Class
+#######################################
+
+# Methods
+
+init KEYWORD2
+setup KEYWORD2
+setRPM KEYWORD2
+setMaxAcceleration KEYWORD2
+setMaxDeceleration KEYWORD2
+setMaxVelocity KEYWORD2
+setCurrent KEYWORD2
+setHoldCurrent KEYWORD2
+moveSteps KEYWORD2
+moveAngle KEYWORD2
+moveToAngle KEYWORD2
+runContinous KEYWORD2
+angleMoved KEYWORD2
+getMotorState KEYWORD2
+stop KEYWORD2
+enableStallguard KEYWORD2
+disableStallguard KEYWORD2
+clearStall KEYWORD2
+isStalled KEYWORD2
+setBrakeMode KEYWORD2
+enablePid KEYWORD2
+disablePid KEYWORD2
+enableClosedLoop KEYWORD2
+disableClosedLoop KEYWORD2
+setControlThreshold KEYWORD2
+moveToEnd KEYWORD2
+getPidError KEYWORD2
+setProportional KEYWORD2
+setIntegral KEYWORD2
+setDifferential KEYWORD2
+invertDropinDir KEYWORD2
+dropinCli KEYWORD2
+parseCommand KEYWORD2
+dropinPrintHelp KEYWORD2
+checkOrientation KEYWORD2
+
+# Defines
+
+CW KEYWORD2
+CCW KEYWORD2
+POSITION_REACHED KEYWORD2
+VELOCITY_REACHED KEYWORD2
+STANDSTILL KEYWORD2
+STALLGUARD2 KEYWORD2
+NORMAL KEYWORD2
+DROPIN KEYWORD2
+PID KEYWORD2
+HARD KEYWORD2
+SOFT KEYWORD2
+CLOSEDLOOP KEYWORD2
+
+#######################################
+# uStepperDriver Class
+#######################################
+
+# Methods
+
+init KEYWORD2
+setPosition KEYWORD2
+setVelocity KEYWORD2
+setAcceleration KEYWORD2
+setDeceleration KEYWORD2
+setCurrent KEYWORD2
+setHoldCurrent KEYWORD2
+setShaftDirection KEYWORD2
+stop KEYWORD2
+getVelocity KEYWORD2
+getPosition KEYWORD2
+setHome KEYWORD2
+writeRegister KEYWORD2
+readRegister KEYWORD2
+getStallValue KEYWORD2
+chipSelect KEYWORD2
+
+# Defines
+
+#######################################
+# uStepperEncoder Class
+#######################################
+
+# Methods
+
+cmpfunc KEYWORD2
+init KEYWORD2
+setHome KEYWORD2
+getAngle KEYWORD2
+getAngleRaw KEYWORD2
+getAngleMoved KEYWORD2
+getAngleMovedRaw KEYWORD2
+getSpeed KEYWORD2
+getRPM KEYWORD2
+captureAngle KEYWORD2
+getStatus KEYWORD2
+detectMagnet KEYWORD2
+
+# Defines
+
+FREEWHEELBRAKE KEYWORD2
+COOLBRAKE KEYWORD2
+HARDBRAKE KEYWORD2
+
+#######################################
+# uStepperServo Class
+#######################################
+
+# Methods
+
+attach
+detach
+write
+setMinimumPulse
+setMaximumPulse
+refresh
+
+# Defines

@@ -1,21 +1,4 @@
 var searchData=
 [
-  ['p',['P',['../structdropinCliSettings__t.html#ac2ae5becda6e7d44075f51d81acc0147',1,'dropinCliSettings_t']]],
-  ['parsecommand',['parseCommand',['../classuStepperS.html#a31f72b85450c8e35e683e5e762f12bde',1,'uStepperS']]],
-  ['pid',['PID',['../uStepperS_8h.html#a1230649f2e178a83485c5b5465ff8260',1,'uStepperS.h']]],
-  ['pin',['pin',['../classuStepperServo.html#a72e10d31d2497569b375042ee734d620',1,'uStepperServo']]],
-  ['pointer',['pointer',['../classuStepperEncoder.html#af03347ce7448de89aa6e3333607534fc',1,'uStepperEncoder']]],
-  ['poserror',['posError',['../structposFilter__t.html#ae7dc4d98505b9d46627c632623dbc0db',1,'posFilter_t']]],
-  ['posest',['posEst',['../structposFilter__t.html#ae4963032c3a15fd8682b42f92398adf7',1,'posFilter_t']]],
-  ['posfilter_5ft',['posFilter_t',['../structposFilter__t.html',1,'']]],
-  ['position_5freached',['POSITION_REACHED',['../uStepperS_8h.html#a28ceb6b3df3d27000c0b4f6267960932',1,'uStepperS.h']]],
-  ['positioning_5fmode',['POSITIONING_MODE',['../uStepperDriver_8h.html#a42f5ef23c0496041764dde6bbb516ab0',1,'uStepperDriver.h']]],
-  ['pulse',['pulse',['../classuStepperServo.html#ae5134b8075617d90449f56014273ebeb',1,'uStepperServo']]],
-  ['pulsefilterki',['PULSEFILTERKI',['../uStepperS_8h.html#a56db52ff22b9436bd02f4778aa515fcf',1,'uStepperS.h']]],
-  ['pulsefilterkp',['PULSEFILTERKP',['../uStepperS_8h.html#af1cdc1117507707eac5d4f47537161b4',1,'uStepperS.h']]],
-  ['pwm_5fampl',['PWM_AMPL',['../uStepperDriver_8h.html#a1fc76bf3a9d5c141fc207bd84d7587ea',1,'uStepperDriver.h']]],
-  ['pwm_5fautoscale',['PWM_AUTOSCALE',['../uStepperDriver_8h.html#a90cd755245c42a0b7ac17417e22ce007',1,'uStepperDriver.h']]],
-  ['pwm_5ffreq',['PWM_FREQ',['../uStepperDriver_8h.html#ac0396c819198866244c01d0028e21cff',1,'uStepperDriver.h']]],
-  ['pwm_5fgrad',['PWM_GRAD',['../uStepperDriver_8h.html#a4b1443926adc572d73e7bfa475f9a60b',1,'uStepperDriver.h']]],
-  ['pwmconf',['PWMCONF',['../uStepperDriver_8h.html#ad3f0a7ed18381c2a906d3cc24878771c',1,'uStepperDriver.h']]]
+  ['oldangle_144',['oldAngle',['../classuStepperEncoder.html#a479c3f88c98766f1df30eea67b907c6f',1,'uStepperEncoder']]]
 ];

@@ -1,8 +1,15 @@
 var searchData=
 [
-  ['init',['init',['../classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715',1,'uStepperDriver::init()'],['../classuStepperEncoder.html#a51e78587431729869ae7e3394641b909',1,'uStepperEncoder::init()'],['../classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d',1,'uStepperS::init()']]],
-  ['interrupt0',['interrupt0',['../uStepperS_8cpp.html#a7d9af270acb55589631319b0f5460276',1,'interrupt0(void):&#160;uStepperS.cpp'],['../uStepperS_8h.html#a7d9af270acb55589631319b0f5460276',1,'interrupt0(void):&#160;uStepperS.cpp']]],
-  ['interrupt1',['interrupt1',['../uStepperS_8cpp.html#a9d297deade6b2a750336bf6194976a42',1,'interrupt1(void):&#160;uStepperS.cpp'],['../uStepperS_8h.html#a9d297deade6b2a750336bf6194976a42',1,'interrupt1(void):&#160;uStepperS.cpp']]],
-  ['invertdropindir',['invertDropinDir',['../classuStepperS.html#add194ed650ddffc8fdf2da308348e6b6',1,'uStepperS']]],
-  ['isstalled',['isStalled',['../classuStepperS.html#ace68e24a0173ea644576420d939e2846',1,'uStepperS']]]
+  ['getangle_313',['getAngle',['../classuStepperEncoder.html#abf760d7949e75977bf11bce48256283c',1,'uStepperEncoder']]],
+  ['getanglemoved_314',['getAngleMoved',['../classuStepperEncoder.html#a2eceb2b57d672fce865b4bd778ba06c5',1,'uStepperEncoder']]],
+  ['getanglemovedraw_315',['getAngleMovedRaw',['../classuStepperEncoder.html#a08d3fede16d43e1f9acf64f4c339ce1f',1,'uStepperEncoder']]],
+  ['getangleraw_316',['getAngleRaw',['../classuStepperEncoder.html#ab7c6ce15fc449cbebbed70ebba0ff5a6',1,'uStepperEncoder']]],
+  ['getmotorstate_317',['getMotorState',['../classuStepperS.html#afacfd0440b99f607b2af14f103c4e71f',1,'uStepperS']]],
+  ['getpiderror_318',['getPidError',['../classuStepperS.html#aff00f38831b806a89ee8172fbb29dfc2',1,'uStepperS']]],
+  ['getposition_319',['getPosition',['../classuStepperDriver.html#a59dd1795c65fba7767cf61c18e87024e',1,'uStepperDriver']]],
+  ['getrpm_320',['getRPM',['../classuStepperEncoder.html#ab9e040232788a91dc168c0b1ccb0fbae',1,'uStepperEncoder']]],
+  ['getspeed_321',['getSpeed',['../classuStepperEncoder.html#a8812beadc9bec6f4e321d281d9b6ea79',1,'uStepperEncoder']]],
+  ['getstallvalue_322',['getStallValue',['../classuStepperDriver.html#a2461be201fde6037b90a58c8452319ad',1,'uStepperDriver']]],
+  ['getstatus_323',['getStatus',['../classuStepperEncoder.html#a1567e96bd3bf1a05a64a6e43dcdfb072',1,'uStepperEncoder']]],
+  ['getvelocity_324',['getVelocity',['../classuStepperDriver.html#ad1e100d57b313971a3dfb9c78183caa9',1,'uStepperDriver']]]
 ];

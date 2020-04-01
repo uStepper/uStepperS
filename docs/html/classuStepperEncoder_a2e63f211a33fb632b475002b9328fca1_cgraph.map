@@ -1,0 +1,8 @@
+<map id="uStepperEncoder::captureAngle" name="uStepperEncoder::captureAngle">
+<area shape="rect" id="node1" title="Capture the current shaft angle." alt="" coords="5,74,195,115"/>
+<area shape="rect" id="node2" href="$classuStepperEncoder.html#add49ad79af1377c014b7ab5a6c696699" title="Set the output level of the chip select pin." alt="" coords="245,5,451,32"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="243,107,453,133"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="513,56,685,83"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="541,157,657,184"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="501,107,696,133"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="uStepperS::setBrakeMode" name="uStepperS::setBrakeMode">
+<area shape="rect" id="node1" title=" " alt="" coords="5,81,195,108"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="757,31,967,57"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#a57e019bb84dee27bc4681a311e44e27e" title="Set motor hold current." alt="" coords="243,81,437,108"/>
+<area shape="rect" id="node8" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="755,81,969,108"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="1017,5,1212,32"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="1029,56,1201,83"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="1057,107,1173,133"/>
+<area shape="rect" id="node7" href="$classuStepperDriver.html#a6622381d9be81cd93f1c34e605dde404" title="Writes the current setting registers of the motor driver" alt="" coords="485,81,707,108"/>
+</map>

@@ -1,0 +1,17 @@
+<map id="uStepperDriver::setDeceleration" name="uStepperDriver::setDeceleration">
+<area shape="rect" id="node1" title="Set motor deceleration." alt="" coords="765,162,996,189"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="551,61,701,88"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="43,24,175,50"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113" title="Make the motor perform a predefined number of steps." alt="" coords="541,162,711,189"/>
+<area shape="rect" id="node10" href="$classuStepperS.html#a26ed0d754a0d95eab0bea0225f471e6e" title=" " alt="" coords="568,264,684,290"/>
+<area shape="rect" id="node12" href="$classuStepperS.html#abbe885c71e6dadc13b8c954221ac47eb" title="Make the motor rotate continuously." alt="" coords="535,213,717,240"/>
+<area shape="rect" id="node13" href="$classuStepperS.html#a386a51f45a4f1e45db75c4f0c59263cf" title="Set the maximum deceleration of the stepper motor." alt="" coords="260,112,487,138"/>
+<area shape="rect" id="node14" href="$classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd" title="Stop the motor." alt="" coords="564,314,688,341"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="315,61,432,88"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="27,86,190,113"/>
+<area shape="rect" id="node7" href="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="288,213,459,240"/>
+<area shape="rect" id="node9" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="281,162,465,189"/>
+<area shape="rect" id="node8" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,213,212,240"/>
+<area shape="rect" id="node11" href="$uStepperS_8h.html#a8bc7a9f474f12ea128e6ea6fde8382a5" title="Interrupt routine for critical tasks." alt="" coords="293,264,454,290"/>
+<area shape="rect" id="node15" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="288,314,459,341"/>
+</map>

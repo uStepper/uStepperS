@@ -1,11 +1,11 @@
 /********************************************************************************************
 * 	 	File: 		uStepperS.h 															*
-*		Version:    1.0.1                                           						*
-*      	Date: 		May 14th, 2019  	                                    				*
+*		Version:    2.0.0                                           						*
+*      	Date: 		March 30th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
-*	(C) 2019																				*
+*	(C) 2020																				*
 *																							*
 *	uStepper ApS																			*
 *	www.ustepper.com 																		*
@@ -44,7 +44,7 @@
 *	- Measure the current speed of the motor 
 *	- Stall detection for use in e.g. limit detection functionality 
 *	
-*	The library uses timer one in order to function properly, meaning that unless the user of this library
+*	The library uses timer 1 in order to function properly, meaning that unless the user of this library
 *	can accept the loss of some functionality, this timer is unavailable and the registers associated with these timers
 *	should not be reconfigured.
 *
@@ -67,7 +67,7 @@
 *	- Search for "uStepper S", in the top right corner of the "Library Manager" window
 *	- Install uStepper S library 
 *	
-*	The library is tested with Arduino IDE 1.8.8
+*	The library is tested with Arduino IDE 1.8.11
 *	
 *	\warning MAC users should be aware, that OSX does NOT include SILABS VCP drivers, needed to upload sketches to the uStepper S, by default. This driver should be 
 *	downloaded and installed from SILABS's website:
@@ -77,7 +77,7 @@
 *
 *	\par Copyright
 *
-*	(C)2019 uStepper ApS	
+*	(C)2020 uStepper ApS	
 *																	
 *	www.ustepper.com 																	
 *
@@ -91,15 +91,29 @@
 * 	neither uStepper ApS nor the author, can be held responsible for any damage		
 * 	caused by the use of the code contained in this library ! 	
 *
-*	\par To do list
-*	- Clean out in unused variables
-*	- Update comments
-*
 *	\par Known Bugs
 *	- does not properly release motor in dropin mode
 *
 *	\author Thomas Hørring Olsen (thomas@ustepper.com)
 *	\par Change Log
+*	\version 2.0.0:
+*	- Changed name of "brake()" function in uStepper Class to "setBrakeMode()"
+*	- Implemented "setBrakeMode()" function in uStepper Class to choose between freewheel, braking with low side fets shorted and brake with specified hold current. default = brake with low side fets shorted
+*	- "setHome" argument of ustepper class "setup" function is now used
+*	- Implemented "checkOrientation()" function in uStepper Class, to check the orientation of the motor cable, and invert direction if needed.
+*	- Added 3 moves in "checkOrientation()" function in uStepper Class, to check orientation instead of just 1
+*	- Removed check for motor cable orientation from "setup()" function in uStepper Class. Users actively needs to call the "checkOrientation" function from uStepper Class, if they need this feature, AFTER calling the "setup()" function
+*	- Disabled driver on MCU reset while setting up, to avoid the motor spinning on startup if power was removed during motor movement
+*	- Moved the absolute position counter into the encoder getangle function
+*	- Added a LP filter on the absolute position data in the encoder function (so, getAngleMoved is filtered)
+*	- Stall detection removed from timer1
+*	- Variable filter depending on mode set in setup routine
+*	- Removed obsolete things in setup routine and timer1
+*	- Made new velocity measurement for encoder values
+*	- Made the control threshold for closed loop control variable and intrduced a function for editing it
+*	- Changed timer1 interrupt frequency to 2KhZ for all other modes than DROPIN
+*	- Added option to choose how long the "checkOrientation()" function in UstepperS class should move during check
+*	- Renamed "PID" to "CLOSEDLOOP" to avoid confusing the closed loop position mode with a PID controller. PID keyword is stall accepted for backwards compatibility
 *	\version 1.0.1:
 *	- Fixed bug in functions to set acceleration and deceleration
 *	- moved a couple of functions in uStepperDriver.h from public to protected section of class
@@ -119,22 +133,32 @@
 #ifndef _USTEPPER_S_H_
 #define _USTEPPER_S_H_
 
+#ifndef ARDUINO_AVR_USTEPPER_S
+	#error !!This library only supports the uStepper S board!!
+#endif
+
 #ifndef __AVR_ATmega328PB__
 	#error !!This library only supports the ATmega328PB MCU!!
 #endif
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <inttypes.h>
 #include <uStepperServo.h>
-#define CW 1	/**< DESCRIPTION PENDING */
-#define CCW 0	/**< DESCRIPTION PENDING */
 
-#define POSITION_REACHED 0x20	/**< DESCRIPTION PENDING */
-#define VELOCITY_REACHED 0x10	/**< DESCRIPTION PENDING */
-#define STANDSTILL 0x08	/**< DESCRIPTION PENDING */
-#define STALLGUARD2 0x04	/**< DESCRIPTION PENDING */
+#define FREEWHEELBRAKE 0	/**< Define label users can use as argument for setBrakeMode() function to specify freewheeling as brake mode. This will result in no holding torque at standstill */
+#define COOLBRAKE 1			/**< Define label users can use as argument for setBrakeMode() function to make the motor brake by shorting the two bottom FET's of the H-Bridge. This will provide less holding torque, but will significantly reduce driver heat */
+#define HARDBRAKE 2			/**< Define label users can use as argument for setBrakeMode() function to use full specified current for braking. This will provide high holding torque, but will make the driver (and motor) dissipate power*/
+
+#define CW 1	/**< Define label users can use as argument for runContinous() function to specify clockwise direction */
+#define CCW 0	/**< Define label users can use as argument for runContinous() function to specify counterclockwise direction */
+
+#define POSITION_REACHED 0x20	/**< Define label users can use as argument for getMotorState() function to check if target position has been reached*/
+#define VELOCITY_REACHED 0x10	/**< Define label users can use as argument for getMotorState() function to check if target velocity has been reached */
+#define STANDSTILL 0x08	/**< Define label users can use as argument for getMotorState() function to check if motor is not currently running */
+#define STALLGUARD2 0x04	/**< Define label users can use as argument for getMotorState() function to check stallguard status */
 
 /**
  * @brief      Union to easily split a float into its binary representation
@@ -183,40 +207,37 @@ class uStepperS;
 #include <uStepperEncoder.h>
 #include <uStepperDriver.h>
 
-#define HARD 0	/**< DESCRIPTION PENDING */
-#define SOFT 1	/**< DESCRIPTION PENDING */
+#define HARD 0	/**< Define label users can use as argument for stop() function to specify that the motor should stop immediately (without decelerating) */
+#define SOFT 1	/**< Define label users can use as argument for stop() function to specify that the motor should decelerate before stopping */
 
-#define DRV_ENN PD4 	/**< DESCRIPTION PENDING */
-#define SD_MODE PD5	/**< DESCRIPTION PENDING */
-#define SPI_MODE PD6	/**< DESCRIPTION PENDING */
+#define DRV_ENN PD4 	/**< Define label for driver DRV_ENN pin. Not normally needed for users */
+#define SD_MODE PD5	/**< Define label for driver chip SD_MODE pin. Not normally needed for users */
+#define SPI_MODE PD6	/**< Define label for driver SPI_MODE pin. Not normally needed for users */
 
-#define CS_DRIVER PE2	/**< DESCRIPTION PENDING */
-#define CS_ENCODER PD7 	/**< DESCRIPTION PENDING */
+#define CS_DRIVER PE2	/**< Define label for driver chip select pin. Not normally needed for users */
+#define CS_ENCODER PD7 	/**< Define label for encoder chip select pin. Not normally needed for users */
 
-#define MOSI1 PE3	/**< DESCRIPTION PENDING */
-#define MOSI_ENC PC2	/**< DESCRIPTION PENDING */
-#define MISO1 PC0  	/**< DESCRIPTION PENDING */
-#define SCK1 PC1 	/**< DESCRIPTION PENDING */
+#define MOSI1 PE3	/**< Define label for driver chip MOSI pin. Not normally needed for users */
+#define MOSI_ENC PC2	/**< Define label for encoder chip MOSI pin. Not normally needed for users */
+#define MISO1 PC0  	/**< Define label for driver chip MISO pin. Not normally needed for users */
+#define SCK1 PC1 	/**< Define label for driver chip SCK pin. Not normally needed for users */
 
-/** Value defining normal mode*/	
-#define NORMAL 	0		
-/** Value defining dropin mode for 3d printer/CNC controller boards*/
-#define DROPIN 	1						
-/** Value defining PID mode for normal library functions*/
-#define PID 	2	
 
-#define CLOCKFREQ 16000000.0	/**< DESCRIPTION PENDING */
+#define NORMAL 	0		/**< Value defining normal mode*/	
+#define DROPIN 	1		/**< Value defining dropin mode for 3d printer/CNC controller boards*/				
+#define CLOSEDLOOP 	2	/**< Value defining closed loop mode for normal library functions*/
+#define PID 	CLOSEDLOOP	/**< Value defining PID mode for normal library functions. only here for backwards compatibility*/
 
-/** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
-#define ENCODERINTFREQ 1000.0	
-/** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
-#define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		
-/** Constant to convert angle difference between two interrupts to speed in revolutions per second. Dividing by 10 as each speed is calculated from 10 samples */
-#define ENCODERSPEEDCONSTANT ENCODERINTFREQ/65535.0	
-/**	P term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
-#define PULSEFILTERKP 120.0
-/**	I term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
-#define PULSEFILTERKI 1900.0*ENCODERINTPERIOD
+#define CLOCKFREQ 16000000.0	/**< MCU Clock frequency */
+
+/** Frequency at which the encoder is sampled, for keeping track of angle moved and current speed 
+ * 	Frequency is 1kHz in dropin and 2kHz for all other modes. base define is 1kHz, and if the mode
+ * is not dropin, it is multiplied by 2 in the relevant places of the code 
+*/
+#define ENCODERINTFREQ 1000	
+#define ENCODERINTPERIOD 1.0/ENCODERINTFREQ		 /**< Frequency at which the encoder is sampled, for keeping track of angle moved and current speed */
+#define PULSEFILTERKP 120.0	/**< P term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
+#define PULSEFILTERKI 1900.0*ENCODERINTPERIOD /**< I term in the PI filter estimating the step rate of incomming pulsetrain in DROPIN mode*/
 
 /**
  * @brief	Interrupt routine for critical tasks.
@@ -325,7 +346,6 @@ public:
 				uint8_t runCurrent = 50,
 				uint8_t holdCurrent = 30);	
 
-
 	/**
 	 * @brief      Set the velocity in rpm
 	 *
@@ -401,7 +421,7 @@ public:
 	void moveSteps( int32_t steps );
 
 	/**
-	 * @brief      	Moves the motor rotate a specific angle relative to the current position
+	 * @brief      	Makes the motor rotate a specific angle relative to the current position
 	 *
 	 *              This function makes the motor a rotate by a specific angle relative to 
 	 *			    the current position, using the acceleration profile. The motor will accelerate
@@ -418,7 +438,7 @@ public:
 	void moveAngle( float angle );
 
 	/**
-	 * @brief      	Moves the motor rotate a specific angle relative to the current position
+	 * @brief      	Makes the motor rotate a specific angle relative to the current position
 	 *
 	 *              This function makes the motor a rotate by a specific angle relative to 
 	 *			    the current position, using the acceleration profile. The motor will accelerate
@@ -466,7 +486,7 @@ public:
 	 *
 	 * @return     The angle moved.
 	 */
-	bool uStepperS::getMotorState(uint8_t statusType = POSITION_REACHED);
+	bool getMotorState(uint8_t statusType = POSITION_REACHED);
 
 	/**
 	 * @brief      Stop the motor
@@ -481,19 +501,65 @@ public:
 	void stop( bool mode = HARD );
 
 	/**
-	 * @brief      	This method returns a bool variable indicating wether the motor
-	 *				is stalled or not
+	 * @brief      Enable TMC5130 StallGuard 
 	 *
-	 * @param[in]  	stallSensitivity - Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 *             	This function enables the builtin stallguard offered from TMC5130 stepper driver.
+	 * 				The threshold should be tuned as to trigger stallguard before a step is lost.
+	 *
+	 * @param	   threshold 	- stall sensitivity. A value between -64 and +63
+	 * @param      stopOnStall  - should the driver automatic stop the motor on a stall
+	 */
+	void enableStallguard( int8_t threshold = 4, bool stopOnStall = false);
+
+	/**
+	 * @brief      	Disables the builtin stallguard offered from TMC5130, and reenables StealthChop.
+	 */
+	void disableStallguard( void );
+
+	/**
+	 * @brief      	Clear the stallguard, reenabling the motor to return to its previous operation.
+	 */
+	void clearStall( void );
+
+	/**
+	 * @brief      	This method returns a bool variable indicating wether the motor is stalled or not. 
+	 * 				Uses the default stallguard threshold, unless this has been changed by .enableStallguard()
 	 *
 	 * @return     	0 = not stalled, 1 = stalled
 	 */
-	bool isStalled(float stallSensitivity = 0.992);
+	bool isStalled(void);
 
-	void brakeMotor(bool brake);
 
 	/**
-	 * @brief      	This method enables the PID after being disabled  (disablePid).
+	 * @brief      	This method returns a bool variable indicating wether the motor is stalled or not.
+	 * 				The stallguard is sensitive to the speed of the motor, as the torque available is a 
+	 * 				function of the speed. Therefore, it is necessary to change the treshold according 
+	 * 				to the application. A higher treshold makes the stallguard less sensitive to external
+	 * 				loads, meaning that, the higher the application speed, the higher the treshold has to
+	 * 				be for the stall guard to perform well
+	 *
+	 * @param[in]   threshold  -  Threshold for stallguard. A value between -64 and +63
+	 * 
+	 * @return     	0 = not stalled, 1 = stalled		
+	*/
+	bool isStalled( int8_t threshold );
+
+	/**
+	 * @brief      	
+	 *
+	 * @param[in]   mode  -  this parameter specifies how the motor should brake during standstill.
+	 * 				available modes:
+	 * 				FREEWHEELBRAKE - This will result in no holding torque at standstill
+	 *				COOLBRAKE 1 - This will make the motor brake by shorting the two bottom FET's of the H-Bridge. This will provide less holding torque, but will significantly reduce driver heat 
+	 *				HARDBRAKE 2 - This will make the motor brake by sending the full specified current through the coils. This will provide high holding torque, but will make the driver (and motor) dissipate power
+	 * 
+	 * @param[in]   brakeCurrent (optional) -  if HARDBRAKE is use as mode, this argument can set the current to use for braking (0-100% of 2A).
+	 * 				If argument is not specified, the motor will brake with 25% of max current	
+	*/
+	void setBrakeMode( uint8_t mode, float brakeCurrent = 25.0 );
+
+	/**
+	 * @brief      	This method reenables the PID after being disabled.
 	 *
 	 */
 	void enablePid(void);
@@ -505,6 +571,24 @@ public:
 	void disablePid(void);
 
 	/**
+	 * @brief      	This method reenables the closed loop mode after being disabled.
+	 *
+	 */
+	void enableClosedLoop(void);
+
+	/**
+	 * @brief      	This method disables the closed loop mode until calling enableClosedLoop.
+	 *
+	 */
+	void disableClosedLoop(void);
+
+	/**
+	 * @brief      	This method sets the control threshold for the closed loop position control in microsteps - i.e. it is the allowed control error. 10 microsteps is suitable in most applications.
+	 *
+	 */
+	void setControlThreshold(float threshold);
+
+	/**
 	 * @brief      	Moves the motor to its physical limit, without limit switch
 	 *
 	 *              This function, makes the motor run continously, untill the
@@ -513,11 +597,13 @@ public:
 	 *
 	 * @param[in]  	dir  Direction to search for limit
 	 *
-	 * @param[in]  	stallSensitivity  Sensitivity of stall detection (0.0 - 1.0), low is more sensitive
+	 * @param[in]   rpm   RPM of the motor while searching for limit
+	 * 
+	 * @param[in]  	threshold  Sensitivity of stall detection (-64 to +63), low is more sensitive
 	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float stallSensitivity = 0.992);
+	float moveToEnd(bool dir, float rpm = 40.0, int8_t threshold = 4);
 
 	/**
 	 * @brief      This method returns the current PID error
@@ -599,6 +685,15 @@ public:
 	 *
 	 */	
 	void dropinPrintHelp();
+
+	/**
+	 * @brief      	This method is used to check the orientation of the motor connector. 
+	 *
+	 * @param[in]  	distance - the amount of degrees the motor shaft should rotate during orientation determination.
+	 *			
+	 */
+
+	void checkOrientation(float distance = 10);
 	
 private: 
 
@@ -632,7 +727,7 @@ private:
 	float currentPidSpeed;
 	/** This variable is used to indicate which mode the uStepper is
 	* running in (Normal, dropin or pid)*/
-	uint8_t mode;	
+	volatile uint8_t mode;	
 	float pTerm;	
 	/** This variable contains the integral coefficient used by the PID */
 	float iTerm;		
@@ -640,6 +735,8 @@ private:
 	float dTerm;
 	bool brake;
 	volatile bool pidDisabled;
+	/** This variable sets the threshold for activating/deactivating closed loop position control - i.e. it is the allowed error in steps for the control**/
+	volatile float controlThreshold = 10;
 	/** This variable holds information on wether the motor is stalled or not.
 	0 = OK, 1 = stalled */
 	volatile bool stall;
@@ -647,7 +744,16 @@ private:
 
 	volatile int32_t pidPositionStepsIssued = 0;
 	volatile float currentPidError;
-	float stallSensitivity = 0.992;
+
+	/** This variable holds the default stall threshold, but can be updated by the user. */
+	int8_t stallThreshold = 4;
+
+	/** This variable hold the default state for Stallguard (stopOnStall) */
+	bool stallStop = false; 
+
+	/** Flag to keep track of stallguard */
+	bool stallEnabled = false;
+
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );
@@ -657,7 +763,7 @@ private:
 	void filterSpeedPos(posFilter_t *filter, int32_t steps);
 
 	float pid(float error);
-	bool detectStall(int32_t stepsMoved);
+	
 	dropinCliSettings_t dropinSettings;
 	bool loadDropinSettings(void);
 	void saveDropinSettings(void);

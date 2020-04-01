@@ -1,0 +1,8 @@
+<map id="uStepperDriver::setPosition" name="uStepperDriver::setPosition">
+<area shape="rect" id="node1" title="Set the motor position." alt="" coords="5,56,205,83"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c" title="Set motor driver to position mode or velocity mode." alt="" coords="253,31,476,57"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="524,56,739,83"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="787,5,981,32"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="798,56,970,83"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="826,107,942,133"/>
+</map>

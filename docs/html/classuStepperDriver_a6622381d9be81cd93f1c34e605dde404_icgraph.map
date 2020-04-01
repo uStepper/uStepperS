@@ -1,0 +1,12 @@
+<map id="uStepperDriver::updateCurrent" name="uStepperDriver::updateCurrent">
+<area shape="rect" id="node1" title="Writes the current setting registers of the motor driver" alt="" coords="751,81,972,108"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#ad766a6a6f52387d96e1435943c8591b4" title="Set motor driver current." alt="" coords="491,5,687,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#ac74e343f7ad81aa5c54a68f2514807fe" title="Set motor output current." alt="" coords="507,56,671,83"/>
+<area shape="rect" id="node8" href="$classuStepperDriver.html#ab697c4a73fb3aada7fa8f9e30694ff30" title="Set motor driver hold current." alt="" coords="476,157,703,184"/>
+<area shape="rect" id="node9" href="$classuStepperS.html#a57e019bb84dee27bc4681a311e44e27e" title="Set motor hold current." alt="" coords="492,107,687,133"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#a050f8ae21dd10978e98e871a8b96b77b" title=" " alt="" coords="208,107,428,133"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="17,107,149,133"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#a31f72b85450c8e35e683e5e762f12bde" title="This method is used for the dropinCli to take in user commands." alt="" coords="219,56,417,83"/>
+<area shape="rect" id="node7" href="$classuStepperS.html#a343e6b5f62d468ad44da9af5ab947936" title="This method is used to tune Drop&#45;in parameters. After tuning uStepper S, the parameters are saved in ..." alt="" coords="5,56,160,83"/>
+<area shape="rect" id="node10" href="$classuStepperS.html#a78008ed9b2cdbdd8128553a13896aa0d" title=" " alt="" coords="223,157,413,184"/>
+</map>

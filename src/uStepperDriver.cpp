@@ -1,11 +1,11 @@
 /********************************************************************************************
 * 	 	File: 		uStepperDriver.cpp														*
-*		Version:    1.0.1                                           						*
-*      	Date: 		May 14th, 2019  	                                    				*
+*		Version:    2.0.0                                           						*
+*      	Date: 		March 30th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
-*	(C) 2019																				*
+*	(C) 2020																				*
 *																							*
 *	uStepper ApS																			*
 *	www.ustepper.com 																		*
@@ -39,9 +39,16 @@ uStepperDriver::uStepperDriver( void ){
 
 void uStepperDriver::reset( void ){
 
+	// Reset stallguard
+	this->writeRegister( TCOOLTHRS, 0 );
+	this->writeRegister( THIGH, 	0);
+	this->writeRegister( COOLCONF, 	0 );
+	this->writeRegister( SW_MODE, 	0 );
+	this->clearStall();
+
 	this->writeRegister(XACTUAL, 0);
 	this->writeRegister(XTARGET, 0);
-
+	
 	this->writeRegister( IHOLD_IRUN,0 );
 	this->writeRegister( CHOPCONF, 	0 );
 	this->writeRegister( GCONF, 	0 );
@@ -74,7 +81,6 @@ void uStepperDriver::init( uStepperS * _pointer ){
 
 	/* Set all-round chopper configuration */
 	this->writeRegister( CHOPCONF, TOFF(2) | TBL(2) | HSTRT_TFD(4) | HEND(0));
-	//this->writeRegister( SW_MODE, this->readRegister(SW_MODE) & ~(1 << 11));
 
 	/* Set startup ramp mode */
 	this->setRampMode( POSITIONING_MODE );
@@ -82,6 +88,13 @@ void uStepperDriver::init( uStepperS * _pointer ){
 	/* Reset position */
 	this->writeRegister(XACTUAL, 0);
 	this->writeRegister(XTARGET, 0);
+	
+	this->setDeceleration( 0xFFFE );
+	this->setAcceleration( 0xFFFE );
+	
+	this->stop();
+
+	while(this->readRegister(VACTUAL) != 0);
 }
 
 void uStepperDriver::readMotorStatus(void)
@@ -211,7 +224,7 @@ void uStepperDriver::enableStealth()
 	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) ); 
 
 	/* Set PWMCONF for StealthChop */
-	this->writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(1) ); 
+	this->writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(2) ); 
 
 	/* Specifies the upper velocity (lower time delay) for operation in stealthChop voltage PWM mode */
 	this->writeRegister( TPWMTHRS, 5000 ); 
@@ -233,7 +246,7 @@ void uStepperDriver::stop( void )
 	this->setVelocity(0);
 }
 
-void uStepperDriver::setHome(void)
+void uStepperDriver::setHome(int32_t initialSteps)
 {
 	int32_t xActual, xTarget;
 
@@ -243,18 +256,20 @@ void uStepperDriver::setHome(void)
 		xTarget = this->readRegister(XTARGET);
 
 		xTarget -= xActual;
-		this->xTarget = xTarget;
-		this->writeRegister(XACTUAL, 0);
-		this->writeRegister(XTARGET, xTarget);
+		this->xTarget = xTarget + initialSteps;
+		this->xActual = initialSteps;
+		this->writeRegister(XACTUAL, initialSteps);
+		this->writeRegister(XTARGET, this->xTarget);
 	}
 	else
 	{
-		this->xTarget = 0;
-		this->writeRegister(XACTUAL, 0);
-		this->writeRegister(XTARGET, 0);
+		this->xTarget = initialSteps;
+		this->xActual = initialSteps;
+		this->writeRegister(XACTUAL, initialSteps);
+		this->writeRegister(XTARGET, initialSteps);
 	}
 
-	pointer->pidPositionStepsIssued = 0;
+	pointer->pidPositionStepsIssued = initialSteps;
 }
 
 int32_t uStepperDriver::writeRegister( uint8_t address, uint32_t datagram ){
@@ -333,4 +348,57 @@ void uStepperDriver::chipSelect(bool state)
 		PORTE &= ~(1 << CS_DRIVER);  // Set CS LOW 
 	else
 		PORTE |= (1 << CS_DRIVER); // Set CS HIGH
+}
+
+void uStepperDriver::enableStallguard( int8_t threshold, bool stopOnStall )
+{
+	// Limit threshold
+	if( threshold > 63)
+		threshold = 63;
+	else if( threshold < -64)
+		threshold = -64;
+	
+	/* Disable StealthChop for stallguard operation */
+	this->writeRegister( GCONF, EN_PWM_MODE(0) | I_SCALE_ANALOG(1) ); 
+
+	// Configure COOLCONF for stallguard
+	this->writeRegister( COOLCONF, SGT(threshold) | SFILT(1) | SEMIN(5) | SEMAX(2) | SEDN(1) );
+
+	// Limit stallguard to 10 RPM
+	int32_t stall_speed = 16777216 / pointer->rpmToVelocity * 10.0; // 16777216 = 2^24. See TSTEP in datasheet p.33
+	stall_speed = stall_speed * 1.2; // // Activate stallGuard sligthly below desired homing velocity (provide 20% tolerance)
+
+	// Set TCOOLTHRS to max speed value (enable stallguard for all speeds)
+	this->writeRegister( TCOOLTHRS, stall_speed ); // Max value is 20bit = 0xFFFFF
+	this->writeRegister( THIGH, 0);
+	
+	// Enable automatic stop on stall dectection
+	if( stopOnStall )
+		this->writeRegister( SW_MODE, SG_STOP(1) );
+	else
+		this->writeRegister( SW_MODE, SG_STOP(0) );
+}
+
+void uStepperDriver::disableStallguard( void )
+{
+	// Reenable stealthchop
+	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) );
+
+	// Disable all stallguard configuration
+	this->writeRegister( COOLCONF, 	0 );
+	this->writeRegister( TCOOLTHRS, 0 );
+	this->writeRegister( THIGH, 	0);
+	this->writeRegister( SW_MODE, 	0 );	
+}
+
+void uStepperDriver::clearStall( void )
+{
+	// Reading the RAMP_STAT register clears the stallguard flag, telling the driver to continue. 
+	this->readRegister( RAMP_STAT );
+}
+
+uint16_t uStepperDriver::getStallValue( void )
+{
+	// Get the SG_RESULT from DRV_STATUS. 
+	return this->readRegister(DRV_STATUS) & 0x3FF;
 }

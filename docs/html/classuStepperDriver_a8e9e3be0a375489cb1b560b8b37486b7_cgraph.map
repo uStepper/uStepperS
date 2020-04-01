@@ -1,0 +1,9 @@
+<map id="uStepperDriver::reset" name="uStepperDriver::reset">
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,167,83"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#acf01b92a98aed0b576588caecf534ed4" title=" " alt="" coords="215,31,404,57"/>
+<area shape="rect" id="node7" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="452,81,667,108"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="454,31,665,57"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="715,5,909,32"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="726,56,898,83"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="754,107,870,133"/>
+</map>

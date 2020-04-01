@@ -1,11 +1,11 @@
 /********************************************************************************************
 * 	 	File: 		uStepperEncoder.cpp														*
-*		Version:    1.0.1                                           						*
-*      	Date: 		May 14th, 2019  	                                    				*
+*		Version:    2.0.0                                           						*
+*      	Date: 		March 30th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
-*	(C) 2019																				*
+*	(C) 2020																				*
 *																							*
 *	uStepper ApS																			*
 *	www.ustepper.com 																		*
@@ -49,7 +49,6 @@ uStepperEncoder::uStepperEncoder(void)
 void uStepperEncoder::init(uStepperS * _pointer)
 {
 	this->pointer = _pointer;
-
 	angle = 0;
 
 	/* Set the interrupt mode to 14 with a prescaler of 1 */
@@ -58,7 +57,14 @@ void uStepperEncoder::init(uStepperS * _pointer)
 
 	/* Reset Timer1 and set compare interrupt each: 62.5 ns * 16000 = 1 milliseconds */
 	TCNT1 = 0;
-	ICR1 = 16000; 
+	if(pointer->mode == DROPIN)
+	{
+		ICR1 = 16000; 
+	}
+	else{
+		ICR1 = 8000;
+	}
+	
 
 	TIFR1 = 0;
 
@@ -72,20 +78,22 @@ void uStepperEncoder::init(uStepperS * _pointer)
 	sei();
 }
 
-void uStepperEncoder::setHome(void)
+void uStepperEncoder::setHome(float initialAngle)
 {
 	cli();
-
+	TCNT1 = 0;
 	this->encoderOffset = this->captureAngle();
 	this->oldAngle = 0;
 	this->angle = 0;
-	this->angleMoved = 0;
-	this->revolutions = 0;
-	pointer->driver.setHome();
+	this->angleMoved = ANGLETOENCODERDATA * initialAngle;
+	this->angleMovedRaw=this->angleMoved;
+	this->smoothValue = this->angleMoved;
+	pointer->driver.setHome(this->angleMoved * ENCODERDATATOSTEP);
 	this->encoderFilter.posError = 0.0;
 	this->encoderFilter.posEst = 0.0;
 	this->encoderFilter.velIntegrator = 0.0;
 	this->encoderFilter.velEst = 0.0;
+	this->speedSmoothValue = 0.0;
 	sei();
 }
 
@@ -110,6 +118,8 @@ uint16_t uStepperEncoder::captureAngle(void)
 	pointer->setSPIMode(2);
 
 	uint16_t value = 0;
+	int32_t deltaAngle;
+	uint16_t curAngle;
 
 	chipSelect(true);  // Set CS HIGH
 	
@@ -119,19 +129,49 @@ uint16_t uStepperEncoder::captureAngle(void)
 
 	/* Write dummy and read the incoming 8 bits */
 	value |= pointer->SPI(0x00);
-
 	/* Write dummy and read the incoming 8 bits */
 	this->status = pointer->SPI(0x00);
 
 	chipSelect(false);  // Set CS LOW
 
+	curAngle = value;
+	curAngle -= this->encoderOffset;
+	this->angle = curAngle;
 
-	return value;
+	deltaAngle = (int32_t)this->oldAngle - (int32_t)curAngle;
+	this->oldAngle = curAngle;
+
+	if(deltaAngle < -32768)
+	{
+		deltaAngle += 65536;
+	}
+	else if(deltaAngle > 32768)
+	{
+		deltaAngle -= 65536;
+	}
+
+	angleMovedRaw += deltaAngle;
+	pointer->driver.readRegister(VACTUAL);
+	this->smoothValue = (this->smoothValue<< this->Beta)-this->smoothValue; 
+   	this->smoothValue += angleMovedRaw;
+   	this->smoothValue >>= this->Beta;
+
+	if(pointer->mode != DROPIN)
+	{
+		this->speedSmoothValue *= 0.99;
+		this->speedSmoothValue += (this->smoothValue-this->angleMoved)*0.01;
+		pointer->encoder.encoderFilter.velIntegrator = this->speedSmoothValue*ENCODERINTFREQ*2.0f;
+	}
+   	
+	this->angleMoved=this->smoothValue;
+
+	return (uint16_t)value;
+	
 }
 
 float uStepperEncoder::getAngle(void)
 {
-	return (float)angle * 0.005493164;	//360/65536
+	return (float)angle * 0.005493164;	//360/65536  0.087890625
 }
 
 uint16_t uStepperEncoder::getAngleRaw(void)
@@ -140,14 +180,32 @@ uint16_t uStepperEncoder::getAngleRaw(void)
 }
 
 
-float uStepperEncoder::getAngleMoved(void)
+float uStepperEncoder::getAngleMoved(bool filtered)
 {
-	return this->angleMoved * 0.005493164;	//360/65536
+	if(filtered == true)
+	{
+		return this->angleMoved * 0.005493164;	//360/65536
+	}
+	else
+	{
+		return this->angleMovedRaw * 0.005493164;	//360/65536
+	}
+	
+	
 }
 
-int32_t uStepperEncoder::getAngleMovedRaw(void)
+int32_t uStepperEncoder::getAngleMovedRaw(bool filtered)
 {
-	return angleMoved;
+	if(filtered == true)
+	{
+		return this->angleMoved;
+	}
+	else
+	{
+		return this->angleMovedRaw;
+	}
+	
+	
 }
 
 

@@ -1,0 +1,7 @@
+<map id="/home/thomas/Arduino/libraries/uStepperS/src/uStepperS.h" name="/home/thomas/Arduino/libraries/uStepperS/src/uStepperS.h">
+<area shape="rect" id="node1" title=" " alt="" coords="205,5,375,61"/>
+<area shape="rect" id="node2" href="$uStepperDriver_8cpp.html" title="Function implementations for the TMC5130 motor driver." alt="" coords="5,109,180,165"/>
+<area shape="rect" id="node3" href="$uStepperDriver_8h.html" title="Function prototypes and definitions for the TMC5130 motor driver." alt="" coords="205,109,375,165"/>
+<area shape="rect" id="node4" href="$uStepperEncoder_8cpp.html" title="Function implementations for the AEAT8800&#45;Q24 Encoder." alt="" coords="399,109,586,165"/>
+<area shape="rect" id="node5" href="$uStepperS_8cpp.html" title="Function and class implementation for the uStepper S library." alt="" coords="610,109,781,165"/>
+</map>

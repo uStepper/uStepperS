@@ -1,0 +1,8 @@
+<map id="uStepperS::dropinSettingsCalcChecksum" name="uStepperS::dropinSettingsCalcChecksum">
+<area shape="rect" id="node1" title=" " alt="" coords="725,49,916,90"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a050f8ae21dd10978e98e871a8b96b77b" title=" " alt="" coords="456,5,676,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="241,56,373,83"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#a1351b0a32f03e24c1cea2185574d46b0" title=" " alt="" coords="455,107,677,133"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#a31f72b85450c8e35e683e5e762f12bde" title="This method is used for the dropinCli to take in user commands." alt="" coords="208,107,407,133"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#a343e6b5f62d468ad44da9af5ab947936" title="This method is used to tune Drop&#45;in parameters. After tuning uStepper S, the parameters are saved in ..." alt="" coords="5,107,160,133"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="uStepperS::enableStallguard" name="uStepperS::enableStallguard">
+<area shape="rect" id="node1" title="Enable TMC5130 StallGuard." alt="" coords="205,5,412,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a9d494350df8d401b1bfcd82eca5481a5" title="This method returns a bool variable indicating wether the motor is stalled or not...." alt="" coords="5,5,157,32"/>
+</map>

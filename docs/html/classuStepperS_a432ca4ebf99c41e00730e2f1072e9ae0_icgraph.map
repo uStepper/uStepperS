@@ -1,0 +1,4 @@
+<map id="uStepperS::setMaxAcceleration" name="uStepperS::setMaxAcceleration">
+<area shape="rect" id="node1" title="Set the maximum acceleration of the stepper motor." alt="" coords="216,5,441,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="5,5,168,32"/>
+</map>

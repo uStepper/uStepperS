@@ -1,0 +1,6 @@
+<map id="uStepperDriver::writeRegister" name="uStepperDriver::writeRegister">
+<area shape="rect" id="node1" title="Write a register of the motor driver." alt="" coords="5,56,220,83"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="268,5,463,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="279,56,451,83"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="307,107,423,133"/>
+</map>

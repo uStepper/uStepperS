@@ -1,0 +1,5 @@
+<map id="uStepperDriver::disableStallguard" name="uStepperDriver::disableStallguard">
+<area shape="rect" id="node1" title=" " alt="" coords="263,31,504,57"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a4d8842264775a82e016b88c3ca719ddb" title="Disables the builtin stallguard offered from TMC5130, and reenables StealthChop." alt="" coords="5,5,215,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="25,56,195,83"/>
+</map>

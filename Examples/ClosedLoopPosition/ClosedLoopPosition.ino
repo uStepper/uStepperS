@@ -3,7 +3,7 @@
 *
 * This example demonstrates how easy closed loop position control can be achieved using the uStepper S !
 * The only thing needed to activate closed loop control, is in the stepper.setup() function, where the
-* object is initiated with the keyword "PID", followed by the number of steps per revolution setting.
+* object is initiated with the keyword "CLOSEDLOOP", followed by the number of steps per revolution setting.
 * For more information, check out the documentation:
 * http://ustepper.com/docs/usteppers/html/index.html
 *
@@ -18,11 +18,9 @@ uStepperS stepper;
 void setup(void)
 {
   Serial.begin(9600);
-  stepper.setup(PID,200);     //Initiate the stepper object to use closed loop control
-                                                //note that the closed loop control are NOT using a PID controller
-                                                //Which is why P, I and D are not configured
-                                                //check out the documentation:
-                                                //http://ustepper.com/docs/usteppers/html/index.html
+  stepper.setup();        //Initialisation of the uStepper S
+  stepper.checkOrientation(10.0);       //Check orientation of motor connector
+  stepper.setup(CLOSEDLOOP,200);     //Initiate the stepper object to use closed loop control
 
   stepper.moveSteps(3200);                 //turn shaft 3200 steps, counterClockWise (equal to one revolution)
 }

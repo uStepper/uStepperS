@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['parsecommand',['parseCommand',['../classuStepperS.html#a31f72b85450c8e35e683e5e762f12bde',1,'uStepperS']]]
+  ['loaddropinsettings_330',['loadDropinSettings',['../classuStepperS.html#a050f8ae21dd10978e98e871a8b96b77b',1,'uStepperS']]]
 ];

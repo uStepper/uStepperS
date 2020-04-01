@@ -1,0 +1,8 @@
+<map id="uStepperS::clearStall" name="uStepperS::clearStall">
+<area shape="rect" id="node1" title="Clear the stallguard, reenabling the motor to return to its previous operation." alt="" coords="5,56,163,83"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#acf01b92a98aed0b576588caecf534ed4" title=" " alt="" coords="211,56,400,83"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="448,56,659,83"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="707,5,901,32"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="718,56,890,83"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="746,107,862,133"/>
+</map>

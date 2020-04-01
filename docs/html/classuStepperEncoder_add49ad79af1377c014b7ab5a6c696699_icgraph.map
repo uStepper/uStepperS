@@ -1,0 +1,7 @@
+<map id="uStepperEncoder::chipSelect" name="uStepperEncoder::chipSelect">
+<area shape="rect" id="node1" title="Set the output level of the chip select pin." alt="" coords="669,31,876,57"/>
+<area shape="rect" id="node2" href="$classuStepperEncoder.html#a2e63f211a33fb632b475002b9328fca1" title="Capture the current shaft angle." alt="" coords="432,23,621,65"/>
+<area shape="rect" id="node3" href="$classuStepperEncoder.html#a42c9667e532981996758163dfe471682" title="Define new reference(home) position." alt="" coords="185,5,384,32"/>
+<area shape="rect" id="node5" href="$uStepperS_8h.html#a8bc7a9f474f12ea128e6ea6fde8382a5" title="Interrupt routine for critical tasks." alt="" coords="204,56,365,83"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="5,5,137,32"/>
+</map>

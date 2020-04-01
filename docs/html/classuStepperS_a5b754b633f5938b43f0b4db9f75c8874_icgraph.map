@@ -1,0 +1,7 @@
+<map id="uStepperS::setRPM" name="uStepperS::setRPM">
+<area shape="rect" id="node1" title="Set the velocity in rpm." alt="" coords="396,31,541,57"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="5,5,176,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#a26ed0d754a0d95eab0bea0225f471e6e" title=" " alt="" coords="228,81,344,108"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd" title="Stop the motor." alt="" coords="224,31,348,57"/>
+<area shape="rect" id="node4" href="$uStepperS_8h.html#a8bc7a9f474f12ea128e6ea6fde8382a5" title="Interrupt routine for critical tasks." alt="" coords="10,81,171,108"/>
+</map>

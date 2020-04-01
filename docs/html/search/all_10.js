@@ -1,16 +1,13 @@
 var searchData=
 [
-  ['updatecurrent',['updateCurrent',['../classuStepperDriver.html#a6622381d9be81cd93f1c34e605dde404',1,'uStepperDriver']]],
-  ['ustepperdriver',['uStepperDriver',['../classuStepperDriver.html',1,'uStepperDriver'],['../classuStepperDriver.html#a95b8dfd19596790197d2eb99c8f7b264',1,'uStepperDriver::uStepperDriver()']]],
-  ['ustepperdriver_2ecpp',['uStepperDriver.cpp',['../uStepperDriver_8cpp.html',1,'']]],
-  ['ustepperdriver_2eh',['uStepperDriver.h',['../uStepperDriver_8h.html',1,'']]],
-  ['ustepperencoder',['uStepperEncoder',['../classuStepperEncoder.html',1,'uStepperEncoder'],['../classuStepperEncoder.html#ab9c80a99fca938eeb490e4ed8d109f04',1,'uStepperEncoder::uStepperEncoder()']]],
-  ['ustepperencoder_2ecpp',['uStepperEncoder.cpp',['../uStepperEncoder_8cpp.html',1,'']]],
-  ['ustepperencoder_2eh',['uStepperEncoder.h',['../uStepperEncoder_8h.html',1,'']]],
-  ['usteppers',['uStepperS',['../classuStepperS.html',1,'uStepperS'],['../classuStepperS.html#aea43098c9be52ac35427452aad4c6c42',1,'uStepperS::uStepperS()'],['../classuStepperS.html#a1e69d66085f86b6776436deb1f8a8196',1,'uStepperS::uStepperS(float acceleration, float velocity)']]],
-  ['usteppers_2ecpp',['uStepperS.cpp',['../uStepperS_8cpp.html',1,'']]],
-  ['usteppers_2eh',['uStepperS.h',['../uStepperS_8h.html',1,'']]],
-  ['ustepperservo',['uStepperServo',['../classuStepperServo.html',1,'uStepperServo'],['../classuStepperServo.html#a4a7e5ea48796ab435a74e18b5cc601bc',1,'uStepperServo::uStepperServo()']]],
-  ['ustepperservo_2ecpp',['uStepperServo.cpp',['../uStepperServo_8cpp.html',1,'']]],
-  ['ustepperservo_2eh',['uStepperServo.h',['../uStepperServo_8h.html',1,'']]]
+  ['tbl_228',['TBL',['../uStepperDriver_8h.html#a16ea40b2486ef8fe6b77d73a2ebfa6b4',1,'uStepperDriver.h']]],
+  ['tcoolthrs_229',['TCOOLTHRS',['../uStepperDriver_8h.html#a3f09e2cc8f037d68b1cea9a54eab7791',1,'uStepperDriver.h']]],
+  ['tfd3_230',['TFD3',['../uStepperDriver_8h.html#a2f05b4e1339693c53e1df3db9edc43ed',1,'uStepperDriver.h']]],
+  ['thigh_231',['THIGH',['../uStepperDriver_8h.html#aa5d90514056b84897ab374114e0effae',1,'uStepperDriver.h']]],
+  ['timer1_5fcompa_5fvect_232',['TIMER1_COMPA_vect',['../classuStepperS.html#a8bc7a9f474f12ea128e6ea6fde8382a5',1,'uStepperS::TIMER1_COMPA_vect()'],['../uStepperS_8cpp.html#ae9b180f762f781150187a88c1344e064',1,'TIMER1_COMPA_vect(void):&#160;uStepperS.cpp'],['../uStepperS_8h.html#a8bc7a9f474f12ea128e6ea6fde8382a5',1,'TIMER1_COMPA_vect(void) __attribute__((signal:&#160;uStepperS.cpp']]],
+  ['toff_233',['TOFF',['../uStepperDriver_8h.html#a607f725de91e7769c45c70f8ba779843',1,'uStepperDriver.h']]],
+  ['tpowerdown_234',['TPOWERDOWN',['../uStepperDriver_8h.html#a6a10123d6ad6d0fb3f20473101f3cde6',1,'uStepperDriver.h']]],
+  ['tpwmthrs_235',['TPWMTHRS',['../uStepperDriver_8h.html#af10d1234375187d9f4f425f4d99819cd',1,'uStepperDriver.h']]],
+  ['tstep_236',['TSTEP',['../uStepperDriver_8h.html#a1baef856c38189d1ff283471c979b468',1,'uStepperDriver.h']]],
+  ['tzerowait_237',['TZEROWAIT',['../uStepperDriver_8h.html#aaef2d011c2cd532b10ce2ad18925aedc',1,'uStepperDriver.h']]]
 ];
