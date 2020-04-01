@@ -649,7 +649,7 @@ float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 	if (rpm < 20.0)
 		rpm = 20.0;
 
-	this->isStalled();
+	//this->isStalled();
 	// Enable stallguard to detect hardware stop (use driver directly, as to not override user stall settings)
 	pointer->driver.enableStallguard( threshold, true );
 
