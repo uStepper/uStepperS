@@ -10,7 +10,7 @@
 #define STALLSENSITIVITY 2//sensitivity of the stall detection, between -64 and 63 - high number is less sensitive
 
 uStepperS stepper;
-uint8_t rpm[6] = {50, 60, 70, 80, 90, 100};
+uint8_t rpm[6] = {25, 50, 80, 120, 130, 150};
 
 void setup() {
 
@@ -18,10 +18,6 @@ void setup() {
 
   // Configure uStepper
   stepper.setup();
-
-  // Enabled stallguard, with threshold set by STALLSENSITIVITY and stop automatic on stall.
-  // Hint: If stopOnStall is set to false, you have to use .stop() or setRPM(0) in order to stop the motor on stall. 
-  stepper.enableStallguard(STALLSENSITIVITY, true);
   
 }
 
@@ -34,6 +30,9 @@ void loop() {
   for( uint8_t i = 0; i < sizeof(rpm); i++ ){
     Serial.print(rpm[i]); Serial.println(" rpm");
     stepper.setRPM(rpm[i]);
+    // Enabled stallguard, with threshold set by STALLSENSITIVITY and stop automatic on stall.
+    // Hint: If stopOnStall is set to false, you have to use .stop() or setRPM(0) in order to stop the motor on stall. 
+    stepper.enableStallguard(STALLSENSITIVITY, true, rpm[i]);
 
     // Wait for stall to be detected.
     while( !stepper.isStalled() ){}

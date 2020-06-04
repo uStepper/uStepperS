@@ -509,7 +509,7 @@ public:
 	 * @param	   threshold 	- stall sensitivity. A value between -64 and +63
 	 * @param      stopOnStall  - should the driver automatic stop the motor on a stall
 	 */
-	void enableStallguard( int8_t threshold = 4, bool stopOnStall = false);
+	void enableStallguard( int8_t threshold = 4, bool stopOnStall = false, float rpm = 10.0);
 
 	/**
 	 * @brief      	Disables the builtin stallguard offered from TMC5130, and reenables StealthChop.
