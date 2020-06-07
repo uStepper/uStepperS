@@ -332,7 +332,7 @@ bool uStepperS::isStalled( int8_t threshold )
 	// If the threshold is different from what is configured..
 	if( threshold != this->stallThreshold || this->stallEnabled == false ){
 		// Reconfigure stallguard
-		this->enableStallguard( threshold, this->stallStop, 10);
+		this->enableStallguard( threshold, this->stallStop, 10 );
 	}
 
 	int32_t stats = pointer->driver.readRegister(RAMP_STAT);
@@ -648,19 +648,19 @@ float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 	// Lowest reliable speed for stallguard
 	if (rpm < 25.0)
 		rpm = 25.0;
-
-	this->isStalled();
-	// Enable stallguard to detect hardware stop (use driver directly, as to not override user stall settings)
-	pointer->driver.enableStallguard( threshold, true, rpm );
-
-	float length = this->encoder.getAngleMoved();
-
+	
 	if(dir == CW)
 		this->setRPM(abs(rpm));
 	else
 		this->setRPM(-abs(rpm));
 	
 	delay(100);
+
+	this->isStalled();
+	// Enable stallguard to detect hardware stop (use driver directly, as to not override user stall settings)
+	pointer->driver.enableStallguard( threshold, true, rpm );
+
+	float length = this->encoder.getAngleMoved();
 	
 	while( !this->isStalled() ){}
 	this->stop();
