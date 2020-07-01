@@ -18,9 +18,8 @@ uStepperS stepper;
 void setup(void)
 {
   Serial.begin(9600);
-  stepper.setup();        //Initialisation of the uStepper S
-  stepper.checkOrientation(10.0);       //Check orientation of motor connector
   stepper.setup(CLOSEDLOOP,200);     //Initiate the stepper object to use closed loop control
+  stepper.checkOrientation(30.0);       //Check orientation of motor connector
 
   stepper.moveSteps(3200);                 //turn shaft 3200 steps, counterClockWise (equal to one revolution)
 }

@@ -95,6 +95,7 @@ void uStepperS::checkOrientation(float distance)
 	float startAngle;
 	uint8_t inverted = 0;
 	uint8_t noninverted = 0;
+	this->disablePid();
 	this->driver.setShaftDirection(0);
 	
 	startAngle = this->encoder.getAngleMoved();
@@ -150,6 +151,7 @@ void uStepperS::checkOrientation(float distance)
 	{
 		this->driver.setShaftDirection(1);
 	}
+	this->enablePid();
 }
 
 void uStepperS::setup(	uint8_t mode, 
