@@ -19,6 +19,7 @@
 * 	neither uStepper ApS nor the author, can be held responsible for any damage				*
 * 	caused by the use of the code contained in this file ! 									*
 *                                                                                           *
+* TEST *
 ********************************************************************************************/
 /**
 * @file uStepperDriver.cpp
@@ -350,22 +351,29 @@ void uStepperDriver::chipSelect(bool state)
 		PORTE |= (1 << CS_DRIVER); // Set CS HIGH
 }
 
-void uStepperDriver::enableStallguard( int8_t threshold, bool stopOnStall )
+void uStepperDriver::enableStallguard( int8_t threshold, bool stopOnStall, float rpm)
 {
 	// Limit threshold
 	if( threshold > 63)
 		threshold = 63;
 	else if( threshold < -64)
 		threshold = -64;
-	
+
+	rpm = abs(rpm);
+	// Limit rpm
+	if( rpm > 1000)
+		rpm = 1000;
+	else if( rpm < 2)
+		rpm = 2;
+
 	/* Disable StealthChop for stallguard operation */
 	this->writeRegister( GCONF, EN_PWM_MODE(0) | I_SCALE_ANALOG(1) ); 
 
 	// Configure COOLCONF for stallguard
 	this->writeRegister( COOLCONF, SGT(threshold) | SFILT(1) | SEMIN(5) | SEMAX(2) | SEDN(1) );
 
-	// Limit stallguard to 10 RPM
-	int32_t stall_speed = 16777216 / pointer->rpmToVelocity * 10.0; // 16777216 = 2^24. See TSTEP in datasheet p.33
+	//int32_t stall_speed = 1048576 / pointer->rpmToVelocity * speed // 1048576 = 2^20. See TSTEP in datasheet p.33
+	int32_t stall_speed = 1048576 / pointer->rpmToVelocity * (rpm/2); //Should be 1048576 = 2^20.
 	stall_speed = stall_speed * 1.2; // // Activate stallGuard sligthly below desired homing velocity (provide 20% tolerance)
 
 	// Set TCOOLTHRS to max speed value (enable stallguard for all speeds)
