@@ -16,7 +16,7 @@ void setup() {
   stepper.setup();        //Initialisation of the uStepper S
   stepper.setMaxAcceleration(2000);     //use an acceleration of 2000 fullsteps/s^2
   stepper.setMaxVelocity(500);          //Max velocity of 500 fullsteps/s
-  stepper.checkOrientation(10.0);       //Check orientation of motor connector
+  stepper.checkOrientation(30.0);       //Check orientation of motor connector with +/- 30 microsteps movement
   Serial.begin(9600);
 }
 

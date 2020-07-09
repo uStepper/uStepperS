@@ -24,6 +24,10 @@
 *	|	Dir      |		D4		 |
 *	|	GND      |		GND		 |
 *	------------------------------	
+*
+*
+*		ATTENTION: There is a 10 second delay from powering up uStepper to accepting input - this is to avoid movement on control jitter when CNC/Printer board starts up !
+*
 */
 
 #include <uStepperS.h>
@@ -37,7 +41,7 @@ void setup() {
   														// P = 75
   														// I = 7
   														// D = 1
-  stepper.checkOrientation(30.0);       				//Check orientation of motor connector
+  stepper.checkOrientation(30.0);       				//Check orientation of motor connector with +/- 30 microsteps movement
 }
 
 void loop() {

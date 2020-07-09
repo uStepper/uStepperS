@@ -18,13 +18,19 @@ uStepperS stepper;
 void setup(void)
 {
   Serial.begin(9600);
-  stepper.setup(CLOSEDLOOP,200);     //Initiate the stepper object to use closed loop control
-  stepper.checkOrientation(30.0);       //Check orientation of motor connector
+  stepper.setup(CLOSEDLOOP,200);     //Initiate the stepper object to use closed loop control with 200 steps per revolution motor - i.e. 1.8 deg stepper 
+  
+  // For the closed loop position control the acceleration and velocity parameters define the response of the control:
+  stepper.setMaxAcceleration(2000);     //use an acceleration of 2000 fullsteps/s^2
+  stepper.setMaxVelocity(800);          //Max velocity of 800 fullsteps/s
+  
+  stepper.checkOrientation(30.0);       //Check orientation of motor connector with +/- 30 microsteps movement
+  stepper.setControlThreshold(15);		//Adjust the control threshold - here set to 15 microsteps before making corrective action
 
-  stepper.moveSteps(3200);                 //turn shaft 3200 steps, counterClockWise (equal to one revolution)
+  stepper.moveSteps(51200);                 //Turn shaft 51200 steps, counterClockWise (equal to one revolution with the TMC native 1/256 microstepping)
 }
 
 void loop(void)
 {
-  Serial.println(stepper.encoder.getAngleMoved());    //print out the current angle of the motor shaft.
+  Serial.println(stepper.encoder.getAngleMoved());    //Print out the current angle of the motor shaft.
 }
