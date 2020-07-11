@@ -223,6 +223,7 @@ void uStepperDriver::enableStealth()
 {
 	/* Set GCONF and enable stealthChop */
 	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) ); 
+	this->setShaftDirection(pointer->shaftDir);
 
 	/* Set PWMCONF for StealthChop */
 	this->writeRegister( PWMCONF, PWM_AUTOSCALE(1) | PWM_GRAD(1) | PWM_AMPL(128) | PWM_FREQ(0) | FREEWHEEL(2) ); 
@@ -368,6 +369,7 @@ void uStepperDriver::enableStallguard( int8_t threshold, bool stopOnStall, float
 
 	/* Disable StealthChop for stallguard operation */
 	this->writeRegister( GCONF, EN_PWM_MODE(0) | I_SCALE_ANALOG(1) ); 
+	this->setShaftDirection(pointer->shaftDir);
 
 	// Configure COOLCONF for stallguard
 	this->writeRegister( COOLCONF, SGT(threshold) | SFILT(1) | SEMIN(5) | SEMAX(2) | SEDN(1) );
@@ -391,6 +393,7 @@ void uStepperDriver::disableStallguard( void )
 {
 	// Reenable stealthchop
 	this->writeRegister( GCONF, EN_PWM_MODE(1) | I_SCALE_ANALOG(1) );
+	this->setShaftDirection(pointer->shaftDir);
 
 	// Disable all stallguard configuration
 	this->writeRegister( COOLCONF, 	0 );

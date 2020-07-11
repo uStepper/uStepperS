@@ -754,6 +754,9 @@ private:
 	/** Flag to keep track of stallguard */
 	bool stallEnabled = false;
 
+	/** Flag to keep track of shaft direction setting */
+	volatile bool shaftDir = 0;
+
 	uint8_t SPI( uint8_t data );
 
 	void setSPIMode( uint8_t mode );
