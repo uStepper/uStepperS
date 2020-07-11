@@ -1,0 +1,12 @@
+<map id="uStepperS::enableStallguard" name="uStepperS::enableStallguard">
+<area shape="rect" id="node1" title="Enable TMC5130 StallGuard." alt="" coords="5,39,212,65"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#ab542d2f2219e517df9c05ba271da6272" title="Clear the stallguard, reenabling the motor to return to its previous operation." alt="" coords="301,9,458,36"/>
+<area shape="rect" id="node8" href="$classuStepperDriver.html#ac606ead1b8240894e570561f8872f75a" title=" " alt="" coords="260,64,499,91"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#acf01b92a98aed0b576588caecf534ed4" title=" " alt="" coords="547,5,736,32"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="786,39,997,65"/>
+<area shape="rect" id="node5" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="1047,13,1241,40"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="1058,64,1230,91"/>
+<area shape="rect" id="node7" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="1086,115,1202,141"/>
+<area shape="rect" id="node9" href="$classuStepperDriver.html#a9182900a27f84224e9428022e4cd2e12" title="Set motor driver direction." alt="" coords="550,57,733,98"/>
+<area shape="rect" id="node10" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="784,89,999,116"/>
+</map>

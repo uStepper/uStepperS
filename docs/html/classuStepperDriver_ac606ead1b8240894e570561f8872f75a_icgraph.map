@@ -1,6 +1,6 @@
 <map id="uStepperDriver::enableStallguard" name="uStepperDriver::enableStallguard">
 <area shape="rect" id="node1" title=" " alt="" coords="460,31,699,57"/>
-<area shape="rect" id="node2" href="$classuStepperS.html#a15dfc85e972df36fd91fe06d3b35008a" title="Enable TMC5130 StallGuard." alt="" coords="205,5,412,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a8dbe051a358d1754f579476e00cb9985" title="Enable TMC5130 StallGuard." alt="" coords="205,5,412,32"/>
 <area shape="rect" id="node4" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="223,56,394,83"/>
 <area shape="rect" id="node3" href="$classuStepperS.html#a9d494350df8d401b1bfcd82eca5481a5" title="This method returns a bool variable indicating wether the motor is stalled or not...." alt="" coords="5,5,157,32"/>
 </map>

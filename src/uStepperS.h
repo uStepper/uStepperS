@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	 	File: 		uStepperS.h 															*
-*		Version:    2.0.0                                           						*
-*      	Date: 		March 30th, 2020  	                                    				*
+*		Version:    2.1.0                                           						*
+*      	Date: 		July 11th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
@@ -96,6 +96,10 @@
 *
 *	\author Thomas Hørring Olsen (thomas@ustepper.com)
 *	\par Change Log
+*	\version 2.1.0:
+*	- Fixed checkOrientation to work with Closed loop and dropin modes
+*	- Fixed stallguard feature
+*	- Modified examples to library update  
 *	\version 2.0.0:
 *	- Changed name of "brake()" function in uStepper Class to "setBrakeMode()"
 *	- Implemented "setBrakeMode()" function in uStepper Class to choose between freewheel, braking with low side fets shorted and brake with specified hold current. default = brake with low side fets shorted
@@ -430,7 +434,7 @@ public:
 	 *              by setMaxVelocity() function. The direction of rotation
 	 *              is set by the sign of the commanded angle to move
 	 *
-	 * @param[in]  	    angle     -	Angle to move. an input value of
+	 * @param[in]  	    angle     -	Angle to move. An input value of
 	 *								300 makes the motor go 300 degrees in CW direction, and
 	 *								an input value of -300 makes the motor move 300 degrees
 	 *								in CCW direction.
@@ -438,19 +442,19 @@ public:
 	void moveAngle( float angle );
 
 	/**
-	 * @brief      	Makes the motor rotate a specific angle relative to the current position
+	 * @brief      	Makes the motor rotate to a specific absolute angle
 	 *
-	 *              This function makes the motor a rotate by a specific angle relative to 
-	 *			    the current position, using the acceleration profile. The motor will accelerate
+	 *              This function makes the motor a rotate to a specific angle, 
+	 *			    using the acceleration profile. The motor will accelerate
 	 *              at the rate set by setMaxAcceleration(), decelerate at the rate set by 
 	 *				setMaxDeceleration() and eventually reach the speed set
 	 *              by setMaxVelocity() function. The direction of rotation
 	 *              is set by the sign of the commanded angle to move
 	 *
-	 * @param[in]  	    angle     -	Angle to move. an input value of
-	 *								300 makes the motor go 300 degrees in CW direction, and
-	 *								an input value of -300 makes the motor move 300 degrees
-	 *								in CCW direction.
+	 * @param[in]  	    angle     -	Angle to move to. An input value of
+	 *								300 makes the motor go to absolute 300 degrees, 
+	 *								and an input value of -300 makes the motor move 
+	 *								to absolute -300 degrees.
 	 */
 	void moveToAngle( float angle );
 
@@ -509,7 +513,7 @@ public:
 	 * @param	   threshold 	- stall sensitivity. A value between -64 and +63
 	 * @param      stopOnStall  - should the driver automatic stop the motor on a stall
 	 */
-	void enableStallguard( int8_t threshold = 4, bool stopOnStall = false);
+	void enableStallguard( int8_t threshold = 4, bool stopOnStall = false, float rpm = 10.0);
 
 	/**
 	 * @brief      	Disables the builtin stallguard offered from TMC5130, and reenables StealthChop.
@@ -753,6 +757,9 @@ private:
 
 	/** Flag to keep track of stallguard */
 	bool stallEnabled = false;
+
+	/** Flag to keep track of shaft direction setting */
+	volatile bool shaftDir = 0;
 
 	uint8_t SPI( uint8_t data );
 

@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	 	File: 		uStepperDriver.h														*
-*		Version:    2.0.0                                           						*
-*      	Date: 		March 30th, 2020  	                                    				*
+*		Version:    2.1.0                                           						*
+*      	Date: 		July 11th, 2020  	                                    				*
 *      	Author: 	Thomas Hørring Olsen                                   					*
 *                                                   										*	
 *********************************************************************************************
@@ -351,7 +351,7 @@ friend class uStepperS;
 
 		void enableStealth( void );
 
-		void enableStallguard( int8_t threshold, bool stopOnStall );
+		void enableStallguard( int8_t threshold, bool stopOnStall, float rpm );
 
 		void disableStallguard( void );
 

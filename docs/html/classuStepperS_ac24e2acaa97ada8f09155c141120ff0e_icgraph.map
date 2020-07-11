@@ -1,4 +1,5 @@
 <map id="uStepperS::enablePid" name="uStepperS::enablePid">
-<area shape="rect" id="node1" title="This method reenables the PID after being disabled." alt="" coords="268,5,428,32"/>
-<area shape="rect" id="node2" href="$classuStepperS.html#a72e08afe1becf4f79e66af496357ab43" title="This method reenables the closed loop mode after being disabled." alt="" coords="5,5,220,32"/>
+<area shape="rect" id="node1" title="This method reenables the PID after being disabled." alt="" coords="268,31,428,57"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="9,5,216,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#a72e08afe1becf4f79e66af496357ab43" title="This method reenables the closed loop mode after being disabled." alt="" coords="5,56,220,83"/>
 </map>

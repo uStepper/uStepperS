@@ -8,6 +8,6 @@
 <area shape="rect" id="node5" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="271,56,433,83"/>
 <area shape="rect" id="node8" href="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113" title="Make the motor perform a predefined number of steps." alt="" coords="492,132,661,159"/>
 <area shape="rect" id="node9" href="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="267,119,437,145"/>
-<area shape="rect" id="node11" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="260,169,444,196"/>
+<area shape="rect" id="node11" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate to a specific absolute angle." alt="" coords="260,169,444,196"/>
 <area shape="rect" id="node10" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,119,212,145"/>
 </map>

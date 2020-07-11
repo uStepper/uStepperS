@@ -4,7 +4,7 @@
 <area shape="rect" id="node6" href="$classuStepperDriver.html#aed59b07c61be01c0973614cd94e20ebc" title="Resets the internal position counter of the motor driver." alt="" coords="507,107,693,133"/>
 <area shape="rect" id="node9" href="$uStepperS_8h.html#a8bc7a9f474f12ea128e6ea6fde8382a5" title="Interrupt routine for critical tasks." alt="" coords="519,157,681,184"/>
 <area shape="rect" id="node3" href="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="274,5,445,32"/>
-<area shape="rect" id="node5" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="267,56,451,83"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate to a specific absolute angle." alt="" coords="267,56,451,83"/>
 <area shape="rect" id="node4" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,5,212,32"/>
 <area shape="rect" id="node7" href="$classuStepperEncoder.html#a42c9667e532981996758163dfe471682" title="Define new reference(home) position." alt="" coords="260,107,459,133"/>
 <area shape="rect" id="node8" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="43,107,175,133"/>

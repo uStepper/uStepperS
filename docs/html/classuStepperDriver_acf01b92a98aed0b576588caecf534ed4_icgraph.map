@@ -3,7 +3,7 @@
 <area shape="rect" id="node2" href="$classuStepperS.html#ab542d2f2219e517df9c05ba271da6272" title="Clear the stallguard, reenabling the motor to return to its previous operation." alt="" coords="677,5,835,32"/>
 <area shape="rect" id="node5" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="671,56,841,83"/>
 <area shape="rect" id="node6" href="$classuStepperDriver.html#a8e9e3be0a375489cb1b560b8b37486b7" title=" " alt="" coords="675,107,837,133"/>
-<area shape="rect" id="node3" href="$classuStepperS.html#a15dfc85e972df36fd91fe06d3b35008a" title="Enable TMC5130 StallGuard." alt="" coords="416,5,623,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#a8dbe051a358d1754f579476e00cb9985" title="Enable TMC5130 StallGuard." alt="" coords="416,5,623,32"/>
 <area shape="rect" id="node4" href="$classuStepperS.html#a9d494350df8d401b1bfcd82eca5481a5" title="This method returns a bool variable indicating wether the motor is stalled or not...." alt="" coords="216,5,368,32"/>
 <area shape="rect" id="node7" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="445,107,594,133"/>
 <area shape="rect" id="node8" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="233,107,351,133"/>

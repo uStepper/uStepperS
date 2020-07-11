@@ -13,7 +13,7 @@ uStepperS stepper;
 void setup() {
   // put your setup code here, to run once:
   stepper.setup();
-  stepper.checkOrientation(10.0);       //Check orientation of motor connector
+  stepper.checkOrientation(30.0);       //Check orientation of motor connector with +/- 30 microsteps movement
   Serial.begin(9600);
   stepper.setRPM(100);
 }

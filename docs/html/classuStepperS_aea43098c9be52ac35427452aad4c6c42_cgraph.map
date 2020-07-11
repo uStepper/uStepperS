@@ -1,22 +1,23 @@
 <map id="uStepperS::uStepperS" name="uStepperS::uStepperS">
-<area shape="rect" id="node1" title="Constructor of uStepper class." alt="" coords="5,87,168,113"/>
-<area shape="rect" id="node2" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="271,168,388,195"/>
-<area shape="rect" id="node18" href="$classuStepperS.html#a432ca4ebf99c41e00730e2f1072e9ae0" title="Set the maximum acceleration of the stepper motor." alt="" coords="491,117,716,144"/>
-<area shape="rect" id="node19" href="$classuStepperS.html#a386a51f45a4f1e45db75c4f0c59263cf" title="Set the maximum deceleration of the stepper motor." alt="" coords="216,61,443,88"/>
-<area shape="rect" id="node20" href="$classuStepperS.html#a0e84f3aa5a3e33b39586697bc7bc741e" title="Set the maximum velocity of the stepper motor." alt="" coords="231,11,428,37"/>
-<area shape="rect" id="node3" href="$classuStepperEncoder.html#a51e78587431729869ae7e3394641b909" title="Initiation of the encoder." alt="" coords="523,168,684,195"/>
-<area shape="rect" id="node4" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="529,232,678,259"/>
-<area shape="rect" id="node5" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="1576,384,1771,411"/>
-<area shape="rect" id="node6" href="$classuStepperDriver.html#ab89ec040a2e8a6f4b03cc03e8c590e2e" title=" " alt="" coords="1045,257,1263,284"/>
-<area shape="rect" id="node7" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="1313,283,1528,309"/>
-<area shape="rect" id="node10" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="1315,384,1526,411"/>
-<area shape="rect" id="node11" href="$classuStepperDriver.html#a8e9e3be0a375489cb1b560b8b37486b7" title=" " alt="" coords="799,359,960,385"/>
-<area shape="rect" id="node13" href="$classuStepperDriver.html#a1668657b55a0839ced16aa728f90bc7f" title="Set motor acceleration." alt="" coords="765,156,994,183"/>
-<area shape="rect" id="node14" href="$classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c" title="Set motor deceleration." alt="" coords="764,55,995,81"/>
-<area shape="rect" id="node15" href="$classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c" title="Set motor driver to position mode or velocity mode." alt="" coords="1043,308,1265,335"/>
-<area shape="rect" id="node16" href="$classuStepperDriver.html#a990e6d0c64db890f0aecbc00a934f109" title="Stops any ongoing movement with deceleration." alt="" coords="801,105,957,132"/>
-<area shape="rect" id="node8" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="1587,333,1759,360"/>
-<area shape="rect" id="node9" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="1615,283,1731,309"/>
-<area shape="rect" id="node12" href="$classuStepperDriver.html#acf01b92a98aed0b576588caecf534ed4" title=" " alt="" coords="1059,409,1249,436"/>
-<area shape="rect" id="node17" href="$classuStepperDriver.html#ace949223744d3ecb544ddb879a1146d6" title="Set motor velocity." alt="" coords="1053,105,1255,132"/>
+<area shape="rect" id="node1" title="Constructor of uStepper class." alt="" coords="5,118,168,145"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="271,197,388,223"/>
+<area shape="rect" id="node19" href="$classuStepperS.html#a432ca4ebf99c41e00730e2f1072e9ae0" title="Set the maximum acceleration of the stepper motor." alt="" coords="491,145,716,171"/>
+<area shape="rect" id="node20" href="$classuStepperS.html#a386a51f45a4f1e45db75c4f0c59263cf" title="Set the maximum deceleration of the stepper motor." alt="" coords="216,81,443,107"/>
+<area shape="rect" id="node21" href="$classuStepperS.html#a0e84f3aa5a3e33b39586697bc7bc741e" title="Set the maximum velocity of the stepper motor." alt="" coords="231,11,428,38"/>
+<area shape="rect" id="node3" href="$classuStepperEncoder.html#a51e78587431729869ae7e3394641b909" title="Initiation of the encoder." alt="" coords="523,197,684,223"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="529,250,678,277"/>
+<area shape="rect" id="node5" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="1576,387,1771,414"/>
+<area shape="rect" id="node6" href="$classuStepperDriver.html#ab89ec040a2e8a6f4b03cc03e8c590e2e" title=" " alt="" coords="770,307,989,334"/>
+<area shape="rect" id="node8" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="1315,377,1526,403"/>
+<area shape="rect" id="node11" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="1313,286,1528,313"/>
+<area shape="rect" id="node12" href="$classuStepperDriver.html#a8e9e3be0a375489cb1b560b8b37486b7" title=" " alt="" coords="799,425,960,451"/>
+<area shape="rect" id="node14" href="$classuStepperDriver.html#a1668657b55a0839ced16aa728f90bc7f" title="Set motor acceleration." alt="" coords="765,155,994,182"/>
+<area shape="rect" id="node15" href="$classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c" title="Set motor deceleration." alt="" coords="764,54,995,81"/>
+<area shape="rect" id="node16" href="$classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c" title="Set motor driver to position mode or velocity mode." alt="" coords="1043,257,1265,283"/>
+<area shape="rect" id="node17" href="$classuStepperDriver.html#a990e6d0c64db890f0aecbc00a934f109" title="Stops any ongoing movement with deceleration." alt="" coords="801,105,957,131"/>
+<area shape="rect" id="node7" href="$classuStepperDriver.html#a9182900a27f84224e9428022e4cd2e12" title="Set motor driver direction." alt="" coords="1063,359,1245,400"/>
+<area shape="rect" id="node9" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="1587,286,1759,313"/>
+<area shape="rect" id="node10" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="1615,337,1731,363"/>
+<area shape="rect" id="node13" href="$classuStepperDriver.html#acf01b92a98aed0b576588caecf534ed4" title=" " alt="" coords="1059,475,1249,502"/>
+<area shape="rect" id="node18" href="$classuStepperDriver.html#ace949223744d3ecb544ddb879a1146d6" title="Set motor velocity." alt="" coords="1053,105,1255,131"/>
 </map>

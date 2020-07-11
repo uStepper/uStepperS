@@ -24,7 +24,7 @@ int16_t rpm = 50;
 void setup() {
   // put your setup code here, to run once:
   stepper.setup(NORMAL, STEPSPERREV); 
-  stepper.checkOrientation(10.0);       //Check orientation of motor connector
+  stepper.checkOrientation(30.0);       //Check orientation of motor connector with +/- 30 microsteps movement
   stepper.setMaxAcceleration(2000);//use an acceleration of 2000 fullsteps/s^2
   stepper.setMaxVelocity(500);//Max velocity of 500 fullsteps/s
   Serial.begin(9600);
