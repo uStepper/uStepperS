@@ -430,7 +430,7 @@ public:
 	 *              by setMaxVelocity() function. The direction of rotation
 	 *              is set by the sign of the commanded angle to move
 	 *
-	 * @param[in]  	    angle     -	Angle to move. an input value of
+	 * @param[in]  	    angle     -	Angle to move. An input value of
 	 *								300 makes the motor go 300 degrees in CW direction, and
 	 *								an input value of -300 makes the motor move 300 degrees
 	 *								in CCW direction.
@@ -438,19 +438,19 @@ public:
 	void moveAngle( float angle );
 
 	/**
-	 * @brief      	Makes the motor rotate a specific angle relative to the current position
+	 * @brief      	Makes the motor rotate to a specific absolute angle
 	 *
-	 *              This function makes the motor a rotate by a specific angle relative to 
-	 *			    the current position, using the acceleration profile. The motor will accelerate
+	 *              This function makes the motor a rotate to a specific angle, 
+	 *			    using the acceleration profile. The motor will accelerate
 	 *              at the rate set by setMaxAcceleration(), decelerate at the rate set by 
 	 *				setMaxDeceleration() and eventually reach the speed set
 	 *              by setMaxVelocity() function. The direction of rotation
 	 *              is set by the sign of the commanded angle to move
 	 *
-	 * @param[in]  	    angle     -	Angle to move. an input value of
-	 *								300 makes the motor go 300 degrees in CW direction, and
-	 *								an input value of -300 makes the motor move 300 degrees
-	 *								in CCW direction.
+	 * @param[in]  	    angle     -	Angle to move to. An input value of
+	 *								300 makes the motor go to absolute 300 degrees, 
+	 *								and an input value of -300 makes the motor move 
+	 *								to absolute -300 degrees.
 	 */
 	void moveToAngle( float angle );
 
