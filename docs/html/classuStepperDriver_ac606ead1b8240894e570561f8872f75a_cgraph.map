@@ -1,0 +1,9 @@
+<map id="uStepperDriver::enableStallguard" name="uStepperDriver::enableStallguard">
+<area shape="rect" id="node1" title=" " alt="" coords="5,60,244,87"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#a9182900a27f84224e9428022e4cd2e12" title="Set motor driver direction." alt="" coords="292,23,475,65"/>
+<area shape="rect" id="node7" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="523,81,737,108"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="525,31,735,57"/>
+<area shape="rect" id="node4" href="$classuStepperDriver.html#a2c2fa442620130914896548072a65d8e" title=" " alt="" coords="785,5,980,32"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa84ce3b0c79dc725a3c4646253b71b60" title=" " alt="" coords="797,56,969,83"/>
+<area shape="rect" id="node6" href="$classuStepperS.html#abeb08ab58e0d25de9f6e2efc74403585" title=" " alt="" coords="825,107,941,133"/>
+</map>

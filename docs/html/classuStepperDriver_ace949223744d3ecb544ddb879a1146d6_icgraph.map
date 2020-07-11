@@ -6,7 +6,7 @@
 <area shape="rect" id="node9" href="$classuStepperS.html#a5b754b633f5938b43f0b4db9f75c8874" title="Set the velocity in rpm." alt="" coords="721,208,867,235"/>
 <area shape="rect" id="node14" href="$classuStepperDriver.html#a990e6d0c64db890f0aecbc00a934f109" title="Stops any ongoing movement with deceleration." alt="" coords="716,296,872,323"/>
 <area shape="rect" id="node3" href="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="477,5,648,32"/>
-<area shape="rect" id="node5" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="471,56,655,83"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate to a specific absolute angle." alt="" coords="471,56,655,83"/>
 <area shape="rect" id="node4" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="216,5,423,32"/>
 <area shape="rect" id="node8" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="5,208,168,235"/>
 <area shape="rect" id="node10" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="234,220,405,247"/>

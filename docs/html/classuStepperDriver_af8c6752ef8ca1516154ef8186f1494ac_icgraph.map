@@ -2,6 +2,6 @@
 <area shape="rect" id="node1" title="Set the motor position." alt="" coords="709,31,909,57"/>
 <area shape="rect" id="node2" href="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113" title="Make the motor perform a predefined number of steps." alt="" coords="492,31,661,57"/>
 <area shape="rect" id="node3" href="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="267,5,437,32"/>
-<area shape="rect" id="node5" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="260,56,444,83"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate to a specific absolute angle." alt="" coords="260,56,444,83"/>
 <area shape="rect" id="node4" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,5,212,32"/>
 </map>

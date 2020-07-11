@@ -3,5 +3,5 @@
 <area shape="rect" id="node2" href="$classuStepperS.html#a1976219524f5853d3fc37b7d919bfca4" title="Get the angle moved from reference position in degrees." alt="" coords="253,5,429,32"/>
 <area shape="rect" id="node4" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="237,56,444,83"/>
 <area shape="rect" id="node5" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="255,107,426,133"/>
-<area shape="rect" id="node3" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="5,5,189,32"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692" title="Makes the motor rotate to a specific absolute angle." alt="" coords="5,5,189,32"/>
 </map>

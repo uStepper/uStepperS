@@ -3,7 +3,7 @@ var searchData=
   ['en_5fpwm_5fmode_70',['EN_PWM_MODE',['../uStepperDriver_8h.html#a48ba2af942b418f1c29c53d2409725dc',1,'uStepperDriver.h']]],
   ['enableclosedloop_71',['enableClosedLoop',['../classuStepperS.html#a72e08afe1becf4f79e66af496357ab43',1,'uStepperS']]],
   ['enablepid_72',['enablePid',['../classuStepperS.html#ac24e2acaa97ada8f09155c141120ff0e',1,'uStepperS']]],
-  ['enablestallguard_73',['enableStallguard',['../classuStepperDriver.html#af9be9b72c4e56c23cbb69ac0d07dbdf6',1,'uStepperDriver::enableStallguard()'],['../classuStepperS.html#a15dfc85e972df36fd91fe06d3b35008a',1,'uStepperS::enableStallguard()']]],
+  ['enablestallguard_73',['enableStallguard',['../classuStepperDriver.html#ac606ead1b8240894e570561f8872f75a',1,'uStepperDriver::enableStallguard()'],['../classuStepperS.html#a8dbe051a358d1754f579476e00cb9985',1,'uStepperS::enableStallguard()']]],
   ['enablestealth_74',['enableStealth',['../classuStepperDriver.html#ab89ec040a2e8a6f4b03cc03e8c590e2e',1,'uStepperDriver']]],
   ['encoder_75',['encoder',['../classuStepperS.html#a8bd2c15ffd3903ac9dab69555a9a7675',1,'uStepperS']]],
   ['encoderdatatorevolutions_76',['ENCODERDATATOREVOLUTIONS',['../uStepperEncoder_8h.html#a70129b78f57027e731e985927be5f49e',1,'uStepperEncoder.h']]],

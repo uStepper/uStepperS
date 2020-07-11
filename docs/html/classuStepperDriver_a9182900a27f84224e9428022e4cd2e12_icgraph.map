@@ -1,4 +1,15 @@
 <map id="uStepperDriver::setShaftDirection" name="uStepperDriver::setShaftDirection">
-<area shape="rect" id="node1" title="Set motor driver direction." alt="" coords="260,5,443,47"/>
-<area shape="rect" id="node2" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,13,212,39"/>
+<area shape="rect" id="node1" title="Set motor driver direction." alt="" coords="963,74,1145,115"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="691,5,897,32"/>
+<area shape="rect" id="node3" href="$classuStepperDriver.html#a5ae3986e69fcd2488d9649bf2ae16e69" title=" " alt="" coords="673,56,915,83"/>
+<area shape="rect" id="node6" href="$classuStepperDriver.html#ac606ead1b8240894e570561f8872f75a" title=" " alt="" coords="675,107,913,133"/>
+<area shape="rect" id="node9" href="$classuStepperDriver.html#ab89ec040a2e8a6f4b03cc03e8c590e2e" title=" " alt="" coords="685,157,903,184"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#a4d8842264775a82e016b88c3ca719ddb" title="Disables the builtin stallguard offered from TMC5130, and reenables StealthChop." alt="" coords="416,5,625,32"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="435,56,606,83"/>
+<area shape="rect" id="node7" href="$classuStepperS.html#a8dbe051a358d1754f579476e00cb9985" title="Enable TMC5130 StallGuard." alt="" coords="417,107,624,133"/>
+<area shape="rect" id="node8" href="$classuStepperS.html#a9d494350df8d401b1bfcd82eca5481a5" title="This method returns a bool variable indicating wether the motor is stalled or not...." alt="" coords="216,107,368,133"/>
+<area shape="rect" id="node10" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="446,157,595,184"/>
+<area shape="rect" id="node11" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="233,157,351,184"/>
+<area shape="rect" id="node12" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="21,132,153,159"/>
+<area shape="rect" id="node13" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="5,183,168,209"/>
 </map>

@@ -1,5 +1,10 @@
 Changelog - uStepper S library
 ----------------------------
+Version 2.1.0:
+	- Fixed checkOrientation to work with Closed loop and dropin modes
+	- Fixed stallguard feature
+	- Modified examples to library update  
+	
 Version 2.0.0:
 	- Changed name of "brake()" function in uStepper Class to "setBrakeMode()"
 	- Implemented "setBrakeMode()" function in uStepper Class to choose between freewheel, braking with low side fets shorted and brake with specified hold current. default = brake with low side fets shorted
