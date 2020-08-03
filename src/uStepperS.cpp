@@ -90,6 +90,13 @@ bool uStepperS::getMotorState(uint8_t statusType)
 	return 1;
 }
 
+float uStepperS::getDriverRPM( void )
+{
+	int32_t velocity = this->driver.getVelocity();
+
+	return (float)velocity * this->velToRpm;
+}
+
 void uStepperS::checkOrientation(float distance)
 {
 	float startAngle;
@@ -177,6 +184,12 @@ void uStepperS::setup(	uint8_t mode,
 	this->rpmToVelocity = (float)(279620.267 * fullSteps * microSteps)/(CLOCKFREQ);
 	this->stepsPerSecondToRPM = 60.0/(this->microSteps*this->fullSteps);
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
+
+
+	this->stepTime = 16777216.0/CLOCKFREQ; // 2^24/CLOCKFREQ
+	this->rpmToVel = (this->fullSteps*this->microSteps)/(60.0/this->stepTime);
+	this->velToRpm = 1.0/this->rpmToVel;
+
 	this->init();
 
 	this->driver.setDeceleration( (uint32_t)( this->maxDeceleration ) );

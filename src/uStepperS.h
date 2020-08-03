@@ -360,6 +360,15 @@ public:
 	 */
 	void setRPM( float rpm );
 
+    /**
+	 * @brief      Get the RPM from driver
+	 *
+	 *             This function returns the driver velocity of the motor 
+	 *
+	 * @return     The velocity in rpm
+	 */
+    float getDriverRPM( void );
+
 	/**
 	 * @brief      Set the maximum acceleration of the stepper motor.
 	 *
@@ -700,6 +709,10 @@ public:
 	void checkOrientation(float distance = 10);
 	
 private: 
+
+	float stepTime;
+	float rpmToVel;
+	float velToRpm;
 
 	/** This variable contains the maximum velocity in steps/s, the motor is
 	 * allowed to reach at any given point. The user of the library can

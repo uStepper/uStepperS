@@ -234,7 +234,13 @@ void uStepperDriver::enableStealth()
 
 int32_t uStepperDriver::getVelocity( void )
 {
-	return this->readRegister(VACTUAL);
+	int32_t value = this->readRegister(VACTUAL);
+
+	// VACTUAL is 24bit two's compliment
+	if (value & 0x00800000)
+    	value |= 0xFF000000;
+
+	return value;
 }
 
 int32_t uStepperDriver::getPosition( void )
