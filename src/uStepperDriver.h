@@ -2,7 +2,7 @@
 * 	 	File: 		uStepperDriver.h														*
 *		Version:    2.1.0                                           						*
 *      	Date: 		July 11th, 2020  	                                    				*
-*      	Author: 	Thomas Hørring Olsen                                   					*
+*      	Author: 	Emil Jacobsen & Thomas Hørring Olsen                                  	*
 *                                                   										*	
 *********************************************************************************************
 *	(C) 2020																				*

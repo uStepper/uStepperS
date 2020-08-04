@@ -2,7 +2,7 @@
 * 	 	File: 		uStepperS.h 															*
 *		Version:    2.1.0                                           						*
 *      	Date: 		July 11th, 2020  	                                    				*
-*      	Author: 	Thomas Hørring Olsen                                   					*
+*      	Author: 	Emil Jacobsen & Thomas Hørring Olsen                                   	*
 *                                                   										*	
 *********************************************************************************************
 *	(C) 2020																				*
@@ -732,6 +732,7 @@ private:
 
 	uint16_t microSteps;
 	uint16_t fullSteps;
+	
 	uint16_t dropinStepSize;
 
 	int32_t stepCnt;
