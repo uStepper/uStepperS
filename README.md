@@ -67,10 +67,20 @@ https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vc
 - does not properly release motor in dropin mode
 
 ## Change Log
+
+2.2.0:
+- Added function to get current driver speed in RPM (getDriverRPM())
+- Fixed "getVelocity()" method of "uStepperDriver" class to use correct twos complement conversion
+- Updated keywords
+- Added two new examples:
+	- GYROBalance: Example on how to use MPU6050 IMU with uStepper S 
+	- SWiFiGUI: Example sketch to control the uStepper S with browser based GUI over WiFi
+
 2.1.0:
 - Fixed checkOrientation to work with Closed loop and dropin modes
 - Fixed stallguard feature
 - Modified examples to library update  
+
 2.0.0:
 - Changed name of "brake()" function in uStepper Class to "setBrakeMode()"
 - Implemented "setBrakeMode()" function in uStepper Class to choose between freewheel, braking with low side fets shorted and brake with specified hold current. default = brake with low side fets shorted

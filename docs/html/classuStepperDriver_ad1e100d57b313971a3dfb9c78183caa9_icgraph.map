@@ -1,0 +1,4 @@
+<map id="uStepperDriver::getVelocity" name="uStepperDriver::getVelocity">
+<area shape="rect" id="node1" title="Returns the current speed of the motor driver." alt="" coords="240,5,443,32"/>
+<area shape="rect" id="node2" href="$classuStepperS.html#a2e3a7553124db1a62a74fdf0d439f24c" title="Get the RPM from driver." alt="" coords="5,5,192,32"/>
+</map>

@@ -1,52 +1,52 @@
 <map id="uStepperDriver::chipSelect" name="uStepperDriver::chipSelect">
-<area shape="rect" id="node1" title=" " alt="" coords="1615,990,1809,1017"/>
-<area shape="rect" id="node2" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="565,1345,714,1371"/>
-<area shape="rect" id="node6" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="1354,391,1565,418"/>
-<area shape="rect" id="node32" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="1352,990,1567,1017"/>
-<area shape="rect" id="node3" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="315,1319,432,1346"/>
-<area shape="rect" id="node4" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="43,1066,175,1093"/>
-<area shape="rect" id="node5" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="27,1269,190,1295"/>
-<area shape="rect" id="node7" href="$classuStepperEncoder.html#a2e63f211a33fb632b475002b9328fca1" title="Capture the current shaft angle." alt="" coords="818,392,1007,433"/>
-<area shape="rect" id="node10" href="$classuStepperDriver.html#acf01b92a98aed0b576588caecf534ed4" title=" " alt="" coords="1098,341,1287,367"/>
-<area shape="rect" id="node13" href="$classuStepperS.html#a9d494350df8d401b1bfcd82eca5481a5" title="This method returns a bool variable indicating wether the motor is stalled or not...." alt="" coords="297,197,449,223"/>
-<area shape="rect" id="node16" href="$classuStepperDriver.html#a59dd1795c65fba7767cf61c18e87024e" title="Returns the current position of the motor driver." alt="" coords="1092,290,1293,317"/>
-<area shape="rect" id="node20" href="$classuStepperDriver.html#aed59b07c61be01c0973614cd94e20ebc" title="Resets the internal position counter of the motor driver." alt="" coords="819,610,1006,637"/>
-<area shape="rect" id="node21" href="$classuStepperDriver.html#a2461be201fde6037b90a58c8452319ad" title="Returns the load measurement used for Stall detection." alt="" coords="1103,123,1282,164"/>
-<area shape="rect" id="node22" href="$classuStepperDriver.html#ad1e100d57b313971a3dfb9c78183caa9" title="Returns the current speed of the motor driver." alt="" coords="1091,189,1294,215"/>
-<area shape="rect" id="node23" href="$classuStepperDriver.html#a3a4dbb14ce4308802c27244bdef566b9" title=" " alt="" coords="1095,5,1290,47"/>
-<area shape="rect" id="node25" href="$classuStepperS.html#a78008ed9b2cdbdd8128553a13896aa0d" title=" " alt="" coords="545,711,734,738"/>
-<area shape="rect" id="node26" href="$classuStepperDriver.html#a9182900a27f84224e9428022e4cd2e12" title="Set motor driver direction." alt="" coords="1101,493,1284,535"/>
-<area shape="rect" id="node31" href="$classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd" title="Stop the motor." alt="" coords="577,863,701,890"/>
-<area shape="rect" id="node8" href="$classuStepperEncoder.html#a42c9667e532981996758163dfe471682" title="Define new reference(home) position." alt="" coords="540,661,739,687"/>
-<area shape="rect" id="node9" href="$uStepperS_8h.html#a8bc7a9f474f12ea128e6ea6fde8382a5" title="Interrupt routine for critical tasks." alt="" coords="293,273,454,299"/>
-<area shape="rect" id="node11" href="$classuStepperS.html#ab542d2f2219e517df9c05ba271da6272" title="Clear the stallguard, reenabling the motor to return to its previous operation." alt="" coords="834,239,991,266"/>
-<area shape="rect" id="node14" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="288,610,459,637"/>
-<area shape="rect" id="node15" href="$classuStepperDriver.html#a8e9e3be0a375489cb1b560b8b37486b7" title=" " alt="" coords="832,1370,993,1397"/>
-<area shape="rect" id="node12" href="$classuStepperS.html#a8dbe051a358d1754f579476e00cb9985" title="Enable TMC5130 StallGuard." alt="" coords="536,239,743,266"/>
-<area shape="rect" id="node17" href="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113" title="Make the motor perform a predefined number of steps." alt="" coords="555,813,724,839"/>
-<area shape="rect" id="node18" href="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e" title="Makes the motor rotate a specific angle relative to the current position." alt="" coords="288,787,459,814"/>
-<area shape="rect" id="node19" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="5,458,212,485"/>
-<area shape="rect" id="node24" href="$classuStepperS.html#afacfd0440b99f607b2af14f103c4e71f" title="Get the current motor driver state." alt="" coords="279,61,468,87"/>
-<area shape="rect" id="node27" href="$classuStepperDriver.html#a5ae3986e69fcd2488d9649bf2ae16e69" title=" " alt="" coords="792,559,1033,586"/>
-<area shape="rect" id="node29" href="$classuStepperDriver.html#ac606ead1b8240894e570561f8872f75a" title=" " alt="" coords="793,341,1032,367"/>
-<area shape="rect" id="node30" href="$classuStepperDriver.html#ab89ec040a2e8a6f4b03cc03e8c590e2e" title=" " alt="" coords="803,1471,1022,1498"/>
-<area shape="rect" id="node28" href="$classuStepperS.html#a4d8842264775a82e016b88c3ca719ddb" title="Disables the builtin stallguard offered from TMC5130, and reenables StealthChop." alt="" coords="535,559,744,586"/>
-<area shape="rect" id="node33" href="$classuStepperDriver.html#a1668657b55a0839ced16aa728f90bc7f" title="Set motor acceleration." alt="" coords="798,1015,1027,1042"/>
-<area shape="rect" id="node37" href="$classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c" title="Set motor deceleration." alt="" coords="797,1066,1028,1093"/>
-<area shape="rect" id="node39" href="$classuStepperDriver.html#a204ff5c6565b158f9d1c24672d2ef09d" title=" " alt="" coords="1089,965,1296,991"/>
-<area shape="rect" id="node41" href="$classuStepperDriver.html#af8c6752ef8ca1516154ef8186f1494ac" title="Set the motor position." alt="" coords="813,813,1013,839"/>
-<area shape="rect" id="node42" href="$classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c" title="Set motor driver to position mode or velocity mode." alt="" coords="1081,1142,1304,1169"/>
-<area shape="rect" id="node43" href="$classuStepperDriver.html#ace949223744d3ecb544ddb879a1146d6" title="Set motor velocity." alt="" coords="1092,1230,1293,1257"/>
-<area shape="rect" id="node46" href="$classuStepperDriver.html#a6622381d9be81cd93f1c34e605dde404" title="Writes the current setting registers of the motor driver" alt="" coords="1082,1573,1303,1599"/>
-<area shape="rect" id="node34" href="$classuStepperS.html#a26ed0d754a0d95eab0bea0225f471e6e" title=" " alt="" coords="581,965,697,991"/>
-<area shape="rect" id="node35" href="$classuStepperS.html#abbe885c71e6dadc13b8c954221ac47eb" title="Make the motor rotate continuously." alt="" coords="548,1218,731,1245"/>
-<area shape="rect" id="node36" href="$classuStepperS.html#a432ca4ebf99c41e00730e2f1072e9ae0" title="Set the maximum acceleration of the stepper motor." alt="" coords="261,1167,486,1194"/>
-<area shape="rect" id="node38" href="$classuStepperS.html#a386a51f45a4f1e45db75c4f0c59263cf" title="Set the maximum deceleration of the stepper motor." alt="" coords="260,1218,487,1245"/>
-<area shape="rect" id="node40" href="$classuStepperS.html#a5b754b633f5938b43f0b4db9f75c8874" title="Set the velocity in rpm." alt="" coords="840,914,985,941"/>
-<area shape="rect" id="node44" href="$classuStepperS.html#a0e84f3aa5a3e33b39586697bc7bc741e" title="Set the maximum velocity of the stepper motor." alt="" coords="275,1446,472,1473"/>
-<area shape="rect" id="node45" href="$classuStepperDriver.html#a990e6d0c64db890f0aecbc00a934f109" title="Stops any ongoing movement with deceleration." alt="" coords="835,1319,991,1346"/>
-<area shape="rect" id="node47" href="$classuStepperDriver.html#ad766a6a6f52387d96e1435943c8591b4" title="Set motor driver current." alt="" coords="815,1674,1011,1701"/>
-<area shape="rect" id="node48" href="$classuStepperS.html#ac74e343f7ad81aa5c54a68f2514807fe" title="Set motor output current." alt="" coords="291,1269,455,1295"/>
-<area shape="rect" id="node49" href="$classuStepperDriver.html#ab697c4a73fb3aada7fa8f9e30694ff30" title="Set motor driver hold current." alt="" coords="799,1623,1026,1650"/>
-<area shape="rect" id="node50" href="$classuStepperS.html#a57e019bb84dee27bc4681a311e44e27e" title="Set motor hold current." alt="" coords="815,965,1010,991"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1571,1075,1765,1101"/>
+<area shape="rect" id="node2" href="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715" title="Initiation of the motor driver." alt="" coords="521,1245,670,1272"/>
+<area shape="rect" id="node6" href="$classuStepperDriver.html#ac63122b462ec49720be39372be32c994" title="Reads a register from the motor driver." alt="" coords="1310,341,1521,368"/>
+<area shape="rect" id="node32" href="$classuStepperDriver.html#a9df53360451da6c1b7291ae2ffd12819" title="Write a register of the motor driver." alt="" coords="1308,1075,1523,1101"/>
+<area shape="rect" id="node3" href="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d" title="Internal function to prepare the uStepperS in the constructor." alt="" coords="271,1245,388,1272"/>
+<area shape="rect" id="node4" href="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861" title="Initializes the different parts of the uStepper S object." alt="" coords="21,1183,153,1209"/>
+<area shape="rect" id="node5" href="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42" title="Constructor of uStepper class." alt="" coords="5,1625,168,1652"/>
+<area shape="rect" id="node7" href="$classuStepperEncoder.html#a2e63f211a33fb632b475002b9328fca1" title="Capture the current shaft angle." alt="" coords="774,6,963,47"/>
+<area shape="rect" id="node10" href="$classuStepperDriver.html#acf01b92a98aed0b576588caecf534ed4" title=" " alt="" coords="1054,501,1243,528"/>
+<area shape="rect" id="node13" href="$classuStepperS.html#a9d494350df8d401b1bfcd82eca5481a5" title="This method returns a bool variable indicating wether the motor is stalled or not...." alt="" coords="253,208,405,235"/>
+<area shape="rect" id="node16" href="$classuStepperDriver.html#a59dd1795c65fba7767cf61c18e87024e" title="Returns the current position of the motor driver." alt="" coords="1048,451,1249,477"/>
+<area shape="rect" id="node18" href="$classuStepperDriver.html#aed59b07c61be01c0973614cd94e20ebc" title="Resets the internal position counter of the motor driver." alt="" coords="775,283,962,309"/>
+<area shape="rect" id="node19" href="$classuStepperDriver.html#a2461be201fde6037b90a58c8452319ad" title="Returns the load measurement used for Stall detection." alt="" coords="1059,334,1238,375"/>
+<area shape="rect" id="node20" href="$classuStepperDriver.html#ad1e100d57b313971a3dfb9c78183caa9" title="Returns the current speed of the motor driver." alt="" coords="1047,232,1250,259"/>
+<area shape="rect" id="node22" href="$classuStepperDriver.html#a3a4dbb14ce4308802c27244bdef566b9" title=" " alt="" coords="1051,115,1246,157"/>
+<area shape="rect" id="node25" href="$classuStepperS.html#a78008ed9b2cdbdd8128553a13896aa0d" title=" " alt="" coords="501,637,690,664"/>
+<area shape="rect" id="node26" href="$classuStepperDriver.html#a9182900a27f84224e9428022e4cd2e12" title="Set motor driver direction." alt="" coords="1057,603,1240,645"/>
+<area shape="rect" id="node31" href="$classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd" title="Stop the motor." alt="" coords="533,1448,657,1475"/>
+<area shape="rect" id="node8" href="$classuStepperEncoder.html#a42c9667e532981996758163dfe471682" title="Define new reference(home) position." alt="" coords="496,21,695,48"/>
+<area shape="rect" id="node9" href="$uStepperS_8cpp.html#ae9b180f762f781150187a88c1344e064" title=" " alt="" coords="249,440,410,467"/>
+<area shape="rect" id="node11" href="$classuStepperS.html#ab542d2f2219e517df9c05ba271da6272" title="Clear the stallguard, reenabling the motor to return to its previous operation." alt="" coords="790,435,947,461"/>
+<area shape="rect" id="node14" href="$classuStepperS.html#ae2ee05c054a75cacc7a34803bc8b4641" title="Moves the motor to its physical limit, without limit switch." alt="" coords="244,739,415,765"/>
+<area shape="rect" id="node15" href="$classuStepperDriver.html#a8e9e3be0a375489cb1b560b8b37486b7" title=" " alt="" coords="788,840,949,867"/>
+<area shape="rect" id="node12" href="$classuStepperS.html#a8dbe051a358d1754f579476e00cb9985" title="Enable TMC5130 StallGuard." alt="" coords="492,435,699,461"/>
+<area shape="rect" id="node17" href="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113" title="Make the motor perform a predefined number of steps." alt="" coords="511,1296,680,1323"/>
+<area shape="rect" id="node21" href="$classuStepperS.html#a2e3a7553124db1a62a74fdf0d439f24c" title="Get the RPM from driver." alt="" coords="775,232,962,259"/>
+<area shape="rect" id="node23" href="$classuStepperS.html#afacfd0440b99f607b2af14f103c4e71f" title="Get the current motor driver state." alt="" coords="774,127,963,153"/>
+<area shape="rect" id="node24" href="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f" title="This method is used to check the orientation of the motor connector." alt="" coords="492,293,699,320"/>
+<area shape="rect" id="node27" href="$classuStepperDriver.html#a5ae3986e69fcd2488d9649bf2ae16e69" title=" " alt="" coords="748,739,989,765"/>
+<area shape="rect" id="node29" href="$classuStepperDriver.html#ac606ead1b8240894e570561f8872f75a" title=" " alt="" coords="749,536,988,563"/>
+<area shape="rect" id="node30" href="$classuStepperDriver.html#ab89ec040a2e8a6f4b03cc03e8c590e2e" title=" " alt="" coords="759,941,978,968"/>
+<area shape="rect" id="node28" href="$classuStepperS.html#a4d8842264775a82e016b88c3ca719ddb" title="Disables the builtin stallguard offered from TMC5130, and reenables StealthChop." alt="" coords="491,789,700,816"/>
+<area shape="rect" id="node33" href="$classuStepperDriver.html#a1668657b55a0839ced16aa728f90bc7f" title="Set motor acceleration." alt="" coords="754,1499,983,1525"/>
+<area shape="rect" id="node37" href="$classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c" title="Set motor deceleration." alt="" coords="753,1549,984,1576"/>
+<area shape="rect" id="node39" href="$classuStepperDriver.html#a204ff5c6565b158f9d1c24672d2ef09d" title=" " alt="" coords="1045,1651,1252,1677"/>
+<area shape="rect" id="node41" href="$classuStepperDriver.html#af8c6752ef8ca1516154ef8186f1494ac" title="Set the motor position." alt="" coords="769,1245,969,1272"/>
+<area shape="rect" id="node42" href="$classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c" title="Set motor driver to position mode or velocity mode." alt="" coords="1037,1239,1260,1265"/>
+<area shape="rect" id="node43" href="$classuStepperDriver.html#ace949223744d3ecb544ddb879a1146d6" title="Set motor velocity." alt="" coords="1048,1587,1249,1613"/>
+<area shape="rect" id="node46" href="$classuStepperDriver.html#a6622381d9be81cd93f1c34e605dde404" title="Writes the current setting registers of the motor driver" alt="" coords="1038,1100,1259,1127"/>
+<area shape="rect" id="node34" href="$classuStepperS.html#a26ed0d754a0d95eab0bea0225f471e6e" title=" " alt="" coords="537,1499,653,1525"/>
+<area shape="rect" id="node35" href="$classuStepperS.html#abbe885c71e6dadc13b8c954221ac47eb" title="Make the motor rotate continuously." alt="" coords="504,1651,687,1677"/>
+<area shape="rect" id="node36" href="$classuStepperS.html#a432ca4ebf99c41e00730e2f1072e9ae0" title="Set the maximum acceleration of the stepper motor." alt="" coords="217,1600,442,1627"/>
+<area shape="rect" id="node38" href="$classuStepperS.html#a386a51f45a4f1e45db75c4f0c59263cf" title="Set the maximum deceleration of the stepper motor." alt="" coords="216,1651,443,1677"/>
+<area shape="rect" id="node40" href="$classuStepperS.html#a5b754b633f5938b43f0b4db9f75c8874" title="Set the velocity in rpm." alt="" coords="796,1651,941,1677"/>
+<area shape="rect" id="node44" href="$classuStepperS.html#a0e84f3aa5a3e33b39586697bc7bc741e" title="Set the maximum velocity of the stepper motor." alt="" coords="231,1727,428,1753"/>
+<area shape="rect" id="node45" href="$classuStepperDriver.html#a990e6d0c64db890f0aecbc00a934f109" title="Stops any ongoing movement with deceleration." alt="" coords="791,1397,947,1424"/>
+<area shape="rect" id="node47" href="$classuStepperDriver.html#ad766a6a6f52387d96e1435943c8591b4" title="Set motor driver current." alt="" coords="771,1093,967,1120"/>
+<area shape="rect" id="node48" href="$classuStepperS.html#ac74e343f7ad81aa5c54a68f2514807fe" title="Set motor output current." alt="" coords="247,1119,411,1145"/>
+<area shape="rect" id="node49" href="$classuStepperDriver.html#ab697c4a73fb3aada7fa8f9e30694ff30" title="Set motor driver hold current." alt="" coords="755,1144,982,1171"/>
+<area shape="rect" id="node50" href="$classuStepperS.html#a57e019bb84dee27bc4681a311e44e27e" title="Set motor hold current." alt="" coords="771,688,966,715"/>
 </map>
