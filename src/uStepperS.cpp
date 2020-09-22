@@ -1,8 +1,9 @@
 /********************************************************************************************
 * 	 	File: 		uStepperS.cpp															*
-*		Version:    2.1.0                                           						*
-*      	Date: 		July 11th, 2020  	                                    				*
-*      	Author: 	Thomas Hørring Olsen                                   					*
+*		Version:    2.2.0                                           						*
+*      	Date: 		September 22nd, 2020  	                                    			*
+*      	Authors: 	Thomas Hørring Olsen                                   					*
+*					Emil Jacobsen															*
 *                                                   										*	
 *********************************************************************************************
 *	(C) 2020																				*
@@ -663,8 +664,8 @@ void uStepperS::disableClosedLoop(void)
 float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 {
 	// Lowest reliable speed for stallguard
-	if (rpm < 25.0)
-		rpm = 25.0;
+	if (rpm < 10.0)
+		rpm = 10.0;
 	
 	if(dir == CW)
 		this->setRPM(abs(rpm));

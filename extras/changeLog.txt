@@ -1,5 +1,19 @@
 Changelog - uStepper S library
 ----------------------------
+
+Version 2.2.0:
+	- Added function to get current driver speed in RPM (getDriverRPM())
+	- Fixed "getVelocity()" method of "uStepperDriver" class to use correct twos complement conversion
+	- Updated keywords
+	- Added two new examples:
+		- GYROBalance: Example on how to use MPU6050 IMU with uStepper S 
+		- SWiFiGUI: Example sketch to control the uStepper S with browser based GUI over WiFi
+
+Version 2.1.0:
+	- Fixed checkOrientation to work with Closed loop and dropin modes
+	- Fixed stallguard feature
+	- Modified examples to library update
+
 Version 2.1.0:
 	- Fixed checkOrientation to work with Closed loop and dropin modes
 	- Fixed stallguard feature

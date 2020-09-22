@@ -1,8 +1,9 @@
 /********************************************************************************************
 * 	 	File: 		uStepperDriver.cpp														*
-*		Version:    2.1.0                                           						*
-*      	Date: 		July 11th, 2020  	                                    				*
-*      	Author: 	Thomas Hørring Olsen                                   					*
+*		Version:    2.2.0                                           						*
+*      	Date: 		September 22nd, 2020  	                                    			*
+*      	Authors: 	Thomas Hørring Olsen                                   					*
+*					Emil Jacobsen															*
 *                                                   										*	
 *********************************************************************************************
 *	(C) 2020																				*
