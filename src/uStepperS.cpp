@@ -1,8 +1,9 @@
 /********************************************************************************************
 * 	 	File: 		uStepperS.cpp															*
-*		Version:    2.1.0                                           						*
-*      	Date: 		July 11th, 2020  	                                    				*
-*      	Author: 	Thomas Hørring Olsen                                   					*
+*		Version:    2.2.0                                           						*
+*      	Date: 		September 22nd, 2020  	                                    			*
+*      	Authors: 	Thomas Hørring Olsen                                   					*
+*					Emil Jacobsen															*
 *                                                   										*	
 *********************************************************************************************
 *	(C) 2020																				*
@@ -88,6 +89,13 @@ bool uStepperS::getMotorState(uint8_t statusType)
 		return 0;
 	}
 	return 1;
+}
+
+float uStepperS::getDriverRPM( void )
+{
+	int32_t velocity = this->driver.getVelocity();
+
+	return (float)velocity * this->velToRpm;
 }
 
 void uStepperS::checkOrientation(float distance)
@@ -177,6 +185,12 @@ void uStepperS::setup(	uint8_t mode,
 	this->rpmToVelocity = (float)(279620.267 * fullSteps * microSteps)/(CLOCKFREQ);
 	this->stepsPerSecondToRPM = 60.0/(this->microSteps*this->fullSteps);
 	this->RPMToStepsPerSecond = (this->microSteps*this->fullSteps)/60.0;
+
+
+	this->stepTime = 16777216.0/CLOCKFREQ; // 2^24/CLOCKFREQ
+	this->rpmToVel = (this->fullSteps*this->microSteps)/(60.0/this->stepTime);
+	this->velToRpm = 1.0/this->rpmToVel;
+
 	this->init();
 
 	this->driver.setDeceleration( (uint32_t)( this->maxDeceleration ) );
@@ -650,8 +664,8 @@ void uStepperS::disableClosedLoop(void)
 float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 {
 	// Lowest reliable speed for stallguard
-	if (rpm < 25.0)
-		rpm = 25.0;
+	if (rpm < 10.0)
+		rpm = 10.0;
 	
 	if(dir == CW)
 		this->setRPM(abs(rpm));

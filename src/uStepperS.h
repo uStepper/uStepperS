@@ -1,8 +1,9 @@
 /********************************************************************************************
 * 	 	File: 		uStepperS.h 															*
-*		Version:    2.1.0                                           						*
-*      	Date: 		July 11th, 2020  	                                    				*
-*      	Author: 	Thomas Hørring Olsen                                   					*
+*		Version:    2.2.0                                           						*
+*      	Date: 		September 22nd, 2020  	                                    			*
+*      	Authors: 	Thomas Hørring Olsen                                   					*
+*					Emil Jacobsen															*
 *                                                   										*	
 *********************************************************************************************
 *	(C) 2020																				*
@@ -360,6 +361,15 @@ public:
 	 */
 	void setRPM( float rpm );
 
+    /**
+	 * @brief      Get the RPM from driver
+	 *
+	 *             This function returns the driver velocity of the motor 
+	 *
+	 * @return     The velocity in rpm
+	 */
+    float getDriverRPM( void );
+
 	/**
 	 * @brief      Set the maximum acceleration of the stepper motor.
 	 *
@@ -701,6 +711,10 @@ public:
 	
 private: 
 
+	float stepTime;
+	float rpmToVel;
+	float velToRpm;
+
 	/** This variable contains the maximum velocity in steps/s, the motor is
 	 * allowed to reach at any given point. The user of the library can
 	 * set this by use of the setMaxVelocity()
@@ -719,6 +733,7 @@ private:
 
 	uint16_t microSteps;
 	uint16_t fullSteps;
+	
 	uint16_t dropinStepSize;
 
 	int32_t stepCnt;
