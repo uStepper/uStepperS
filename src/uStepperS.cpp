@@ -661,8 +661,9 @@ void uStepperS::disableClosedLoop(void)
 	this->disablePid();
 }
 
-float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
+float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold, uint32_t timeOut)
 {
+	uint32_t timeOutStart = micros();
 	// Lowest reliable speed for stallguard
 	if (rpm < 10.0)
 		rpm = 10.0;
@@ -680,7 +681,13 @@ float uStepperS::moveToEnd(bool dir, float rpm, int8_t threshold)
 
 	float length = this->encoder.getAngleMoved();
 	
-	while( !this->isStalled() ){}
+	while( !this->isStalled() ){
+		delay(1);
+		if((micros() - timeOutStart)  > (timeOut * 1000))
+		{
+			break;		// TimeOut !! break out and exit
+		}
+	}
 	this->stop();
 	pointer->driver.clearStall();
 

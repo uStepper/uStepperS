@@ -614,10 +614,12 @@ public:
 	 * @param[in]   rpm   RPM of the motor while searching for limit
 	 * 
 	 * @param[in]  	threshold  Sensitivity of stall detection (-64 to +63), low is more sensitive
+	 * 
+	 * @param[in]  	Timeout in milliseconds to exit function if homing doesnt behave as expected
 	 *
 	 * @return 		Degrees turned from calling the function, till end was reached
 	 */
-	float moveToEnd(bool dir, float rpm = 40.0, int8_t threshold = 4);
+	float moveToEnd(bool dir, float rpm = 40.0, int8_t threshold = 4, uint32_t timeOut = 100000);
 
 	/**
 	 * @brief      This method returns the current PID error
