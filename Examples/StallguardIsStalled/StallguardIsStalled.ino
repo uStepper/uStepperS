@@ -1,3 +1,37 @@
+/********************************************************************************************
+* 	    	File:  LimitDetection.ino                                                         *
+*		   Version:  1.0.0                                                                      *
+*         Date:  Oktober 2nd, 2020                                                          *
+*       Author:  Emil Jacobsen                                                              *
+*  Description:  This example demonstrates how Stallguard can be used to detect motor stall,*
+*                and automatic stop before any steps is lost.                               *
+*                The for-loop applies six different velocities, but only shifts to the next *
+*                when a stall is detected.                                                  *
+*                                                                                           *
+* For more information, check out the documentation:                                        *
+*                       http://ustepper.com/docs/usteppers/html/index.html                  *
+*                                                                                           *
+*  Note.......:  Place the stepper motor on a solid surface where it cannot harm anyone     *
+*                during the test.                                                           *
+*                                                                                           *
+*********************************************************************************************
+*	(C) 2020                                                                                  *
+*                                                                                           *
+*	uStepper ApS                                                                              *
+*	www.ustepper.com                                                                          *
+*	administration@ustepper.com                                                               *
+*                                                                                           *
+*	The code contained in this file is released under the following open source license:      *
+*                                                                                           *
+*			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International               *
+*                                                                                           *
+* 	The code in this file is provided without warranty of any kind - use at own risk!       *
+* 	neither uStepper ApS nor the author, can be held responsible for any damage             *
+* 	caused by the use of the code contained in this file !                                  *
+*                                                                                           *
+*                                                                                           *
+********************************************************************************************/
+
 /*  
   Info:   This example demonstrates how Stallguard can be used to detect motor stall, and automatic stop before any steps is lost.
           The for-loop applies six different velocities, but only shifts to the next when a stall is detected.  
