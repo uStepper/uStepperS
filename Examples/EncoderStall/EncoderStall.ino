@@ -47,7 +47,7 @@ void setup() {
   stepper.checkOrientation(30.0);       //Check orientation of motor connector with +/- 30 microsteps movement
   Serial.begin(9600);
   stepper.setRPM(100);
-  stepper.encoder.encoderStallDetectSensitivity = -0.5;//Encoder stalldetect sensitivity - From -10 to 1 where lower number is less sensitive and higher is more sensitive. -0.5 works for most.
+  stepper.encoder.encoderStallDetectSensitivity = -0.25;//Encoder stalldetect sensitivity - From -10 to 1 where lower number is less sensitive and higher is more sensitive. -0.25 works for most.
   stepper.encoder.encoderStallDetectEnable = 1; //Enable the encoder stall detect
 }
 
