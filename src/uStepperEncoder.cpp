@@ -168,7 +168,7 @@ uint16_t uStepperEncoder::captureAngle(void)
 	{
 		float driverSpeed = pointer->driver.getVelocity();
 		float encoderSpeed = pointer->encoder.encoderFilter.velIntegrator*ENCODERDATATOSTEP;
-		if (pointer->driver.readRegister(RAMPMODE)==2)
+		if (driverSpeed<0)
 		{
 			if ((((driverSpeed*(1+this->encoderStallDetectSensitivity)) < encoderSpeed) || ((driverSpeed*(1-this->encoderStallDetectSensitivity))) > encoderSpeed) && startDelay > 200)
 		    {
