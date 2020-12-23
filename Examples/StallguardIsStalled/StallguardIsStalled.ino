@@ -1,12 +1,16 @@
 /********************************************************************************************
 * 	    	File:  LimitDetection.ino                                                         *
 *		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 2nd, 2020                                                          *
+*         Date:  October 2nd, 2020                                                          *
 *       Author:  Emil Jacobsen                                                              *
 *  Description:  This example demonstrates how Stallguard can be used to detect motor stall,*
 *                and automatic stop before any steps is lost.                               *
 *                The for-loop applies six different velocities, but only shifts to the next *
 *                when a stall is detected.                                                  *
+*                Stallguard is very sensitive and provides seamless stall detection when 	  *
+*				         tuned for the application. It is dependent on speed, current setting		    *
+*				         and load conditions amongst others. The encoder stall detection is 		    *
+*				         unaffected by most of these but can be a bit less sensitive.				        *
 *                                                                                           *
 * For more information, check out the documentation:                                        *
 *                       http://ustepper.com/docs/usteppers/html/index.html                  *

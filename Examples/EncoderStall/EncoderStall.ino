@@ -1,11 +1,17 @@
 /********************************************************************************************
 * 	    	File:  encoderStall.ino                                                           *
 *		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 7th, 2020                                                          *
+*         Date:  December 23rd, 2020                                                        *
 *       Author:  Mogens Groth Nicolaisen                                                    *
 *  Description:  Encoder Stall Example Sketch!                                              *
 *                This example demonstrates how the library can be used to detect a stall    *
 *                using the encoder feedback and stop the motor.                             *
+*				         Alternatively the Trinamic Stallguard feature can be used which is shown	  *
+*				         in LimitDetection.ino and StallguardIsStalled.ino. Stallguard is very 		  *
+*				         sensitive and provides seamless stall detection when tuned for the 		    *
+*				         application. It is dependent on speed, current setting and load conditions	*
+*				         amongst others. The encoder stall detection is unaffected by most of these *
+*				         but can be a bit less sensitive.											                      *
 *                                                                                           *
 * For more information, check out the documentation:                                        *
 *    http://ustepper.com/docs/usteppers/html/index.html                                     *
