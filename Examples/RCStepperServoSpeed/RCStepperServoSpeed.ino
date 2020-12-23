@@ -11,6 +11,16 @@
 *                stick low for 1 second followed by moving it to the highest positon        *
 *                for a second to calibrate the speed range.                                 *
 *                                                                                           *
+*  Pin connections:                                                                         *
+* -----------------------------                                                             *
+* | Controller | uStepper S    |                                                            *
+* |----------------------------|                                                            *
+* | Signal   |    D3     |                                                                  *
+* | GND      |    GND    |                                                                  *
+* | 5V       |    5V     | <- This is only neded if you do not have a supply for your       *
+*                             receiver - ONLY add one 5V connection to your receiver !!     *
+* ------------------------------                                                            *
+*                                                                                           *
 *                                                                                           *
 * For more information, check out the documentation:                                        *
 *    http://ustepper.com/docs/usteppers/html/index.html                                     *
