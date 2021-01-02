@@ -52,11 +52,11 @@
 uStepperS stepper;
 uint16_t deltaTime = 0;
 uint16_t time1 = 0;
-uint16_t lowVal = 2000;
-uint16_t highVal = 0;
+uint16_t lowVal = 2000;// Ususally 1000us - Is set to 2000 for RC range calibarion procedure
+uint16_t highVal = 0;// Usually 2000us - Is set to 0 for RC range calibration procedure
+bool RCinit = 0;// If you do not wish to do RC calibration procedure, set the above two values to 1000 and 2000 respectively (or your own min/max servo pulse widths) and set RCinit = 1;
 uint8_t k = 1;
 int16_t velFilt;
-bool RCinit = 0;
 
 void setup(void)
 {
@@ -64,7 +64,7 @@ void setup(void)
   stepper.setup();    //Initiate the stepper object 
   pinMode(3,INPUT_PULLUP);    //Hardware interrupt input on D3 with pull-up
   attachInterrupt(0, interruptRC, CHANGE);    //Attach interrupt to the pin and react on both rising and falling edges
-  pinMode(2,OUTPUT);
+  pinMode(2,OUTPUT);// Setting the LED up
   digitalWrite(2,LOW);
   
   stepper.setMaxAcceleration(50000);     //use an acceleration of 2000 fullsteps/s^2
@@ -84,7 +84,7 @@ void loop(void)
   stepper.setRPM(velFilt);// Now move as requested
 }
 
-void initRC(void)// Find max and min limits of control input. Requires that the user moves the stick in one direction and keeps it there for a second and then move in the opposite direction and keep it there for a second
+void initRC(void)// Find max and min limits of control input. Requires that the user moves the stick to the low point and keeps it there for a second and then move in the opposite direction and keep it there for a second
 {
   if(deltaTime < 1200 && k<50)
   {
