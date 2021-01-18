@@ -72,8 +72,13 @@ void loop() {
     // Hint: If stopOnStall is set to false, you have to use .stop() or setRPM(0) in order to stop the motor on stall. 
     stepper.enableStallguard(STALLSENSITIVITY, true, rpm[i]);
 
-    // Wait for stall to be detected.
-    while( !stepper.isStalled() ){}
+    // Wait for stall to be detected - print stall value as we wait
+    while( !stepper.isStalled() )
+    {
+      // Use the Serial Plotter to effectively see this value. Must be above 0 when running and stall will make it drop. 
+      // If 0 when running, increase Sensitivity, if not running decrease Sensitivity
+      Serial.println(stepper.driver.getStallValue());
+    }
     // Clear stallguard
     stepper.clearStall();
     
