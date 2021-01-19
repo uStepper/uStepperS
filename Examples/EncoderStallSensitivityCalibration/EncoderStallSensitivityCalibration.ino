@@ -1,11 +1,11 @@
 /********************************************************************************************
-* 	    	File:  EncoderStall.ino                                                           *
+* 	    	File:  EncoderStallSensitivityCalibration.ino                                     *
 *		   Version:  1.0.0                                                                      *
-*         Date:  December 23rd, 2020                                                        *
+*         Date:  January 19, 2021                                                           *
 *       Author:  Mogens Groth Nicolaisen                                                    *
-*  Description:  Encoder Stall Example Sketch!                                              *
-*                This example demonstrates how the library can be used to detect a stall    *
-*                using the encoder feedback and stop the motor.                             *
+*  Description:  Encoder Stall Sensitivity Calibration Sketch!                              *
+*                This example demonstrates helps calibrate the encoder stall sensitivity    *
+*                for use with the encoder stall feature. See encoder stall example.         *
 *				         Alternatively the Trinamic Stallguard feature can be used which is shown	  *
 *				         in LimitDetection.ino and StallguardIsStalled.ino. Stallguard is very 		  *
 *				         sensitive and provides seamless stall detection when tuned for the 		    *
@@ -18,7 +18,7 @@
 *                                                                                           *
 *                                                                                           *
 *********************************************************************************************
-*	(C) 2020                                                                                  *
+*	(C) 2021                                                                                  *
 *                                                                                           *
 *	uStepper ApS                                                                              *
 *	www.ustepper.com                                                                          *
@@ -36,33 +36,45 @@
 ********************************************************************************************/
 
 /*
-*      Encoder Stall Example Sketch!
-*
-* This example demonstrates how the library can be used to detect a stall using the encoder 
-* feedback and stop the motor.
+*      Encoder Stall Sensitivity Calibration Sketch!
+*      
+* This example demonstrates helps calibrate the encoder stall sensitivity 
+* for use with the encoder stall feature. See encoder stall example.
 * For more information, check out the documentation:
 * http://ustepper.com/docs/usteppers/html/index.html
 */
 #include <uStepperS.h>
 
 uStepperS stepper;
+uint8_t rpm[6] = {25, 50, 80, 120, 130, 150};
 
 void setup() {
   // put your setup code here, to run once:
   stepper.setup();
   stepper.checkOrientation(30.0);       //Check orientation of motor connector with +/- 30 microsteps movement
   Serial.begin(9600);
-  stepper.setRPM(100);
-  stepper.encoder.encoderStallDetectSensitivity = -0.25;//Encoder stalldetect sensitivity - From -10 to 1 where lower number is less sensitive and higher is more sensitive. -0.25 works for most.
   stepper.encoder.encoderStallDetectEnable = 1; //Enable the encoder stall detect
 }
 
 void loop() {
-  bool stall = stepper.encoder.encoderStallDetect;//Read the stall decision
-  Serial.println(stall);// Print out the result - 1 = stall detected
-  if(stall)// Look for stall
+  Serial.println("-- Encoder Stall Test --");
+
+  // Run through all five rpm's
+  for( uint8_t i = 0; i < sizeof(rpm); i++ ){
+    Serial.print(rpm[i]); Serial.println(" rpm");
+    stepper.setRPM(rpm[i]); 
+    delay(1000);
+    for(uint8_t stallValue = 0; stallValue<220;stallValue++)
     {
-      stepper.stop();// Stop motor !
-      while(1);// Stop program
+      stepper.encoder.encoderStallDetectSensitivity = 1-(stallValue*0.05);
+      delay(100);
+      if(!stepper.encoder.encoderStallDetect)
+      {
+        Serial.print("Sensitivity must be less than: ");
+        Serial.println(1-(stallValue*0.05));
+        stallValue=220;
+      }
     }
+    stepper.stop();
+  } 
 }
