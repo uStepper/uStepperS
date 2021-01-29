@@ -1,0 +1,49 @@
+/*
+  Blink LED with uStepper digital PIN using pulse width modulation (PWM)
+
+  Turns an LED on and of with fading intensity using PWM available at PINs = {1,4}
+
+ 
+
+  modified 29 Jan 2021
+  by LibrEars
+
+
+  This example code is in the public domain.
+
+  https://create.arduino.cc/projecthub/muhammad-aqib/arduino-pwm-tutorial-ae9d71
+
+
+
+      Pin connections:
+    -----------------------------
+    | Controller | uStepper S    |
+    |----------------------------|
+    | LED (R)  |    D1           |
+    | GND      |    GND          |
+    ------------------------------  
+
+
+*/
+
+
+//Initializing LED Pin
+int led_pin = 1;
+
+void setup() {
+  //Declaring LED pin as output
+  pinMode(led_pin, OUTPUT);
+}
+
+// analogWrite allows values from 0 to 255 (8-bit ADC or 10-bit ADCaß -> 1023?)
+void loop() {
+  //Fading the LED
+  for(int i=0; i<255; i++){
+    analogWrite(led_pin, i);
+    delay(5);
+  }
+  for(int i=255; i>0; i--){
+    analogWrite(led_pin, i);
+    delay(5);
+  }
+}
