@@ -19,7 +19,7 @@
 -----------------------------
 | Controller | uStepper S    |
 |----------------------------|
-| LED (R)  |    D1     |
+| LED (R)  |    D1     |    This example works for D1-D8 on uStepper S 
 | GND      |    GND    |
 ------------------------------  
 
