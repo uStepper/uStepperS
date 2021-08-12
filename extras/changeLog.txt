@@ -1,5 +1,7 @@
 Changelog - uStepper S library
 ----------------------------
+Version 2.2.1:
+	- Added timeout to homing function
 
 Version 2.2.0:
 	- Added function to get current driver speed in RPM (getDriverRPM())

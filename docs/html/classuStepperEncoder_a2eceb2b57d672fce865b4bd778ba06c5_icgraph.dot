@@ -1,0 +1,16 @@
+digraph "uStepperEncoder::getAngleMoved"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="uStepperEncoder::getAngle\lMoved",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Returns the angle moved from reference position in degrees."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="uStepperS::angleMoved",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a1976219524f5853d3fc37b7d919bfca4",tooltip="Get the angle moved from reference position in degrees."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="uStepperS::moveToAngle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692",tooltip="Makes the motor rotate to a specific absolute angle."];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="uStepperS::checkOrientation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f",tooltip="This method is used to check the orientation of the motor connector."];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="uStepperS::moveToEnd",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a197ed9163e649bf5119d6c5670cd6aa4",tooltip="Moves the motor to its physical limit, without limit switch."];
+}

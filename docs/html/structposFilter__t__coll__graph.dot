@@ -1,0 +1,9 @@
+digraph "posFilter_t"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{posFilter_t\n||}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Struct for encoder velocity estimator."];
+  Node2 -> Node1 [color="grey25",fontsize="10",style="solid",label=" +posError\n+posEst\n+velEst\n+velIntegrator" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node2 [label="{float\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}
