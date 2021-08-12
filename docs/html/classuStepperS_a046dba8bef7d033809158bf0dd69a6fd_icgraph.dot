@@ -1,0 +1,10 @@
+digraph "uStepperS::stop"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="uStepperS::stop",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Stop the motor."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="uStepperS::moveToEnd",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a197ed9163e649bf5119d6c5670cd6aa4",tooltip="Moves the motor to its physical limit, without limit switch."];
+}

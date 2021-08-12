@@ -1,0 +1,40 @@
+digraph "uStepperDriver::setVelocity"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="uStepperDriver::setVelocity",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Set motor velocity."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="uStepperS::moveSteps",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113",tooltip="Make the motor perform a predefined number of steps."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="uStepperS::moveAngle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e",tooltip="Makes the motor rotate a specific angle relative to the current position."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="uStepperS::checkOrientation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f",tooltip="This method is used to check the orientation of the motor connector."];
+  Node2 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="uStepperS::moveToAngle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692",tooltip="Makes the motor rotate to a specific absolute angle."];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="uStepperS::runContinous",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#abbe885c71e6dadc13b8c954221ac47eb",tooltip="Make the motor rotate continuously."];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="uStepperS::setMaxVelocity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a0e84f3aa5a3e33b39586697bc7bc741e",tooltip="Set the maximum velocity of the stepper motor."];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="uStepperS::uStepperS",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42",tooltip="Constructor of uStepper class."];
+  Node1 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="uStepperS::setRPM",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a5b754b633f5938b43f0b4db9f75c8874",tooltip="Set the velocity in rpm."];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="uStepperS::moveToEnd",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a197ed9163e649bf5119d6c5670cd6aa4",tooltip="Moves the motor to its physical limit, without limit switch."];
+  Node9 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="uStepperS::pid",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a26ed0d754a0d95eab0bea0225f471e6e",tooltip=" "];
+  Node9 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="uStepperS::stop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd",tooltip="Stop the motor."];
+  Node12 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="uStepperDriver::stop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#a990e6d0c64db890f0aecbc00a934f109",tooltip="Stops any ongoing movement with deceleration."];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="uStepperDriver::init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715",tooltip="Initiation of the motor driver."];
+  Node14 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="uStepperS::init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d",tooltip="Internal function to prepare the uStepperS in the constructor."];
+  Node15 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="uStepperS::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861",tooltip="Initializes the different parts of the uStepper S object."];
+  Node15 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

@@ -67,6 +67,8 @@ https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vc
 - does not properly release motor in dropin mode
 
 ## Change Log
+2.2.1:
+- Added timeout to homing function
 
 2.2.0:
 - Added function to get current driver speed in RPM (getDriverRPM())

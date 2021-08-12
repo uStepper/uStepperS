@@ -1,0 +1,33 @@
+digraph "uStepperDriver::setShaftDirection"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="uStepperDriver::setShaft\lDirection",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Set motor driver direction."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="uStepperS::checkOrientation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f",tooltip="This method is used to check the orientation of the motor connector."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="uStepperDriver::disableStallguard",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#a5ae3986e69fcd2488d9649bf2ae16e69",tooltip=" "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="uStepperS::disableStallguard",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a4d8842264775a82e016b88c3ca719ddb",tooltip="Disables the builtin stallguard offered from TMC5130, and reenables StealthChop."];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="uStepperS::moveToEnd",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a197ed9163e649bf5119d6c5670cd6aa4",tooltip="Moves the motor to its physical limit, without limit switch."];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="uStepperDriver::enableStallguard",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#ac606ead1b8240894e570561f8872f75a",tooltip=" "];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="uStepperS::enableStallguard",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a8dbe051a358d1754f579476e00cb9985",tooltip="Enable TMC5130 StallGuard."];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="uStepperS::isStalled",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a9d494350df8d401b1bfcd82eca5481a5",tooltip="This method returns a bool variable indicating wether the motor is stalled or not...."];
+  Node6 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="uStepperDriver::enableStealth",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#ab89ec040a2e8a6f4b03cc03e8c590e2e",tooltip=" "];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="uStepperDriver::init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#aa0377f43140c529c559e8ec0868cb715",tooltip="Initiation of the motor driver."];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="uStepperS::init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#ab8a5c0b35bda13aae2a9faa56eb4bd5d",tooltip="Internal function to prepare the uStepperS in the constructor."];
+  Node11 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="uStepperS::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861",tooltip="Initializes the different parts of the uStepper S object."];
+  Node11 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="uStepperS::uStepperS",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#aea43098c9be52ac35427452aad4c6c42",tooltip="Constructor of uStepper class."];
+}

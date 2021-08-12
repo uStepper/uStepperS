@@ -1,0 +1,12 @@
+digraph "uStepperServo"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{uStepperServo\n||+ uStepperServo()\l+ attach()\l+ detach()\l+ write()\l+ setMinimumPulse()\l+ setMaximumPulse()\l+ refresh()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Prototype of class for ustepper servo."];
+  Node2 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -pulse" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node2 [label="{uint16_t\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node3 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -angle\n-max16\n-min16\n-pin" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node3 [label="{uint8_t\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -first\n-next" ,arrowhead="odiamond",fontname="Helvetica"];
+}

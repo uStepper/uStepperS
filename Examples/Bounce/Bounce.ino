@@ -1,11 +1,33 @@
-/*
-*      Bounce Example Sketch!
-*
-* This example demonstrates how the library can be used to move the motor a specific angle,
-* Set the acceleration/velocity and read out the angle moved !
-* For more information, check out the documentation:
-* http://ustepper.com/docs/usteppers/html/index.html
-*/
+/********************************************************************************************
+* 	    	File:  LimitDetection.ino                                                         *
+*		   Version:  1.0.0                                                                      *
+*         Date:  Oktober 8th, 2020                                                          *
+*       Author:  Thomas Hørring Olsen                                                       *
+*  Description:  Bounce Example Sketch!                                                     *
+*                                                                                           *
+* This example demonstrates how the library can be used to move the motor a specific angle, *
+* Set the acceleration/velocity and read out the angle moved !                              *            *
+*                                                                                           *
+* For more information, check out the documentation:                                        * 
+*                http://ustepper.com/docs/usteppers/html/index.html                         *
+*                                                                                           *
+*********************************************************************************************
+*	(C) 2020                                                                                  *
+*                                                                                           *
+*	uStepper ApS                                                                              *
+*	www.ustepper.com                                                                          *
+*	administration@ustepper.com                                                               *
+*                                                                                           *
+*	The code contained in this file is released under the following open source license:      *
+*                                                                                           *
+*			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International               *
+*                                                                                           *
+* 	The code in this file is provided without warranty of any kind - use at own risk!       *
+* 	neither uStepper ApS nor the author, can be held responsible for any damage             *
+* 	caused by the use of the code contained in this file !                                  *
+*                                                                                           *
+*                                                                                           *
+********************************************************************************************/
 
 #include <uStepperS.h>
 

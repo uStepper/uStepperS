@@ -1,15 +1,37 @@
-/*
-*      Example sketch for closed loop position control!
-*
-* This example demonstrates how easy closed loop position control can be achieved using the uStepper S !
-* The only thing needed to activate closed loop control, is in the stepper.setup() function, where the
-* object is initiated with the keyword "CLOSEDLOOP", followed by the number of steps per revolution setting.
-* For more information, check out the documentation:
-* http://ustepper.com/docs/usteppers/html/index.html
-*
-* Once the closed loop is activated, the use of the library is the same as without the closed loop !
-*
-*/
+/********************************************************************************************
+* 	    	File:  GYROBalance.ino                                                            *
+*		   Version:  1.0.0                                                                      *
+*         Date:  Oktober 7th, 2020                                                          *
+*       Author:  Thomas Hørring Olsen                                                       *
+*  Description:  Example sketch for closed loop position control!                           *                           *
+*                This example demonstrates how easy closed loop position control can be     *
+*                achieved using the uStepper S !                                            *
+*                The only thing needed to activate closed loop control, is in the           *
+*                stepper.setup() function, where the object is initiated with the keyword   *
+*                "CLOSEDLOOP", followed by the number of steps per revolution setting.      *
+*                                                                                           *
+*                                                                                           *
+* For more information, check out the documentation:                                        *
+*    http://ustepper.com/docs/usteppers/html/index.html                                     *
+*                                                                                           *
+*                                                                                           *
+*********************************************************************************************
+*	(C) 2020                                                                                  *
+*                                                                                           *
+*	uStepper ApS                                                                              *
+*	www.ustepper.com                                                                          *
+*	administration@ustepper.com                                                               *
+*                                                                                           *
+*	The code contained in this file is released under the following open source license:      *
+*                                                                                           *
+*			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International               *
+*                                                                                           *
+* 	The code in this file is provided without warranty of any kind - use at own risk!       *
+* 	neither uStepper ApS nor the author, can be held responsible for any damage             *
+* 	caused by the use of the code contained in this file !                                  *
+*                                                                                           *
+*                                                                                           *
+********************************************************************************************/
 
 #include <uStepperS.h>
 

@@ -1,0 +1,22 @@
+digraph "uStepperDriver::getPosition"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="uStepperDriver::getPosition",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Returns the current position of the motor driver."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="uStepperS::moveSteps",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#afacde6cc1a2dab2420c453008b3ab113",tooltip="Make the motor perform a predefined number of steps."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="uStepperS::moveAngle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a6b3f4acd2deaeb3054d439a148af658e",tooltip="Makes the motor rotate a specific angle relative to the current position."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="uStepperS::checkOrientation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a931f28e0dd5ecba1f1a875ee321f0f5f",tooltip="This method is used to check the orientation of the motor connector."];
+  Node2 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="uStepperS::moveToAngle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#aa8695689ae23951a7dc47300e8529692",tooltip="Makes the motor rotate to a specific absolute angle."];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="uStepperDriver::setHome",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#aed59b07c61be01c0973614cd94e20ebc",tooltip="Resets the internal position counter of the motor driver."];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="uStepperEncoder::setHome",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperEncoder.html#a42c9667e532981996758163dfe471682",tooltip="Define new reference(home) position."];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="uStepperS::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a16c8cc814f8fea692a8f8cad918f9861",tooltip="Initializes the different parts of the uStepper S object."];
+}
