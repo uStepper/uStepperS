@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	 	File: 		uStepperS.h 															*
-*		Version:    2.2.0                                           						*
-*      	Date: 		September 22nd, 2020  	                                    			*
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *      	Authors: 	Thomas Hørring Olsen                                   					*
 *					Emil Jacobsen															*
 *                                                   										*	

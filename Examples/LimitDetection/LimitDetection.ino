@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	    	File:  LimitDetection.ino                                                         *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 2nd, 2020                                                          *
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Thomas Hørring Olsen                                                       *
 *  Description:  Limit Detection Example Sketch!                                            *
 *                This example demonstrates how the library can be used to detect hard       *

@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	    	File:  GYROBalance.ino                                                            *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 7th, 2020                                                          *
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Mogens Nicolaisen                                                          *
 *  Description:  Gyro Example Sketch!                                                       *
 *                Requires uStepper S Gyro Shield !                                          *

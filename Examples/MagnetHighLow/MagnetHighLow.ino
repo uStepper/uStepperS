@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	    	File:  MHI_MLOTest.ino                                                            *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 2nd, 2020                                                          *
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Hans Henrik Skovgaard                                                      *
 *  Description:  This example displays the status of the magnet: High or low, meaning too   *
 *                    close or too far away. Both situations can cource reading errors.      *

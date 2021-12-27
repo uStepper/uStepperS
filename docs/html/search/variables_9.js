@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['next_427',['next',['../classuStepperServo.html#a53bfc2de75dab9df9cfb71157e3dbb3a',1,'uStepperServo']]]
+  ['oldangle_0',['oldAngle',['../classuStepperEncoder.html#a479c3f88c98766f1df30eea67b907c6f',1,'uStepperEncoder']]]
 ];

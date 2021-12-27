@@ -7,7 +7,7 @@ digraph "C:/Users/Thomas/Documents/Arduino/libraries/uStepperS/src/uStepperDrive
   Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node2 [label="Arduino.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node3 [label="uStepperS.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uStepperS_8h.html",tooltip=" "];
+  Node3 [label="uStepperS.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uStepperS_8h.html",tooltip="Function prototypes and definitions for the uStepper S library."];
   Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node4 [label="avr/io.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node3 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
