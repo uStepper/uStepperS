@@ -1,1 +1,4 @@
-added timeout to homing function
+2021-12-27:
+Changed the 'stop' method at the uStepperS.cpp to wait until the motor realy stops movement.
+Thanks to Daniel-Walther for pointing it out.
+

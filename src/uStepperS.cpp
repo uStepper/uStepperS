@@ -516,7 +516,12 @@ void uStepperS::stop( bool mode){
 	else
 	{
 		this->setRPM(0);
+		while(this->driver.readRegister(VACTUAL) != 0);
 	}
+	// Get current position
+	int32_t current = this->driver.getPosition();
+	// Set new position
+	this->driver.setPosition( current );	
 }
 
 void uStepperS::filterSpeedPos(posFilter_t *filter, int32_t steps)
