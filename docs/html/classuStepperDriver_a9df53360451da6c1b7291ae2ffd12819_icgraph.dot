@@ -83,6 +83,7 @@ digraph "uStepperDriver::writeRegister"
   Node1 -> Node30 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node30 [label="uStepperDriver::setPosition",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#af8c6752ef8ca1516154ef8186f1494ac",tooltip="Set the motor position."];
   Node30 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node30 -> Node22 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node31 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node31 [label="uStepperDriver::setRampMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c",tooltip="Set motor driver to position mode or velocity mode."];
   Node31 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];

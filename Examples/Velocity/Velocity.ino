@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	    	File:  VelocityTest.ino                                                           *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 2nd, 2020                                                          *
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Hans Henrik Skovgaard                                                      *
 *  Description:  By entering the commands f, m and s the RPM of the stepper can be changed  *
 *                 on the fly.                                                               *

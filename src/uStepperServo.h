@@ -1,12 +1,12 @@
 /********************************************************************************************
 *       File:       uStepperServo.h                                                         *
-*		    Version:    2.2.0                                           						            *
-*      	Date: 		  September 22nd, 2020  	                                    			      *
+*		    Version:    2.3.0                                          						              *
+*      	Date: 		  December 27th, 2021  	                                    			        *
 *      	Authors: 	  Thomas Hørring Olsen                                   					        *
 *					          Emil Jacobsen															                              *
 *                                                                                           *   
 *********************************************************************************************
-*   (C) 2020                                                                                *
+*   (C) 2021                                                                                *
 *                                                                                           *
 *   uStepper ApS                                                                            *
 *   www.ustepper.com                                                                        *
@@ -37,30 +37,28 @@
 #include <Arduino.h>
 #include <inttypes.h>
 
+#define TIMERTOP 39850.0f
+#define TIMERPERIOD 20000.0f //period in us
+#define TICKSTOUS TIMERTOP/TIMERPERIOD
+
 /**
  * @brief      Prototype of class for ustepper servo.
  */
 class uStepperServo
 {
-  private:
-    /** Digital output pin connected to servo input terminal */
-    uint8_t pin;        
+  private:     
     /** Current angle in degrees */
     uint8_t angle;      
     /** Pulse width in timer0 ticks (1 tick = 16us) */
     uint16_t pulse;     
     /** Minimum pulse width in timer0 ticks (default = 92 = 1.472ms) */
-    uint8_t min16;      
+    uint16_t min16;      
     /** Maximum pulse width in timer0 ticks (default = 150 = 2.4ms) */
-    uint8_t max16;      
-
-    /** Pointer to hold address of next servo in chain, if multiple
-    * servos are connected */
-    class uStepperServo *next;      
-    
-    /** Pointer to hold address of first servo in chain */
-    static uStepperServo* first;    
+    uint16_t max16;      
+  
   public:
+
+    void setup(void);
 
     /**
      * @brief      Constructor for servo class
@@ -70,26 +68,6 @@ class uStepperServo
      *             to the uStepper.
      */
     uStepperServo();
-    
-    /**
-     * @brief      Attaches the servo motor to a specific pin
-     *
-     *             This method is used to attach the instantiated servo motor
-     *             object to a specific pin connected to the servo input
-     *             terminal
-     *
-     * @param[in]  pinArg  Pin connected to servo input terminal
-     *
-     * @return     0 on failure
-     */
-    uint8_t attach(int pinArg);
-    
-    /**
-     * @brief      Detaches the servo motor from the uStepper
-     *
-     *             This method detaches the servo motor from the uStepper
-     */
-    void detach();
     
     /**
      * @brief      Specify angle of servo motor
@@ -108,7 +86,7 @@ class uStepperServo
      *
      * @param[in]  t     Minimum pulse width in microseconds
      */
-    void setMinimumPulse(uint16_t t);
+    void setMinimumPulse(float us);
     
     /**
      * @brief      Sets the maximum pulse.
@@ -118,16 +96,7 @@ class uStepperServo
      *
      * @param[in]  t     Maximum pulse width in microseconds
      */
-    void setMaximumPulse(uint16_t t);
-    
-    /**
-     * @brief      Updates servo output pins
-     *
-     *             This method updates the pulses on the servo output pins. This
-     *             method must be called at least once every 50 ms, to ensure
-     *             correct movement of the Servo motors!
-     */
-    static void refresh();                        
+    void setMaximumPulse(float us);     
 };
 
 #endif

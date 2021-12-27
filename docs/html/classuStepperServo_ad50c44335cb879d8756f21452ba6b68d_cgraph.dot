@@ -1,0 +1,14 @@
+digraph "uStepperServo::setup"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="uStepperServo::setup",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="uStepperServo::setMaximum\lPulse",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperServo.html#ae375b350712489ab63ff6d0c78d08c30",tooltip="Sets the maximum pulse."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="uStepperServo::setMinimum\lPulse",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperServo.html#ac59c16bdaaeb890b84c8421af8a130b5",tooltip="Sets the minimum pulse."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="uStepperServo::write",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperServo.html#a6eba26d4ab124ccaf5eda3cac5df8fb5",tooltip="Specify angle of servo motor."];
+}

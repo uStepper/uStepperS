@@ -31,8 +31,8 @@
 */
 /********************************************************************************************
 * 	    	File:  LimitDetection.ino                                                         *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 8th, 2020                                                          *
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Thomas Hørring Olsen                                                       *
 *  Description:  DropIn example sketch!                                                     *
 *                                                                                           *

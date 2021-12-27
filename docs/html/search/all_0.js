@@ -10,6 +10,5 @@ var searchData=
   ['anglemovedraw_7',['angleMovedRaw',['../classuStepperEncoder.html#a4537edf245267d881c86253ccf6812d6',1,'uStepperEncoder']]],
   ['angletoencoderdata_8',['ANGLETOENCODERDATA',['../uStepperEncoder_8h.html#a15263ab00cc87d3ef28ea806106623f6',1,'uStepperEncoder.h']]],
   ['angletostep_9',['angleToStep',['../classuStepperS.html#a0672048e77783c6eeea4cdf5afc8c680',1,'uStepperS']]],
-  ['arduino_20library_20for_20the_20ustepper_20s_20board_10',['Arduino library for the uStepper S Board',['../index.html',1,'']]],
-  ['attach_11',['attach',['../classuStepperServo.html#a54314020d996a4d8f3c2545e55ce4678',1,'uStepperServo']]]
+  ['arduino_20library_20for_20the_20ustepper_20s_20board_10',['Arduino library for the uStepper S Board',['../index.html',1,'']]]
 ];

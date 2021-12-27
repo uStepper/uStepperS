@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	    	File:  GYROBalance.ino                                                            *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 7th, 2020                                                          *
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Thomas Hørring Olsen                                                       *
 *  Description:  Example sketch for closed loop position control!                           *                           *
 *                This example demonstrates how easy closed loop position control can be     *

@@ -1,8 +1,8 @@
 /********************************************************************************************
 * 	    	File:  LimitDetection.ino                                                         *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 2nd, 2020                                                          *
-*       Author:  Thomas Hørring Olsen                                                       *
+*		      Version:    2.3.0                                          						            *
+*      	  Date: 		December 27th, 2021  	                                    			        *
+*         Author:  Thomas Hørring Olsen                                                      *
 *  Description:  uStepper RC Servo Motor Example Sketch!                                    * 
 *                This example demonstrates how the library can be used to control an RC     * 
 *                servo connected to the uStepper.                                           *
@@ -14,7 +14,7 @@
 *                during the test.                                                           *
 *                                                                                           *
 *********************************************************************************************
-*	(C) 2020                                                                                  *
+*	(C) 2021                                                                                  *
 *                                                                                           *
 *	uStepper ApS                                                                              *
 *	www.ustepper.com                                                                          *
@@ -37,8 +37,10 @@ uint16_t value;
 
 void setup()
 {
-  servo.attach(A1);     //Attach Servo to A1
   Serial.begin(9600);
+  servo.setup();
+  servo.setMaximumPulse(2500);    //Set pulsewidth in microSeconds, of 180 degree position
+  servo.setMinimumPulse(500);     //Set pulsewidth in microSeconds, of 0 degree position
 }
 
 void loop()
@@ -48,6 +50,4 @@ void loop()
     value = Serial.parseInt();      //Read angle argument from serial
     servo.write(value);             //Write angle to servo object
   }
-
-  uStepperServo::refresh();         //Call this method at least once every 50ms to keep the servo running
 }
