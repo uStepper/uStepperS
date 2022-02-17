@@ -63,6 +63,13 @@ http://ustepper.com/docs/usteppers/html/index.html
 In order to make the uStepper S show up in the "ports" list, you need to install the VCP driver from the following link: 
 https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 
+## Building with docker
+To build the Limit Detection Example, from the root directory of this repo run:
+```
+docker buildx build --build-arg EXAMPLE=LimitDetection --progress plain --target export --output type=local,dest=. .
+```
+A flashable .hex file should have appeared.
+
 ## Known bugs
 - does not properly release motor in dropin mode
 
