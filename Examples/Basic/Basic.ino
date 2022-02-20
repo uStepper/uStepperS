@@ -95,7 +95,10 @@ void loop() {
       Serial.print(nsteps);
       Serial.print(" steps...");
       stepper.moveSteps(nsteps);
-      while(getMotorState());  // wait for move to complete
+      // wait for move to complete
+      while(stepper.getMotorState()){
+        ;
+      }
     }
     Serial.println();
     Serial.print(">>> ");
