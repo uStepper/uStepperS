@@ -1,8 +1,8 @@
 // basic motion control via serial port issued commands
 // written by grey@christoforo.net
 // send 'b' character to begin
-// then send "hr/t" or "hl/t" to home clockwise or counterclockwise
-// or send "X/t" to ask the motor to move X steps
+// then send "hr\t" or "hl\t" to home clockwise or counterclockwise
+// or send "X\t" to ask the motor to move X steps
 
 #include <uStepperS.h>
 
@@ -95,6 +95,7 @@ void loop() {
       Serial.print(nsteps);
       Serial.print(" steps...");
       stepper.moveSteps(nsteps);
+      while(getMotorState());  // wait for move to complete
     }
     Serial.println();
     Serial.print(">>> ");
