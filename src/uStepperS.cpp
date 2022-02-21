@@ -597,7 +597,6 @@ void interrupt0(void)
 
 void TIMER1_COMPA_vect(void)
 {
-	
 	int32_t stepsMoved;
 	int32_t stepCntTemp;
 	float error;
