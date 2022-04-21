@@ -67,6 +67,11 @@ https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vc
 - does not properly release motor in dropin mode
 
 ## Change Log
+2.3.0:
+- Changed Servo library (uStepperServo.cpp) to use timer PWM instead of polling to control servo motors. 
+- Changed the servo library example to use the new servo implementation.
+- Changed the 'stop' method at the uStepperS.cpp to wait until the motor realy stops movement. Thanks to Daniel-Walther for pointing it out.
+
 2.2.1:
 - Added timeout to homing function
 

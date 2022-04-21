@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	    	File:  Continous.ino                                                              *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 7th, 2020                                                          *
+*		    Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Thomas Hørring Olsen                                                       *
 *  Description:  Continous Example Sketch!                                                  *
 *                This example demonstrates how the library can be used to make the motorrun *

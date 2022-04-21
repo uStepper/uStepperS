@@ -1,7 +1,7 @@
 /********************************************************************************************
 *       File:       uStepperServo.cpp                                                       *
-*		Version:    2.2.0                                           						*
-*      	Date: 		September 22nd, 2020  	                                    			*
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *      	Authors: 	Thomas Hørring Olsen                                   					*
 *					Emil Jacobsen															*
 *                                                                                           *   
@@ -9,15 +9,16 @@
 *                       uStepperServo class                                                 *
 *                                                                                           *
 *   This file contains the implementation of the class methods, incorporated in the         *
-*   uStepperServo Arduino library. The library is used by instantiating an uStepperServo    *
-*   object by calling either of the two overloaded constructors:                            *
-*                                                                                           *
-*       example:                                                                            *
+*   uStepperServo Arduino library. Currently the servo pulse are only available on pin 3    *
+*   of the uStepper. 
+*   
+*   The library is used by instantiating an uStepperServo                                   *
+*   object, as follows:                                                                     *
 *                                                                                           *
 *       uStepperServo servo;                                                                *
 *                                                                                           * 
 *                                                                                           *
-*   after instantiation of the object, the object attach function, should be called within  *
+*   after instantiation of the object, the object's setup method, should be called within   *
 *   arduino's setup function:                                                               *
 *                                                                                           *
 *       example:                                                                            *
@@ -26,17 +27,12 @@
 *                                                                                           *
 *       void setup()                                                                        *
 *       {                                                                                   *
-*           servo.attach(10);                                                               *
+*           servo.setup();                                                                  *
 *       }                                                                                   *
 *                                                                                           *
-*   This will attach a servo to pin 10, which is the argument of the attach function.       *
-*                                                                                           *
-*   The servo pulse widths are normally around 500 us for 0 deg and 2500 us for 180 deg.    *
-*   The default values in this library are 1472 and 2400 us - giving a work area of         *
-*   ~90-180deg. These values can be redefined to fit your servos specifications by calling  *
-*    the setMaximumPulse and SetMinimumPulse functions. However, because of running the     *
-*    stepper algorithm simultaniously with the servo, there is a risk of twitching if       *
-*    using lower values than the 1500 us.                                                   *                          
+*   The servo pulse widths are normally around 500 us for 0 deg and 2500 us for 180 deg     *
+*   (default values in this library). These values can be redefined to fit your servos      *
+*   specifications by calling the setMaximumPulse and SetMinimumPulse functions.            *                         
 *                                                                                           *
 *       example:                                                                            *
 *                                                                                           *
@@ -44,34 +40,12 @@
 *                                                                                           *
 *       void setup()                                                                        *
 *       {                                                                                   *
-*           servo.attach(10);                                                               *
+*           servo.setup();                                                                  *
 *           servo.SetMaximumPulse(2400);                                                    *
-*           servo.SetMinimumPulse(1500);//Should be kept above 1500!!                       *
+*           servo.SetMinimumPulse(600);                                                     *
 *       }                                                                                   *
-*                                                                                           *
-*   To apply the pulses to the attached servos, the refresh function should be called       *
-*   periodically at a rate of 20-50 Hz, i.e. every 50-20 ms. Calling the function more      *
-*   often than every 20 ms is not a problem for the servo library.                          *
-*                                                                                           *
-*       example                                                                             *
-*                                                                                           *
-*       uStepperServo servo;                                                                *
-*                                                                                           *
-*       void setup()                                                                        *
-*       {                                                                                   *  
-*           servo.attach(10);                                                               *
-*           servo.SetMaximumPulse(2400);                                                    *
-*           servo.SetMinimumPulse(1500);  //Should be kept above 1500!!                     *
-*       }                                                                                   *
-*                                                                                           *
-*        void loop()                                                                        *
-*       {                                                                                   *
-*           uStepperServo::refresh();                                                       *
-*       }                                                                                   *
-*   After this, the library is ready to control the Servo!                                  *
-*                                                                                           *
 *********************************************************************************************
-*   (C) 2020                                                                                *
+*   (C) 2021                                                                                *
 *                                                                                           *
 *   uStepper ApS                                                                            *
 *   www.ustepper.com                                                                        *
@@ -105,7 +79,7 @@ uStepperServo::uStepperServo()
 
 void uStepperServo::setup(void)
 {
-    this->setMaximumPulse(2400);
+    this->setMaximumPulse(2500);
     this->setMinimumPulse(500);
      
     TCCR4A = (1 << 1) | (1 << 5) | (1 << 4); //WGM41 = 1, VGM40 = 0 , Set when up counting, clear when down counting (COM4B0 = 1, COM4B1 = 1)

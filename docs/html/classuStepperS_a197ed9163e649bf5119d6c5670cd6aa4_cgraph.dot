@@ -34,6 +34,7 @@ digraph "uStepperS::moveToEnd"
   Node11 [label="uStepperEncoder::getAngle\lMoved",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperEncoder.html#a2eceb2b57d672fce865b4bd778ba06c5",tooltip="Returns the angle moved from reference position in degrees."];
   Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node12 [label="uStepperS::isStalled",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a426114009e73a6042401c2a1fd2485b8",tooltip="This method returns a bool variable indicating wether the motor is stalled or not...."];
+  Node12 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node13 [label="uStepperS::setRPM",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a5b754b633f5938b43f0b4db9f75c8874",tooltip="Set the velocity in rpm."];
   Node13 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
@@ -44,12 +45,21 @@ digraph "uStepperS::moveToEnd"
   Node15 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node16 [label="uStepperS::stop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperS.html#a046dba8bef7d033809158bf0dd69a6fd",tooltip="Stop the motor."];
-  Node16 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node16 -> Node17 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node17 [label="uStepperDriver::setAcceleration",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#a1668657b55a0839ced16aa728f90bc7f",tooltip="Set motor acceleration."];
-  Node17 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="uStepperDriver::getPosition",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#a59dd1795c65fba7767cf61c18e87024e",tooltip="Returns the current position of the motor driver."];
+  Node17 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node16 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node18 [label="uStepperDriver::setDeceleration",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c",tooltip="Set motor deceleration."];
+  Node18 [label="uStepperDriver::setAcceleration",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#a1668657b55a0839ced16aa728f90bc7f",tooltip="Set motor acceleration."];
   Node18 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="uStepperDriver::setDeceleration",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#a40f48b1a99218b3a648deb56286e678c",tooltip="Set motor deceleration."];
+  Node19 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 -> Node20 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="uStepperDriver::setPosition",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#af8c6752ef8ca1516154ef8186f1494ac",tooltip="Set the motor position."];
+  Node20 -> Node21 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="uStepperDriver::setRampMode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classuStepperDriver.html#af2ce24dc7a9602cd1dee585ecdee567c",tooltip="Set motor driver to position mode or velocity mode."];
+  Node21 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node16 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
 }

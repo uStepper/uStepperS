@@ -1,7 +1,7 @@
 /********************************************************************************************
 * 	    	File:  LimitDetection.ino                                                         *
-*		   Version:  1.0.0                                                                      *
-*         Date:  Oktober 2nd, 2020                                                          *
+*		Version:    2.3.0                                          						    *
+*      	Date: 		December 27th, 2021  	                                    			*
 *       Author:  Emil Jacobsen                                                              *
 *  Description:  This example demonstrates how Stallguard can be used to detect motor stall,*
 *                and automatic stop before any steps is lost.                               *
