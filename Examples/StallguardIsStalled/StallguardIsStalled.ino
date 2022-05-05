@@ -1,12 +1,16 @@
 /********************************************************************************************
-* 	    	File:  LimitDetection.ino                                                         *
-*		Version:    2.3.0                                          						    *
-*      	Date: 		December 27th, 2021  	                                    			*
+* 	    	File:  StallguardIsStalled.ino                                                         *
+*		   Version:  1.1.0                                                                      *
+*         Date:  Januarey 19, 2021                                                          *
 *       Author:  Emil Jacobsen                                                              *
 *  Description:  This example demonstrates how Stallguard can be used to detect motor stall,*
 *                and automatic stop before any steps is lost.                               *
 *                The for-loop applies six different velocities, but only shifts to the next *
 *                when a stall is detected.                                                  *
+*                Stallguard is very sensitive and provides seamless stall detection when 	  *
+*				         tuned for the application. It is dependent on speed, current setting		    *
+*				         and load conditions amongst others. The encoder stall detection is 		    *
+*				         unaffected by most of these but can be a bit less sensitive.				        *
 *                                                                                           *
 * For more information, check out the documentation:                                        *
 *                       http://ustepper.com/docs/usteppers/html/index.html                  *
@@ -15,7 +19,7 @@
 *                during the test.                                                           *
 *                                                                                           *
 *********************************************************************************************
-*	(C) 2020                                                                                  *
+*	(C) 2021                                                                                  *
 *                                                                                           *
 *	uStepper ApS                                                                              *
 *	www.ustepper.com                                                                          *
@@ -68,8 +72,13 @@ void loop() {
     // Hint: If stopOnStall is set to false, you have to use .stop() or setRPM(0) in order to stop the motor on stall. 
     stepper.enableStallguard(STALLSENSITIVITY, true, rpm[i]);
 
-    // Wait for stall to be detected.
-    while( !stepper.isStalled() ){}
+    // Wait for stall to be detected - print stall value as we wait
+    while( !stepper.isStalled() )
+    {
+      // Use the Serial Plotter to effectively see this value. Must be above 0 when running and stall will make it drop. 
+      // If 0 when running, increase Sensitivity, if not running decrease Sensitivity
+      Serial.println(stepper.driver.getStallValue());
+    }
     // Clear stallguard
     stepper.clearStall();
     
