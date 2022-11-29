@@ -61,9 +61,9 @@ void uStepperS::init( void ){
 	
 	this->pidDisabled = 1;
 	/* Set CS, MOSI, SCK and DRV_ENN as Output */
-	DDRC = (1<<SCK1)|(1<<MOSI_ENC);
-	DDRD = (1<<DRV_ENN)|(1<<SD_MODE)|(1<<CS_ENCODER);
-	DDRE = (1<<MOSI1)|(1<<CS_DRIVER);
+	DDRC |= (1<<SCK1)|(1<<MOSI_ENC);
+	DDRD |= (1<<DRV_ENN)|(1<<SD_MODE)|(1<<CS_ENCODER);
+	DDRE |= (1<<MOSI1)|(1<<CS_DRIVER);
 
 	PORTD |= (1 << DRV_ENN);  // Set DRV_ENN HIGH, while configuring
 	PORTD &= ~(1 << SD_MODE);  // Set SD_MODE LOW  
