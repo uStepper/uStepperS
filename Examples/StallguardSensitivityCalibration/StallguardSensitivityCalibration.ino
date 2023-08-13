@@ -66,7 +66,7 @@ void loop() {
     {
       stepper.enableStallguard(stallValue, true, rpm[i]);
       delay(200);
-      if(stepper.driver.getVelocity()>(rpm[i]-1)*60*256*STEPSPERREV)// Speed in RPM * 60 seconds * 256 usteps * stepsPerRev = steps/s
+      if(stepper.driver.getVelocity()>(rpm[i]-1)*256*STEPSPERREV/60)// Speed in RPM * 60 seconds * 256 usteps * stepsPerRev = steps/s
       {
         Serial.print("Sensitivity ~ ");
         Serial.println(stallValue+1);
