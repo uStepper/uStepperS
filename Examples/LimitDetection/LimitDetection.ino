@@ -6,6 +6,10 @@
 *  Description:  Limit Detection Example Sketch!                                            *
 *                This example demonstrates how the library can be used to detect hard       *
 *                limits in an application, without the use of mechanical endstop switches.  *
+*                Stallguard is very sensitive and provides seamless stall detection when 	  *
+*				         tuned for the application. It is dependent on speed, current setting		    *
+*				         and load conditions amongst others. The encoder stall detection is 		    *
+*				         unaffected by most of these but can be a bit less sensitive.				        *
 *                                                                                           *
 * For more information, check out the documentation:                                        *
 *                       http://ustepper.com/docs/usteppers/html/index.html                  *
@@ -30,6 +34,7 @@
 *                                                                                           *
 *                                                                                           *
 ********************************************************************************************/
+
 #include <uStepperS.h>
 
 #define STEPSPERREV 200 //Number of steps pr revolution. 200 for a 1.8deg motor, 400 for a 0.9deg motor

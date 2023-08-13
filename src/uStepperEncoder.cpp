@@ -159,11 +159,52 @@ uint16_t uStepperEncoder::captureAngle(void)
 
 	if(pointer->mode != DROPIN)
 	{
-		this->speedSmoothValue *= 0.99;
-		this->speedSmoothValue += (this->smoothValue-this->angleMoved)*0.01;
+		this->speedSmoothValue *= 0.9;
+		this->speedSmoothValue += (this->smoothValue-this->angleMoved)*0.1;
 		pointer->encoder.encoderFilter.velIntegrator = this->speedSmoothValue*ENCODERINTFREQ*2.0f;
 	}
-   	
+	
+	if(encoderStallDetectEnable)
+	{
+		float driverSpeed = pointer->driver.getVelocity();
+		float encoderSpeed = pointer->encoder.encoderFilter.velIntegrator*ENCODERDATATOSTEP;
+		float stallSpeed = driverSpeed*this->encoderStallDetectSensitivity;
+		if (driverSpeed < 0)
+		{
+			if ((((driverSpeed+stallSpeed) < encoderSpeed) || (driverSpeed-stallSpeed) > encoderSpeed) && startDelay > 200)
+		    {
+		       errorCnt++;
+		    }
+		    else
+		    {
+		        errorCnt = 0;
+		    }
+		}
+		else
+		{
+		    if ((((driverSpeed+stallSpeed) > encoderSpeed) || (driverSpeed-stallSpeed) < encoderSpeed) && startDelay > 200)
+		    {
+		       errorCnt++;
+		    }
+		    else
+		    {
+		        errorCnt = 0;
+		    }
+		}
+	    if(errorCnt > 5)
+	    {
+	        this->encoderStallDetect = 1;
+	    }
+	    else
+	    {
+	    	this->encoderStallDetect = 0;
+	    }
+	    startDelay++;
+	    if(startDelay > 200)
+	    {
+	    	startDelay = 201;
+	    }
+	}
 	this->angleMoved=this->smoothValue;
 
 	return (uint16_t)value;
