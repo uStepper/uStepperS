@@ -263,8 +263,6 @@ void uStepperS::setup(	uint8_t mode,
 	}
 
 	this->pidDisabled = 0;
-
-	DDRB |= (1 << 4);
 }
 
 void uStepperS::moveSteps( int32_t steps )
