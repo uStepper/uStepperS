@@ -67,6 +67,11 @@ https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vc
 - does not properly release motor in dropin mode
 
 ## Change Log
+2.3.2:
+- added new python control example
+- fixed encoder stall examples
+- removed debug setup of pin on portB as output
+  
 2.3.1:
 - added 6 new examples
 
