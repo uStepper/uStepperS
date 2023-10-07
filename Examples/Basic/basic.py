@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # some easy python to do basic control of a stepper motor
 # written by grey@christoforo.net
 
@@ -10,7 +8,8 @@ cmd_term = '\t'
 fw_prompt = '>>> '
 
 # some details related to the setup
-port = '/dev/ttyUSB0'
+
+port = '/dev/ttyUSB0'    # In case of Windows use COMPORT format (ex.: "COM9")
 timeout = 30  # in s, no motion (including homing) should take longer than this
 
 # a list of commands to issue to the firmware (see Basic.ino sketch)
