@@ -229,6 +229,15 @@ class uStepperEncoder
 		/** Filter constant for encoder feedback **/
 		volatile  uint8_t Beta = 5;
 
+		/** Encoder stalldetect enable - enabled when set to 1 **/
+		volatile  bool encoderStallDetectEnable = 0;
+
+		/** Encoder stalldetect return value - stall = 1 **/
+		volatile  bool encoderStallDetect;
+
+		/** Encoder stalldetect sensitivity - From -10 to 1 where lower number is less sensitive and higher is more sensitive. **/
+		volatile  float encoderStallDetectSensitivity = -0.5;
+
 	private:
 		
 		/** Reference to the main object */
@@ -244,6 +253,12 @@ class uStepperEncoder
 		/** Status bits from the encoder */
 		uint8_t status; 
 		int32_t userAngleOffset = 0;	
+
+		/** Encoder stall detect counter - Delay start of the stalldetect to let the encoder velocity filter initialize properly */
+		volatile uint8_t startDelay = 0;
+
+		/** Encoder stall detect counter - Counter for number of consecutive samples that must show a stall */
+		volatile uint16_t errorCnt = 0;
 
 		volatile int32_t angleMovedRaw = 0;
 
